@@ -1,0 +1,58 @@
+Drupal development modules
+ 
+ Administration menu
+ 
+ 
+ Coder
+ -----
+ 
+ Coder options:
+    Select:     coder - main entry point to coder functionality. Called if no options are given to
+                the coder path, then you can select what to review and run the reviews. If the path
+                coder/review/MODULE is used, then it sets the module in SELECT SPECIFIC MODULES
+                options and runs the review - this is used by 'Review code' link in Modules menu.
+                Sets also 'include files' in WHAT TO REVIEW.
+    Default:    coder/review/default - review modules selected in WHAT TO REVIEW settings in Settings
+                menu
+    Active:     coder/review/active - review Active modules (modifies WHAT TO REVIEW settings)
+    Core:       coder/review/core - review Core and include files (modifies WHAT TO REVIEW settings)
+    All:        coder/review/all - review all modules (selects all modules available in
+                SELECT SPECIFIC MODULES, SELECT SPECIFIC THEMES)
+    Files:      coder/review/files -specify files to be reviewed and then run the review
+    Patches:    coder/review/patches - specify patches to be reviewed and then run the review
+    Settings:   coder/default REVIEWS settings for all reviews and default WHAT TO REVIEW settings
+                for Default review
+    
+    WHAT TO REVIEW:
+    active - select active modules in SELECT SPECIFIC MODULES and SELECT SPECIFIC THEMES 
+    core - select core modules as above
+    include files - review additional files, not only .module files.
+    
+ For usual module development set 'minor' severity level to show all issues in Settings menu.
+    
+      
+ Issue:
+ No result on pressing 'Default'
+ See /var/log/apache2/error.log:
+ PHP Fatal error:  Maximum execution time of 30 seconds exceeded in ...
+ 
+ Solution
+ increase max_execution_time in /etc/php5/cgi/php.ini (if fcgi is used)
+ restart apache: service apache2 restart
+ 
+ 
+ 7.x-1.x branch instead of master in GitHub
+ ------------------------------------------
+ create empty repository PRJ in GitHub
+ clone the repository to your workstation: git clone https://github.com/USER/PRJ.git
+ repository has no branch yet
+ create and checkout the required branch
+    git checkout -b 7.x-1.x
+ create a file
+    touch README.txt
+ add the file to the repository amd push to remote:
+    git add README.txt
+    git commit -m "Initial commit"
+    git push origin 7.x-1.x
+ the only and default branch now is 7.x-1.x
+ 
