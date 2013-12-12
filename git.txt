@@ -1,0 +1,371 @@
+BASIC
+
+setup
+-----
+git config --system: /etc/gitconfig
+git config --global: ~/.gitconfig
+git config : PRJ/.git/config
+
+git config --help
+
+git config --global user.name "John Dow"
+git config --global user.email johndow@example.commit
+git config --global core.editor gedit
+git config --global merge.tool kdiff3
+
+git config --global color.ui true
+
+git config --list
+git config KEY		KEY: user.name, ...
+
+
+
+help
+----
+git help CMD		CMD: config, clone, add, ...
+
+
+cloning repo
+------------
+git clone URL_PATH
+git clone URL_PATH DIR
+git clone --bare URL_PATH DIR.git
+
+
+creating repo
+-------------
+git init (of current directory)
+git init --bare DIR.git
+
+
+ignoring files
+--------------
+.gitignore
+#comment
+*~
+*.o
+DIR/
+! - negate
+
+
+checking status
+---------------
+git status
+
+
+viewing changes
+---------------
+git diff		working dir vs staging area
+git diff --cached	staging area vs last commit
+git diff --staged	same as --cached
+git diff --check	check whitespace errors before push
+
+
+adding files to staging area
+----------------------------
+git add FILE		FILE: *, file.c, file*, ...
+
+
+commiting files
+---------------
+
+git commit
+git commit -m "Commit message"
+git commit -a -m "Commit message" skip staging area
+    git add *
+    git commit -m "Commit message"
+
+removing files
+--------------
+git rm FILE		remove from staging and from woring dir
+git commit
+
+git rm --cached FILE	remove from staging, keep in working dir
+
+moving files
+------------
+git mv FILE_FROM FILE_TO
+
+git rm FILE_FROM
+git add FILE_TO
+
+viewing history
+---------------
+git log
+-N			N: 1,2,3... - limit output to N last entries
+-p			show diff introduced in each commit
+--stat
+--pretty=
+--graph
+--no-merges
+
+undoing
+-------
+git commit --amend	change last commit (including commit message)
+git reset HEAD FILE	unstage a staged FILE
+git checkout -- FILE	unmodify a modified FILE
+
+REMOTES
+
+showing remotes
+---------------
+git remote		show remotes' names
+git remote -v 		show remotes' URLs
+git remote show REMOTE	show more info about REMOTE
+
+adding remotes
+--------------
+git remote add REMOTE URL_PATH	add remote URL_PATH as NAME
+
+fetching from remotes
+---------------------
+git fetch REMOTE
+
+pulling from remotes
+--------------------
+git pull REMOTE		fetch and merge
+
+pushing to remotes
+------------------
+git push REMOTE BRANCH
+git push REMOTE BRANCH_LOCAL:BRANCH_REMOTE
+
+renaming remotes
+----------------
+git remote rename REMOTE_OLD REMOTE_NEW
+
+removing remotes
+----------------
+git remote rm REMOTE
+
+TAGS
+
+listing tags
+------------
+git tag
+
+
+creating annotated tags
+-----------------------
+git tag -a TAG
+git tag -a TAG -m "Tagging message"
+
+
+creating lightweight tags
+-------------------------
+git tag TAG
+
+tagging later
+-------------
+git log --pretty=oneline
+git tag -a TAG HASH
+
+sharing tags (pushing)
+----------------------
+git push REMOTE TAG
+git push REMOTE --tags	push all tags
+
+
+showing tag more information
+----------------------------
+git show TAG
+
+
+BRANCHES
+
+creating branch
+---------------
+git branch BRANCH
+git branch BRANCH_L BRANCH_R
+
+
+switching branch
+----------------
+git checkout BRANCH
+git checkout -b BRANCH
+    git branch BRANCH
+    git checkout BRANCH
+    
+git checkout -b BRANCH BRANCH_REMOTE
+
+
+showing (local) branches
+------------------------
+git branch
+git branch -v 		show last commit on each branch
+git branch --merged
+git branch --no-merged
+
+deleting branch
+---------------
+git branch -d BRANCH
+
+
+tracking branches
+-----------------
+Cloning repository automatically creates a master branch that track origin/master.
+That's why git push and git pull work ouf of the box with no other argumets.
+
+git checkout -b BRANCH_A REMOTE/BRANCH_B
+git checkout --track REMOTE/BRANCH
+
+
+deleting remote branches
+------------------------
+TODO
+
+
+merging branch
+--------------
+git checkout MERGE_TO
+git merge BRANCH
+git merge --no-commit
+
+merging conflicts
+-----------------
+git mergetool
+git commit
+
+
+rebasing
+--------
+git checkout TOPIC_BRANCH
+git rebase BASE_BRANCH
+git checkout BASE_BRANCH
+git merge TOPIC_BRANCH
+
+git rebase BASE_BRANCH TOPIC_BRANCH
+  git checkout TOPIC_BRANCH
+  git rebase BASE_BRANCH
+  
+git rebase --onto ONTO_BRANCH BASE_BRANCH TOPIC_BRANCH
+
+cherry picking
+--------------
+git cherry-pick HASH
+
+
+making patch
+------------
+git format-patch BRANCH
+
+applying patch
+--------------
+git apply file.patch	no staging, no commit (like patch -p1)
+git apply --check
+
+git am file.patch	for patches created by git format-patch, commit with original msg
+
+
+determining what is introduced
+------------------------------
+git log BRANCH_A --not BRANCH_B
+
+git reflog		show local history
+
+showing various types of objects
+--------------------------------
+git show TAG
+git show HASH
+git show BRANCH
+
+ancestry references
+-------------------
+git show HEAD@{N}	show N-th commit (latest 0)
+git show HEAD^		show parent of HEAD, same as HEAD@{1}
+
+
+commit ranges
+-------------
+git log BRANCH_A..BRANCH_B	show all commits reachable by BRANCH_B that aren't reachable by BRANCH_A
+
+git log origin/maste..HEAD
+
+Equivalent:
+git log BRANCH_A..BRANCH_B
+git log ^BRANCH_A BRANCH_B
+git log BRANCH_B --not BRANCH_A
+
+git log BRANCH_A BRANCH_B ^BRANCH_C
+git log BRANCH_A BRANCH_B --not BRANCH_C
+
+got log BRANCH_A...BRANCH_B	all commits reachable by either of two branches but not by both of them.
+
+interactive staging
+-------------------
+git add -i
+
+[u]pdate		add to staging
+[r]evert		remove from staging
+[d]iff			git diff --cached
+[p]atch			staging patches in chunks
+
+stashing
+--------
+git stash		save dirty work on stack (don't commit)
+git stash list		show stashed works
+git stash apply		reapply stash
+git stash apply stash@{N}	reapply given stash (see list)
+git stash apply --index		reapply staged changes
+git stash drop stash@{N}	remove stash from stack
+git stash pop
+  git stash apply
+  git stash drop
+git stash branch BRANCH	create a branch from stash
+  
+rewriting history
+-----------------
+TODO
+
+submodules
+----------
+TODO
+
+Git objects
+-----------
+.git/objects
+
+find .git/objects/ -type f	show git object files
+
+git hash-object -w FILE		write blob object
+
+git cat-file -p HASH            show content of object
+git cat-file -t HASH            show type of object
+git cat-file -s HASH		show size of object
+git cat-file -p master^{tree}   show tree object that is pointed to by the last commit on master branch
+
+git update-index --add --cacheinfo MODE HASH FILE	add file from database to staging area
+git update-index FILE		add (tracked) file from directory to staging area
+git update-index --add FILE	add (new) file from directory to staging area
+git write-tree                  write tree object from staging area
+git read-tree --prefix=DIR HASH		read a tree object as DIR to staging area
+git commit-tree TREE_OBJ	create commit object
+ 
+References
+----------
+.git/refs
+ 
+git update-ref refs/heads/BRANCH HASH
+git symbolic-ref HEAD				read value of HEAD
+git symbolic-ref HEAD refs/heads/BRANCH		set value of HEAD
+ 
+Tags
+----
+.git/tags
+git update-ref refs/tags/TAG HASH
+ 
+Pack/repack objects
+-------------------
+git gc
+git verify-pack -v PACK
+ 
+Refspec
+-------
+.git/config
+
+Mapping from remote branches to local references
+git remote add
+git fetch origin
+git fetch origin master:refs/remotes/origin/master
+git fetch origin master:refs/remotes/origin/master topic:refs/remotes/origin/topic
+
