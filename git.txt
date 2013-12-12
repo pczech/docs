@@ -369,3 +369,27 @@ git fetch origin
 git fetch origin master:refs/remotes/origin/master
 git fetch origin master:refs/remotes/origin/master topic:refs/remotes/origin/topic
 
+
+
+SPECIAL CASES
+*************
+
+Replace master branch by another one (GitHub)
+ ------------------------------------------
+ create empty repository PRJ in GitHub
+ clone the repository to your workstation: git clone https://github.com/USER/PRJ.git
+ repository has no branch yet
+ create and checkout the required branch
+    git checkout -b BRANCH (e.g. 7.x-1.x)
+ create a file
+    touch README.txt
+ add the file to the repository amd push to remote:
+    git add README.txt
+    git commit -m "Initial commit"
+    git push origin BRANCH
+ the only and default branch now is BRANCH
+ 
+ See also
+ https://drupal.org/empty-git-master
+ 
+ 
