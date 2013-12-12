@@ -1,0 +1,17 @@
+mysql:
+root		mysql-root (zxcvbnm)
+
+databases
+01
+user: 01
+pass: 01
+
+dev01
+user: dev01
+pass: dev01
+
+
+localhost/dev01/
+dev01
+dev01
+
