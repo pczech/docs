@@ -46,6 +46,14 @@ Drupal development modules
  Supports dpm()
  
  
+ Schema
+ ------
+ You should rarely have to write a schema from scratch. Going to Structure -> Schema will give you
+ the ability to see a schema definition for any database table by clicking the Inspect tab. So you
+ can get the schema definition by using the schema module, and then copy and paste it into your
+ .install file. 
+ 
+ 
  Entities
  --------
  https://drupal.org/developing/api/entity/7
