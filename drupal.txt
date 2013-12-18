@@ -7,31 +7,39 @@ Drupal development modules
  -----
  
  Coder options:
-    Select:     coder - main entry point to coder functionality. Called if no options are given to
-                the coder path, then you can select what to review and run the reviews. If the path
-                coder/review/MODULE is used, then it sets the module in SELECT SPECIFIC MODULES
-                options and runs the review - this is used by 'Review code' link in Modules menu.
-                Sets also 'include files' in WHAT TO REVIEW.
-    Default:    coder/review/default - review modules selected in WHAT TO REVIEW settings in Settings
-                menu
-    Active:     coder/review/active - review Active modules (modifies WHAT TO REVIEW settings)
-    Core:       coder/review/core - review Core and include files (modifies WHAT TO REVIEW settings)
-    All:        coder/review/all - review all modules (selects all modules available in
-                SELECT SPECIFIC MODULES, SELECT SPECIFIC THEMES)
-    Files:      coder/review/files -specify files to be reviewed and then run the review
-    Patches:    coder/review/patches - specify patches to be reviewed and then run the review
-    Settings:   coder/default REVIEWS settings for all reviews and default WHAT TO REVIEW settings
-                for Default review
+    Select:     coder - main entry point to coder functionality. Called if no
+                options are given to the coder path, then you can select what
+                to review and run the reviews. If the path coder/review/MODULE
+                is used, then it sets the module in SELECT SPECIFIC MODULES
+                options and runs the review - this is used by 'Review code'
+                link in Modules menu. Sets also 'include files' in WHAT TO
+                REVIEW.
+    Default:    coder/review/default - review modules selected in WHAT TO REVIEW
+                settings in Settings menu.
+    Active:     coder/review/active - review Active modules (modifies WHAT TO
+                REVIEW settings).
+    Core:       coder/review/core - review Core and include files (modifies WHAT
+                TO REVIEW settings).
+    All:        coder/review/all - review all modules (selects all modules
+                available in SELECT SPECIFIC MODULES, SELECT SPECIFIC THEMES).
+    Files:      coder/review/files -specify files to be reviewed and then run
+                the review.
+    Patches:    coder/review/patches - specify patches to be reviewed and then
+                run the review.
+    Settings:   coder/default REVIEWS settings for all reviews and default WHAT
+                TO REVIEW settings for Default review.
     
     WHAT TO REVIEW:
-    active - select active modules in SELECT SPECIFIC MODULES and SELECT SPECIFIC THEMES 
-    core - select core modules as above
+    active - select active modules in SELECT SPECIFIC MODULES and SELECT
+             SPECIFIC THEMES.
+    core - select core modules as above.
     include files - review additional files, not only .module files.
     
- For usual module development set 'minor' severity level to show all issues in Settings menu.
+ For usual module development set 'minor' severity level to show all issues in
+ Settings menu.
     
       
- Issue:
+ Issues
  No result on pressing 'Default'
  See /var/log/apache2/error.log:
  PHP Fatal error:  Maximum execution time of 30 seconds exceeded in ...
@@ -40,6 +48,21 @@ Drupal development modules
  increase max_execution_time in /etc/php5/cgi/php.ini (if fcgi is used)
  restart apache: service apache2 restart
  
+ No result on reviewing a module
+ See /var/log/apache2/error.log
+ PHP Fatal error:  Call to undefined method
+ Coder requires PHP_CodeSniffer module:
+ pear install PHP_CodeSniffer
+ 
+ Solution
+ 7.x-2.0+14-dev (dev01 + pdd) works with PHP_CodeSniffer-1.4.7
+ pear uninstall PHP_CodeSniffer
+ pear install PHP_CodeSniffer-1.4.7
+ try `pear upgrade` if `pear install` doesn't work.
+
+ 7.x-2.1+1-dev (dev03 + det) doesn't work with 1.4.7 and 1.5.0
+ Install 1.5.0 and apply patch #4 from https://drupal.org/node/2146275 
+
  
  Devel
  -----
@@ -48,10 +71,10 @@ Drupal development modules
  
  Schema
  ------
- You should rarely have to write a schema from scratch. Going to Structure -> Schema will give you
- the ability to see a schema definition for any database table by clicking the Inspect tab. So you
- can get the schema definition by using the schema module, and then copy and paste it into your
- .install file. 
+ You should rarely have to write a schema from scratch. Going to Structure ->
+ Schema will give you the ability to see a schema definition for any database
+ table by clicking the Inspect tab. So you can get the schema definition by
+ using the schema module, and then copy and paste it into your .install file. 
  
  
  Entities

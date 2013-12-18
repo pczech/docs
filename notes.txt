@@ -1,0 +1,13 @@
+apache, php
+-----------
+localhost/tools/whoami should return piotr. It returns www-data if  apache
+module php is enabled.
+
+/etc/php5/apache2/php.ini
+/usr/bin/php/php.ini
+
+/etc/php5/conf.d/20-xdebug.ini
+
+
+/etc/apache2/modes-available/fcgid.conf
+file:///usr/share/doc/libapache2-mod-fcgid/mod_fcgid.html.en
