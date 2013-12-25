@@ -76,7 +76,6 @@ Drupal development modules
  table by clicking the Inspect tab. So you can get the schema definition by
  using the schema module, and then copy and paste it into your .install file. 
  
- 
  Entities
  --------
  https://drupal.org/developing/api/entity/7

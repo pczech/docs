@@ -1,0 +1,14 @@
+ Clean URL bug
+ -------------
+ Scenario:
+ Disable Clean URL (before site migration, for example)
+ Enable Clean URl again. Clean URL test fails then.
+ https://drupal.org/node/1572984#comment-6751806
+
+
+ Backing up and migrating a site
+ -------------------------------
+ https://drupal.org/node/679054
+ gzip -c db.sql > db.sql.gz
+ 
+ 
