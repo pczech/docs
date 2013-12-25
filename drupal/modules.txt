@@ -1,4 +1,5 @@
-Drupal development modules
+Development modules
+*******************
  
  Administration menu
  -------------------
@@ -76,8 +77,8 @@ Drupal development modules
  table by clicking the Inspect tab. So you can get the schema definition by
  using the schema module, and then copy and paste it into your .install file. 
  
- Entities
- --------
+Entities
+********
  https://drupal.org/developing/api/entity/7
  https://drupal.org/project/examples
  drupal_7_module_development.pdf
