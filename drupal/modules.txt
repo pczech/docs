@@ -38,9 +38,20 @@ Development modules
     
  For usual module development set 'minor' severity level to show all issues in
  Settings menu.
+ 
+ Ignore system
+ If coder is throwing annoying warnings, you can tell coder to ignore the warning
+ in your code using the comment:
+ 
+ // @ignore RULE_NAME:SCOPE
+ 
+ RULE_NAME: e.g. sniffer_commenting_inlinecomment_spacingafter
+ SCOPE: file class | function | comment | number of lines
     
       
  Issues
+ 
+ Issue
  No result on pressing 'Default'
  See /var/log/apache2/error.log:
  PHP Fatal error:  Maximum execution time of 30 seconds exceeded in ...
@@ -49,6 +60,7 @@ Development modules
  increase max_execution_time in /etc/php5/cgi/php.ini (if fcgi is used)
  restart apache: service apache2 restart
  
+ Issue
  No result on reviewing a module
  See /var/log/apache2/error.log
  PHP Fatal error:  Call to undefined method
@@ -62,7 +74,14 @@ Development modules
  try `pear upgrade` if `pear install` doesn't work.
 
  7.x-2.1+1-dev (dev03 + det) doesn't work with 1.4.7 and 1.5.0
- Install 1.5.0 and apply patch #4 from https://drupal.org/node/2146275 
+ Install 1.5.0 and apply patch #4 from https://drupal.org/node/2146275
+ 
+ Issue
+ 7.x-2.1+1-dev seems not to work well. 7.x-2.0+17-dev reports much more issues
+ 
+ Solution
+ 7.x-2.1+2-dev works fine with PHP_CodeSniffer 1.4.6, PEAR 1.9.4, UBUNTU 12.04
+ TODO 
 
  
  Devel
