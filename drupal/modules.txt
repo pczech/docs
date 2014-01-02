@@ -51,7 +51,7 @@ Development modules
       
  Issues
  
- Issue
+ Issue 01
  No result on pressing 'Default'
  See /var/log/apache2/error.log:
  PHP Fatal error:  Maximum execution time of 30 seconds exceeded in ...
@@ -60,7 +60,7 @@ Development modules
  increase max_execution_time in /etc/php5/cgi/php.ini (if fcgi is used)
  restart apache: service apache2 restart
  
- Issue
+ Issue 02
  No result on reviewing a module
  See /var/log/apache2/error.log
  PHP Fatal error:  Call to undefined method
@@ -75,14 +75,30 @@ Development modules
 
  7.x-2.1+1-dev (dev03 + det) doesn't work with 1.4.7 and 1.5.0
  Install 1.5.0 and apply patch #4 from https://drupal.org/node/2146275
+ See Issue 04, PHP_CodeSniffer-1.4.6 is OK even for 7.x-2.1+4-dev
  
- Issue
+ Issue 03
  7.x-2.1+1-dev seems not to work well. 7.x-2.0+17-dev reports much more issues
  
  Solution
- 7.x-2.1+2-dev works fine with PHP_CodeSniffer 1.4.6, PEAR 1.9.4, UBUNTU 12.04
- TODO 
-
+ 7.x-2.1+2-dev works fine with PHP_CodeSniffer 1.4.6, PEAR 1.9.4, UBUNTU 12.04?
+ See Issue 04
+ 
+ Issue 04
+ Installation process.
+ https://drupal.org/node/1419988
+ (!) Add the Drupal coding standards definitions included with Coder to
+ PHP_CodeSniffer's standards library:
+ sudo ln -sv /path/to/coder/coder_sniffer/Drupal 
+    $(pear config-get php_dir)/PHP/CodeSniffer/Standards/Drupal
+    
+ Solution
+ When working with multiple installations like dev01, dev02, dev03, you should
+ update the symbolic link to current working directory. Please always install
+ the latest dev. version of Coder, if you need to go back and work with older
+ installation, please update the Coder module there.
+ Current working configuration: PHP_CodeSniffer-1.4.7 Coder 7.x-2.1+4-dev.
+ 
  
  Devel
  -----
