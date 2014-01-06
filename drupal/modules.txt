@@ -112,15 +112,12 @@ Development modules
  table by clicking the Inspect tab. So you can get the schema definition by
  using the schema module, and then copy and paste it into your .install file. 
  
-Entities
-********
+ Entity API & Entity Core
+ ------------------------
  https://drupal.org/developing/api/entity/7
  https://drupal.org/project/examples
  drupal_7_module_development.pdf
  programmers_guide_to_drupal.pdf
  Programming Drupal 7 Entities.pdf
- 
- Type: User, Node (Content), Taxonomy, Comment
- Bundle: User - no bundles, Node: Article, Page (Content Type)
- Fields can be attached to Bundles (no to Entity Types)
+
  

@@ -6,9 +6,18 @@
  https://drupal.org/node/1572984#comment-6751806
 
 
- Backing up and migrating a site
+ Backup and migrate a site
  -------------------------------
  https://drupal.org/node/679054
  gzip -c db.sql > db.sql.gz
  
+ 
+ Update core
+ -----------
+ https://drupal.org/node/1494290
+ 
+ Compare working site with the same original core, to identify private
+ patches. Currently they are:
+ /.htaccess - patch to protect original original images
+ /modules/node/node.module - TODO
  
