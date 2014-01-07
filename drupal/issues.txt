@@ -28,3 +28,9 @@
  After unpacking the archive check the git status. Many files seems to be
  modified locally (check git status). Take the HEAD version from (local)
  repository by 'git checkout -- *' command and then import to Eclipse.
+ 
+ Data size
+ ---------
+ uid - INT unsigned 0..4294967295
+ nid - INT unsigned 0..4294967295
+ 
