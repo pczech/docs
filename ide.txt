@@ -1,7 +1,15 @@
-Debugger configuration
-----------------------
+Config PHP Debugger
+-------------------
 
 Menu Run -> Debug Configurations -> PHP Web Application -> New Configuration ->
 Server: XDebugger
 File: /dev01/index.php (example - shall be set for every devXX installation)
 URL: Auto generate
+
+Import local git repository
+---------------------------
+If local git repository is imported via:
+File -> Import -> Git -> Local -> ... 
+then Eclipse doesn't recognize that the project is in git version control.
+To solve the problem choose the option 'Team -> Share project...' in project
+context menu and select 'Use or create repository in parent folder'.

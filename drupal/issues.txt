@@ -21,3 +21,10 @@
  /.htaccess - patch to protect original original images
  /modules/node/node.module - TODO
  
+ 
+ pde.zip
+ -------
+ Programming Drupal 7 Entities
+ After unpacking the archive check the git status. Many files seems to be
+ modified locally (check git status). Take the HEAD version from (local)
+ repository by 'git checkout -- *' command and then import to Eclipse.
