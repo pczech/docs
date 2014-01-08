@@ -2,3 +2,15 @@ Install
 -------
 https://drupal.org/node/1248790
 
+Issue 01 disable_functions error on Ubuntu 13.10
+-------------------------------------------------
+drush reports the error:
+The following restricted PHP modes have non-empty values:            [error]
+disable_functions. This configuration is incompatible with drush. 
+Please check your configuration settings in /etc/php5/cli/php.ini or
+in your drush.ini file; see examples/example.drush.ini for details.
+
+Solution
+check ini file used by drush: drush status
+It is e.g. /etc/php5/cli/php.ini.
+Comment out the line starting with disable_functions=
