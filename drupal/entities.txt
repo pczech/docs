@@ -1,0 +1,110 @@
+class hierarchy
+---------------
+
+
+non-fieldable entities (core)
+-----------------------------
+file
+taxonomy vocabulary
+
+fieldable entities (core)
+-------------------------
+node
+
+Property mapping
+----------------
+
+file
+----
+system_schema() - schema['file_managed']
+entity_metadata_system_entity_property_info()
+entity_metadata_system_entity_property_info_alter()
+entity_get_property_info('file')
+
+entity property                 wrapper property
+fid                             fid
+uid                             owner
+filename                        name
+uri                             -
+filemime                        mime
+filesize                        size
+status                          -
+timestamp                       timestamp
+-                               url
+                                
+taxonomy vocabulary
+-------------------
+taxonomy_schema() - schema['taxonomy_vocabulary']
+entity_metadata_taxonomy_entity_property_info()
+entity_metadata_taxonomy_entity_property_info_alter()
+entity_get_property_info('taxonomy_vocabulary')
+
+entity property                 wrapper property
+vid                             vid
+name                            name
+machine_name                    machine_name
+description                     description
+hierachy                        -
+module                          -
+weight                          -
+-                               term_count
+
+node
+----
+node_schema() - schema['node']
+entity_metadata_node_entity_property_info()
+entity_metadata_node_entity_property_info_alter()
+entity_get_property_info('node')
+
+entity property                 wrapper property
+nid                             nid
+vid                             vid
+-                               is_new
+type                            type
+language                        language
+title                           title
+-                               url
+-                               edit_url
+uid                             author
+status                          status
+created                         created
+changed                         changed
+comment                         -
+promote                         promote
+sticky                          sticky
+tnid                            -
+translate                       -
+-                               source
+-                               log
+-                               revision
+-                               comment
+-                               comment_count
+-                               comment_count_new
+-                               body (field)
+
+
+comment
+-------
+comment_schema() - schema['comment']
+entity_metadata_comment_entity_property_info()
+entity_metadata_comment_entity_property_info_alter()
+entity_get_property_info('comment')
+
+entity property                 wrapper property
+cid                             cid
+pid                             parent
+nid                             node
+uid                             author
+subject                         subject
+hostname                        hostname
+created                         created
+changed                         -
+status                          status
+thread                          -
+name                            name
+mail                            mail
+homepage                        homepage
+language
+-                               url
+-                               edit_url
+-                               comment_body (field)
