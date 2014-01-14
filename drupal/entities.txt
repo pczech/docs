@@ -23,7 +23,7 @@ entity_get_property_info('file')
 
 entity property                 wrapper property
 fid                             fid
-uid                             owner
+uid                             owner (user wrapper)
 filename                        name
 uri                             -
 filemime                        mime
@@ -65,7 +65,7 @@ language                        language
 title                           title
 -                               url
 -                               edit_url
-uid                             author
+uid                             author (user wrapper)
 status                          status
 created                         created
 changed                         changed
@@ -80,7 +80,7 @@ translate                       -
 -                               comment
 -                               comment_count
 -                               comment_count_new
--                               body (field)
+-                               body (field wrapper)
 
 
 comment
@@ -93,8 +93,8 @@ entity_get_property_info('comment')
 entity property                 wrapper property
 cid                             cid
 pid                             parent
-nid                             node
-uid                             author
+nid                             node (node wrapper)
+uid                             author (user wrapper)
 subject                         subject
 hostname                        hostname
 created                         created
@@ -107,4 +107,4 @@ homepage                        homepage
 language
 -                               url
 -                               edit_url
--                               comment_body (field)
+-                               comment_body (field wrapper)
