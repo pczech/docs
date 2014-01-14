@@ -108,3 +108,23 @@ language
 -                               url
 -                               edit_url
 -                               comment_body (field wrapper)
+
+
+taxonomy term
+-------------
+taxonomy_schema() - schema['taxonomy_term_data']
+entity_metadata_taxonomy_entity_property_info()
+entity_metadata_taxonomy_entity_property_info_alter()
+entity_get_property_info('taxonomy_term')
+
+entity property                 wrapper property
+tid                             tid
+vid                             vocabulary (vocabulary wrapper)
+name                            name
+description                     description
+format                          -
+weight                          weight
+-                               url
+-                               node_count
+-                               parent
+-                               parent_all
