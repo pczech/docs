@@ -7,7 +7,7 @@
 
 
  Backup and migrate a site
- -------------------------------
+ -------------------------
  https://drupal.org/node/679054
  gzip -c db.sql > db.sql.gz
  
@@ -22,12 +22,27 @@
  /modules/node/node.module - TODO
  
  
- pde.zip
- -------
- Programming Drupal 7 Entities
- After unpacking the archive check the git status. Many files seems to be
- modified locally (check git status). Take the HEAD version from (local)
- repository by 'git checkout -- *' command and then import to Eclipse.
+ pde.zip (Programming Drupal 7 Entities)
+ ---------------------------------------
+ Issue: many files modified, permission denied blocks branch checkouts.
+ 
+ After unpacking the archive many files seems to be modified locally
+ (check git status). Take the HEAD version from (local) repository by 
+ 'git checkout -- *' command and then import to Eclipse.
+ 
+ It doesn't solve the problem. See the comment below.
+ 
+ Create a bare clone of the repository in local repository storage, e.g.
+ ~/git/pde.git: git clone --bare <PDE> ~/git/pde.git
+ Import the project to Eclipse using URI and 'Local File' method.
+ Rename sites/default/settings.php to e.g. settings.php.org.
+ Install pde drupal with a fresh, empty database.
+ Update .gitignore to ignore Eclipse files
+ Commit the changes
+ (!) Before branch checkout, make sites/default folder and settings.php file
+ writable.
+ Update settings.php and .gitignore for every branch
+ 
  
  Data size
  ---------

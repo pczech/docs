@@ -13,3 +13,6 @@ File -> Import -> Git -> Local -> ...
 then Eclipse doesn't recognize that the project is in git version control.
 To solve the problem choose the option 'Team -> Share project...' in project
 context menu and select 'Use or create repository in parent folder'.
+
+Or just create a bare repository, clone it to Eclipse working directory, using
+URI and Local File method.
