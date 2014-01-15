@@ -10,9 +10,13 @@ taxonomy vocabulary
 fieldable entities (core)
 -------------------------
 node
+comment
+term
+user
 
-Property mapping
-----------------
+Entity property wrapping
+------------------------
+Field wrappers not included here. See Field property wrapping.
 
 file
 ----
@@ -21,16 +25,16 @@ entity_metadata_system_entity_property_info()
 entity_metadata_system_entity_property_info_alter()
 entity_get_property_info('file')
 
-entity property                 wrapper property
-fid                             fid
-uid                             owner (user wrapper)
-filename                        name
-uri                             -
-filemime                        mime
-filesize                        size
-status                          -
-timestamp                       timestamp
--                               url
+entity property                 wrapper property            wrapper class
+fid                             fid                         Value
+uid                             owner (user wrapper)        Drupal
+filename                        name                        Value
+uri                             -                           -
+filemime                        mime                        Value
+filesize                        size                        Value
+status                          -                           -
+timestamp                       timestamp                   Value
+-                               url                         Value
                                 
 taxonomy vocabulary
 -------------------
@@ -39,15 +43,15 @@ entity_metadata_taxonomy_entity_property_info()
 entity_metadata_taxonomy_entity_property_info_alter()
 entity_get_property_info('taxonomy_vocabulary')
 
-entity property                 wrapper property
-vid                             vid
-name                            name
-machine_name                    machine_name
-description                     description
-hierachy                        -
-module                          -
-weight                          -
--                               term_count
+entity property                 wrapper property            wrapper class
+vid                             vid                         Value
+name                            name                        Value
+machine_name                    machine_name                Value
+description                     description                 Value
+hierachy                        -                           -
+module                          -                           -
+weight                          -                           -
+-                               term_count                  Value
 
 node
 ----
@@ -56,32 +60,30 @@ entity_metadata_node_entity_property_info()
 entity_metadata_node_entity_property_info_alter()
 entity_get_property_info('node')
 
-entity property                 wrapper property
-nid                             nid
-vid                             vid
--                               is_new
-type                            type
-language                        language
-title                           title
--                               url
--                               edit_url
-uid                             author (user wrapper)
-status                          status
-created                         created
-changed                         changed
-comment                         -
-promote                         promote
-sticky                          sticky
-tnid                            -
-translate                       -
--                               source
--                               log
--                               revision
--                               comment
--                               comment_count
--                               comment_count_new
--                               body (field wrapper)
-
+entity property                 wrapper property            wrapper class
+nid                             nid                         Value
+vid                             vid                         Value
+-                               is_new                      Value
+type                            type                        Value
+language                        language                    Value
+title                           title                       Value
+-                               url                         Value
+-                               edit_url                    Value
+uid                             author (user wrapper)       Drupal
+status                          status                      Value
+created                         created                     Value
+changed                         changed                     Value
+comment                         -                           -
+promote                         promote                     Value
+sticky                          sticky                      Value
+tnid                            -                           -
+translate                       -                           -
+-                               source                      Drupal
+-                               log                         Value
+-                               revision                    Value
+-                               comment                     Value
+-                               comment_count               Value
+-                               comment_count_new           Value
 
 comment
 -------
@@ -90,25 +92,23 @@ entity_metadata_comment_entity_property_info()
 entity_metadata_comment_entity_property_info_alter()
 entity_get_property_info('comment')
 
-entity property                 wrapper property
-cid                             cid
-pid                             parent
-nid                             node (node wrapper)
-uid                             author (user wrapper)
-subject                         subject
-hostname                        hostname
-created                         created
-changed                         -
-status                          status
-thread                          -
-name                            name
-mail                            mail
-homepage                        homepage
+entity property                 wrapper property            wrapper class
+cid                             cid                         Value
+pid                             parent (comment wrapper)    Drupal
+nid                             node (node wrapper)         Drupal
+uid                             author (user wrapper)       Drupal
+subject                         subject                     Value
+hostname                        hostname                    Value
+created                         created                     Value
+changed                         -                           -
+status                          status                      Drupal
+thread                          -                           Value
+name                            name                        Value
+mail                            mail                        Value
+homepage                        homepage                    Value
 language
--                               url
--                               edit_url
--                               comment_body (field wrapper)
-
+-                               url                         Value
+-                               edit_url                    Value
 
 taxonomy term
 -------------
@@ -117,14 +117,32 @@ entity_metadata_taxonomy_entity_property_info()
 entity_metadata_taxonomy_entity_property_info_alter()
 entity_get_property_info('taxonomy_term')
 
-entity property                 wrapper property
-tid                             tid
-vid                             vocabulary (vocabulary wrapper)
-name                            name
-description                     description
-format                          -
-weight                          weight
--                               url
--                               node_count
--                               parent
--                               parent_all
+entity property                 wrapper property            wrapper class
+tid                             tid                         
+vid                             vocabulary (vocabulary wr.) 
+name                            name                        
+description                     description                 
+format                          -                           -
+weight                          weight                      
+-                               url                         
+-                               node_count                  
+-                               parent                      
+-                               parent_all                  
+
+
+Field property wrapping
+-----------------------
+
+comment_body (comment entity)
+------------
+
+body
+file
+image
+
+body (node entity)
+----
+
+value
+summary
+format
