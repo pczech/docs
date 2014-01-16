@@ -19,11 +19,6 @@ Travesable
     ItaratorAggragate
         
 
-non-fieldable entities (core)
------------------------------
-file
-
-
 Core entities
 *************
 CRUD
@@ -34,6 +29,41 @@ entity_load_single
 entity_save                     $wrapper->save()
 entity_delete                   $wrapper->delete()
 entity_delete_multiple
+
+
+comment
+*******
+fieldable
+
+CRUD
+comment_load
+comment_save
+comment_delete
+
+Property wrapping
+-----------------
+comment_schema() - schema['comment']
+entity_metadata_comment_entity_property_info()
+entity_metadata_comment_entity_property_info_alter()
+entity_get_property_info('comment')
+
+entity property                 wrapper property            wrapper class
+cid                             cid                         Value
+pid                             parent                      Drupal (comment)
+nid                             node                        Drupal (node)
+uid                             author                      Drupal (user)
+subject                         subject                     Value
+hostname                        hostname                    Value
+created                         created                     Value
+changed                         -                           -
+status                          status                      Value
+thread                          -                           Value
+name                            name                        Value
+mail                            mail                        Value
+homepage                        homepage                    Value
+language                        -                           -
+-                               url                         Value
+-                               edit_url                    Value
 
 
 file
@@ -166,38 +196,6 @@ weight                          -                           -
 -                               term_count                  Value
 
 
-comment
-*******
-fieldable
-
-CRUD
-
-Property wrapping
------------------
-comment_schema() - schema['comment']
-entity_metadata_comment_entity_property_info()
-entity_metadata_comment_entity_property_info_alter()
-entity_get_property_info('comment')
-
-entity property                 wrapper property            wrapper class
-cid                             cid                         Value
-pid                             parent                      Drupal (comment)
-nid                             node                        Drupal (node)
-uid                             author                      Drupal (user)
-subject                         subject                     Value
-hostname                        hostname                    Value
-created                         created                     Value
-changed                         -                           -
-status                          status                      Value
-thread                          -                           Value
-name                            name                        Value
-mail                            mail                        Value
-homepage                        homepage                    Value
-language                        -                           -
--                               url                         Value
--                               edit_url                    Value
-
-
 user
 ****
 fieldable
@@ -209,17 +207,44 @@ user_delete
 
 Property wrapping
 -----------------
-TODO
+user_schema() - schema['users']
+entity_metadata_user_entity_property_info()
+entity_metadata_user_entity_property_info_alter()
+entity_get_property_info('user')
+
+entity property                 wrapper property            wrapper class
+uid                             uid                         Value
+name                            name                        Value
+pass                            -                           -
+mail                            mail                        Value
+theme                           theme                       Value
+signature                       -                           -
+signature_format                -                           -
+created                         created                     Value
+access                          last_access                 Value
+login                           last_login                  Value
+status                          status                      Value
+timezone                        -                           -
+language                        -                           -
+picture                         -                           -
+init                            -                           -
+data                            -                           -
+-                               url                         Value
+-                               edit_url                    Value
+-                               roles                       List
+
 
 Core fields
 ***********
 
 Core field types
-* - example field name if attached to entity/bundle. See pde/pde_05
+* - example name of field attached to entity/bundle. 
 
-The field properties presented below (except field name) are located in array,
-and can be seen if the entity with the field attached if loaded, e.g. see
-node_load.
+If a field is attached to an entity, that the field is represented by a <field>
+property in the entity object. The <field> property is an array of of its own
+properties. These properties are presented below.
+For example, create a node with fields of various types and see result of
+node_load(). See also See pde_03, pde_04, pde_05 on branch 'chapter_05'
 
 Long_text (e.g. comment_body)
 *********
@@ -231,6 +256,7 @@ field property                  wrapper property            wrapper class
 value                           value                       Value
 format                          format                      Value
 safe_value                      -                           -
+
 
 Long text and summary (e.g. body)
 *********************
@@ -245,55 +271,55 @@ format                          format                      Value
 safe_value                      -                           -
 safe_summary                    -                           -
 
+
 Term reference (e.g. field_tags)
---------------
+**************
+Field 'term reference' is an array of tids in entity and array of Term entities
+in wrapper.
+
+Property wrapping
+-----------------
 field property                  wrapper property            wrapper class
 *field_tags                     field_tags                  List
-array of tids                   array of term entities      -
+array(tid)                      array(Term entity)          Drupal (Term entity)
+
 
 File (e.g. field_file)
-----
-From wrapper point of view field_file contains File entity and some other
-parameters, which have individual wrappers. From entity point of view the
-properties are collected in an array. See the data structure if a node 
-containing the field is loaded by node_load or entity_load.  
+****
+A file field attached to an entity is represented in the entity object as an
+array of properties related to File entity and some additional properties. The
+file field wrapper wraps the File entity properties in 'file' property
+(object of EntityDrupalWrapper class). The remaining properties have individual
+wrappers.  
 
+Property wrapping
+-----------------
 field property                  wrapper property            wrapper class
 *field_file                     field_file                  Structure
 fid                             \
-uid                              > file                     Drupal
+uid                              > file                     Drupal (File entity)
 ...                             /
 description                     description                 Value
 display                         display                     Value
 
 
 Image
------
+*****
 
 Text
-----
+****
 
 Boolean
--------
+*******
 
 Decimal
+*******
 
 
 Contributed field types
 
 link
-----
+****
 
 date
-----
-
-
-
-CRUD
-----
-
-Read:
-node_load($nid)
-entity_load('node', array($nid))
-entity_metadata_wrapper('node', $nid)
-
+****
