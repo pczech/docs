@@ -33,6 +33,7 @@ rule of thumb           praktyczna zasada
 rung                    szczebel
 shallow                 płytki
 tackle                  załatwić, stawić czoła
+through                 przez, z powodu
 undergo                 przechodzić
 unveil                  odsłaniać
 weird                   dziwny

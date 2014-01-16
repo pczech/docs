@@ -11,3 +11,21 @@ module php is enabled.
 
 /etc/apache2/modes-available/fcgid.conf
 file:///usr/share/doc/libapache2-mod-fcgid/mod_fcgid.html.en
+
+phpmyadmin
+----------
+increase login timeout
+
+/etc/phpmyadmin/config.inc.php:
+
+$cfg['LoginCookieValidity'] = <your_new_timeout>;
+
+Result:
+Your PHP parameter session.gc_maxlifetime is lower that cookie validity
+configured in phpMyAdmin, because of this, your login will expire sooner
+than configured in phpMyAdmin.
+
+Update php.ini (e.g. /etc/php5/cgi/php.ini) and restart apache.
+Don't increase the values on production server!
+
+
