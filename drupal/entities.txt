@@ -1,25 +1,56 @@
+EntityDrupalWrapper - entity wrapped up
+EntityListWrapper - array of wrappers (multivalue field/property)
+EntityStructureWrapper - wraps anything that isn't an entity and
+    has more than one property.
+EntityValueWrapper - wraps a single value
+
 class hierarchy
 ---------------
+class                               interfaces
+EntityMetadataWrapper
+    EntityStructureWrapepr          IteratorAggregate
+        EntityDrupalWrapper
+    EntityListWrapper               IteratorAggregate, ArrayAccess, Countable
+    EntityValueWrapper
 
+interface hierarchy
+-------------------        
+Travesable
+    ItaratorAggragate
+        
 
 non-fieldable entities (core)
 -----------------------------
 file
-taxonomy vocabulary
 
-fieldable entities (core)
--------------------------
-node
-comment
-term
-user
 
-Entity property wrapping
-------------------------
-Field wrappers not included here. See Field property wrapping.
+Core entities
+*************
+CRUD
+
+entity_create                   entity_metadata_wrapper($type, $data)
+entity_load                     entity_metadata_wrapper($type, $id)
+entity_load_single
+entity_save                     $wrapper->save()
+entity_delete                   $wrapper->delete()
+entity_delete_multiple
+
 
 file
-----
+*****
+non-fieldable
+
+CRUD
+
+file_load
+file_save
+file_delete
+file_copy
+file_move
+...
+
+Property wrapping
+-----------------
 system_schema() - schema['file_managed']
 entity_metadata_system_entity_property_info()
 entity_metadata_system_entity_property_info_alter()
@@ -35,9 +66,90 @@ filesize                        size                        Value
 status                          -                           -
 timestamp                       timestamp                   Value
 -                               url                         Value
-                                
-taxonomy vocabulary
--------------------
+
+
+node
+****
+fieldable
+
+CRUD
+node_load
+node_save
+node_delete
+
+Property wrapping
+-----------------
+node_schema() - schema['node']
+entity_metadata_node_entity_property_info()
+entity_metadata_node_entity_property_info_alter()
+entity_get_property_info('node')
+
+entity property                 wrapper property            wrapper class
+nid                             nid                         Value
+vid                             vid                         Value
+-                               is_new                      Value
+type                            type                        Value
+language                        language                    Value
+title                           title                       Value
+-                               url                         Value
+-                               edit_url                    Value
+uid                             author                      Drupal (user)
+status                          status                      Value
+created                         created                     Value
+changed                         changed                     Value
+comment                         -                           -
+promote                         promote                     Value
+sticky                          sticky                      Value
+tnid                            -                           -
+translate                       -                           -
+-                               source                      Drupal (node)
+-                               log                         Value
+-                               revision                    Value
+-                               comment                     Value
+-                               comment_count               Value
+-                               comment_count_new           Value
+
+
+taxonomy_term
+*************
+fieldable
+
+CRUD
+taxonomy_term_load
+taxonomy_term_save
+taxonomy_term_delete
+
+Property wrapping
+-----------------
+taxonomy_schema() - schema['taxonomy_term_data']
+entity_metadata_taxonomy_entity_property_info()
+entity_metadata_taxonomy_entity_property_info_alter()
+entity_get_property_info('taxonomy_term')
+
+entity property                 wrapper property            wrapper class
+tid                             tid                         Value
+vid                             vocabulary                  Drupal (vocabulary)
+name                            name                        Value
+description                     description                 Value
+format                          -                           -
+weight                          weight                      Value
+-                               url                         Value
+-                               node_count                  Value
+-                               parent                      List   (terms)
+-                               parents_all                 List   (terms)
+
+
+taxonomy_vocabulary
+*******************
+non-fieldable
+
+CRUD
+taxonomy_vocabulary_load
+taxonomy_vocabulary_save
+taxonomy_vocabulary_delete
+
+Property wrapping
+-----------------
 taxonomy_schema() - schema['taxonomy_vocabulary']
 entity_metadata_taxonomy_entity_property_info()
 entity_metadata_taxonomy_entity_property_info_alter()
@@ -53,40 +165,15 @@ module                          -                           -
 weight                          -                           -
 -                               term_count                  Value
 
-node
-----
-node_schema() - schema['node']
-entity_metadata_node_entity_property_info()
-entity_metadata_node_entity_property_info_alter()
-entity_get_property_info('node')
-
-entity property                 wrapper property            wrapper class
-nid                             nid                         Value
-vid                             vid                         Value
--                               is_new                      Value
-type                            type                        Value
-language                        language                    Value
-title                           title                       Value
--                               url                         Value
--                               edit_url                    Value
-uid                             author (user wrapper)       Drupal
-status                          status                      Value
-created                         created                     Value
-changed                         changed                     Value
-comment                         -                           -
-promote                         promote                     Value
-sticky                          sticky                      Value
-tnid                            -                           -
-translate                       -                           -
--                               source                      Drupal
--                               log                         Value
--                               revision                    Value
--                               comment                     Value
--                               comment_count               Value
--                               comment_count_new           Value
 
 comment
--------
+*******
+fieldable
+
+CRUD
+
+Property wrapping
+-----------------
 comment_schema() - schema['comment']
 entity_metadata_comment_entity_property_info()
 entity_metadata_comment_entity_property_info_alter()
@@ -94,55 +181,119 @@ entity_get_property_info('comment')
 
 entity property                 wrapper property            wrapper class
 cid                             cid                         Value
-pid                             parent (comment wrapper)    Drupal
-nid                             node (node wrapper)         Drupal
-uid                             author (user wrapper)       Drupal
+pid                             parent                      Drupal (comment)
+nid                             node                        Drupal (node)
+uid                             author                      Drupal (user)
 subject                         subject                     Value
 hostname                        hostname                    Value
 created                         created                     Value
 changed                         -                           -
-status                          status                      Drupal
+status                          status                      Value
 thread                          -                           Value
 name                            name                        Value
 mail                            mail                        Value
 homepage                        homepage                    Value
-language
+language                        -                           -
 -                               url                         Value
 -                               edit_url                    Value
 
-taxonomy term
--------------
-taxonomy_schema() - schema['taxonomy_term_data']
-entity_metadata_taxonomy_entity_property_info()
-entity_metadata_taxonomy_entity_property_info_alter()
-entity_get_property_info('taxonomy_term')
 
-entity property                 wrapper property            wrapper class
-tid                             tid                         
-vid                             vocabulary (vocabulary wr.) 
-name                            name                        
-description                     description                 
-format                          -                           -
-weight                          weight                      
--                               url                         
--                               node_count                  
--                               parent                      
--                               parent_all                  
+user
+****
+fieldable
+
+CRUD
+user_load
+user_save
+user_delete
+
+Property wrapping
+-----------------
+TODO
+
+Core fields
+***********
+
+Core field types
+* - example field name if attached to entity/bundle. See pde/pde_05
+
+The field properties presented below (except field name) are located in array,
+and can be seen if the entity with the field attached if loaded, e.g. see
+node_load.
+
+Long_text (e.g. comment_body)
+*********
+
+Property wrapping
+-----------------
+field property                  wrapper property            wrapper class
+*comment_body                   comment_body                Structure
+value                           value                       Value
+format                          format                      Value
+safe_value                      -                           -
+
+Long text and summary (e.g. body)
+*********************
+
+Property wrapping
+-----------------
+field property                  wrapper property            wrapper class
+*body                           body                        Structure
+value                           value                       Value
+summary                         summary                     Value
+format                          format                      Value
+safe_value                      -                           -
+safe_summary                    -                           -
+
+Term reference (e.g. field_tags)
+--------------
+field property                  wrapper property            wrapper class
+*field_tags                     field_tags                  List
+array of tids                   array of term entities      -
+
+File (e.g. field_file)
+----
+From wrapper point of view field_file contains File entity and some other
+parameters, which have individual wrappers. From entity point of view the
+properties are collected in an array. See the data structure if a node 
+containing the field is loaded by node_load or entity_load.  
+
+field property                  wrapper property            wrapper class
+*field_file                     field_file                  Structure
+fid                             \
+uid                              > file                     Drupal
+...                             /
+description                     description                 Value
+display                         display                     Value
 
 
-Field property wrapping
------------------------
+Image
+-----
 
-comment_body (comment entity)
-------------
-
-body
-file
-image
-
-body (node entity)
+Text
 ----
 
-value
-summary
-format
+Boolean
+-------
+
+Decimal
+
+
+Contributed field types
+
+link
+----
+
+date
+----
+
+
+
+CRUD
+----
+
+Read:
+node_load($nid)
+entity_load('node', array($nid))
+entity_metadata_wrapper('node', $nid)
+
