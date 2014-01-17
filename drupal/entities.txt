@@ -246,42 +246,37 @@ properties. These properties are presented below.
 For example, create a node with fields of various types and see result of
 node_load(). See also See pde_03, pde_04, pde_05 on branch 'chapter_05'
 
-Long_text (e.g. comment_body)
-*********
+Boolean
+*******
 
-Property wrapping
+Property wrapping (cardinality 1)
 -----------------
 field property                  wrapper property            wrapper class
-*comment_body                   comment_body                Structure
-value                           value                       Value
-format                          format                      Value
-safe_value                      -                           -
+*field_boolean                  field_boolean               Value
+und-0-value                     ^
 
 
-Long text and summary (e.g. body)
-*********************
+Decimal
+*******
 
-Property wrapping
+Property wrapping (cardinality 1)
 -----------------
 field property                  wrapper property            wrapper class
-*body                           body                        Structure
-value                           value                       Value
-summary                         summary                     Value
-format                          format                      Value
-safe_value                      -                           -
-safe_summary                    -                           -
+*field_decimal                  field_decimal               Value
+und-0-value                     ^
 
-
-Term reference (e.g. field_tags)
-**************
-Field 'term reference' is an array of tids in entity and array of Term entities
-in wrapper.
-
-Property wrapping
+Property wrapping (cardinality N+1)
 -----------------
+field_decimal property representing the field in an entity wrapper is now 
+of type EntityListWrapper and contains a list of EntityValueWrappers
+representing field_decimal of cardinality 1 (see above) 
+
 field property                  wrapper property            wrapper class
-*field_tags                     field_tags                  List
-array(tid)                      array(Term entity)          Drupal (Term entity)
+*field_decimal                  field_decimal               List
+und-0-value                     0                           Value
+und-1-value                     1                           Value
+...                             ...                         ...
+und-N-value                     N                           Value
 
 
 File (e.g. field_file)
@@ -292,34 +287,260 @@ file field wrapper wraps the File entity properties in 'file' property
 (object of EntityDrupalWrapper class). The remaining properties have individual
 wrappers.  
 
-Property wrapping
+Property wrapping (cardinality 1)
 -----------------
 field property                  wrapper property            wrapper class
-*field_file                     field_file                  Structure
-fid                             \
-uid                              > file                     Drupal (File entity)
-...                             /
-description                     description                 Value
-display                         display                     Value
+*field_file                     field_file                  Structure (F1)
+und-0-fid                       file                        Drupal (File entity)
+und-0-uid                       ^
+...                             ^
+und-0-display                   display                     Value
+und-0-description               description                 Value
 
 
-Image
+Property wrapping (cardinality N+1)
+-----------------
+field_decimal property representing the field in an entity wrapper is now 
+of type EntityListWrapper and contains a list of EntityStructureWrappers
+representing field_file of cardinality 1 (see above) 
+
+field property                  wrapper property            wrapper class
+*field_file                     field_file                  List
+und-0-...                       0                           Structure (see F1 above)
+und-1-...                       1                           Structure (see F1 above)
+...                             ...                         ...
+und-N-...                       N                           Structure (see F1 above)
+
+
+Float
 *****
 
-Text
+Property wrapping (cardinality 1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_float                    field_float               Value
+und-0-value                     ^
+
+Property wrapping (cardinality N+1)
+-----------------
+field_float property representing the field in an entity wrapper is now 
+of type EntityListWrapper and contains a list of EntityValueWrappers
+representing field_float of cardinality 1 (see above) 
+
+field property                  wrapper property            wrapper class
+*field_float                    field_float                 List
+und-0-value                     0                           Value
+und-1-value                     1                           Value
+...                             ...                         ...
+und-N-value                     N                           Value
+
+
+Image (e.g. field_image)
+*****
+
+Property wrapping (cardinality 1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_image                    field_image                 Structure (F2)
+und-0-fid                       file                        Drupal (File entity)
+und-0-uid                       ^
+...                             ^
+und-0-alt                       alt                         Value
+und-0-title                     -                           -
+und-0-width                     -                           -
+und-0-height                    -                           -
+
+Property wrapping (cardinality N+1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_image                    field_image                 List
+und-0-...                       0                           Structure (see F2 above)
+und-1-...                       1                           Structure (see F2 above)
+...                             ...                         ...
+und-N-...                       N                           Structure (see F2 above)
+
+
+Integer
+*******
+
+Property wrapping (cardinality 1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_integer                  field_integer               Value
+und-0-value                     ^
+
+Property wrapping (cardinality N+1)
+-----------------
+field_integer property representing the field in an entity wrapper is now 
+of type EntityListWrapper and contains a list of EntityValueWrappers
+representing field_integer of cardinality 1 (see above) 
+
+field property                  wrapper property            wrapper class
+*field_integer                  field_integer               List
+und-0-value                     0                           Value
+und-1-value                     1                           Value
+...                             ...                         ...
+und-N-value                     N                           Value
+
+
+List (float, integer, text) (e.g. field_list)
+***************************
+
+Property wrapping (cardinality 1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_list                     field_list                  Value
+und-0-value                     ^
+
+Property wrapping (cardinality N < number of elements in the list)
+-----------------
+field_list property representing the field in an entity wrapper is now 
+of type EntityListWrapper and contains a list of EntityValueWrappers
+representing field_list of cardinality 1 (see above) 
+
+field property                  wrapper property            wrapper class
+*field_list                     field_list                  List
+und-0-value                     0                           Value
+und-1-value                     1                           Value
+...                             ...                         ...
+und-N-value                     N                           Value
+
+
+Long_text (e.g. field_ltext)
+*********
+
+Property wrapping (cardinality 1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_ltext                    field_ltext                 Structure (F3)
+und-0-value                     value                       Value
+und-0-format                    format                      Value
+und-0-safe_value                -                           -
+
+Property wrapping (cardinality N+1)
+-----------------
+field_ltext property representing the field in an entity wrapper is now 
+of type EntityListWrapper and contains a list of EntityValueWrappers
+representing field_ltext of cardinality 1 (see above)
+
+field property                  wrapper property            wrapper class
+*field_ltext                    field_ltext                 List
+und-0-...                       0                           Structure (see F3 above)
+und-1-...                       1                           Structure (see F3 above)
+...                             ...                         ...
+und-N-...                       N                           Structure (see F3 above)
+
+
+Long text and summary (e.g. field_body) 
+*********************
+
+Property wrapping (cardinality 1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_body                     field_body                  Structure (F4)
+und-0-value                     value                       Value
+und-0-summary                   summary                     Value
+und-0-format                    format                      Value
+und-0-safe_value                -                           -
+und-0-safe_summary              -                           -
+
+Property wrapping (cardinality N+1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_body                     field_body                  List
+und-0-...                       0                           Structure (see F4 above)
+und-1-...                       1                           Structure (see F4 above)
+...                             ...                         ...
+und-N-...                       N                           Structure (see F4 above)
+
+
+Term reference (e.g. field_term)
+**************
+
+Property wrapping (cardinality 1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_term                     field_term                  Drupal (F5 Term entity)
+und-0-tid                       ^
+
+Property wrapping (cardinality N+1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_term                     field_term                  List
+und-0-tid                       0                           Drupal (see F5 above)
+und-1-tid                       1                           Drupal (see F5 above)
+...                             ...                         ...
+und-N-tid                       N                           Drupal (see F5 above)
+
+
+Text (e.g. field_text)
 ****
 
-Boolean
-*******
+Property wrapping (cardinality 1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_text                     field_text                  Structure (F6)
+und-0-value                     value                       Value
+und-0-format                    format                      Value
+und-0-safe_value                -                           -
 
-Decimal
-*******
+Property wrapping (cardinality N+1)
+-----------------
+field_text property representing the field in an entity wrapper is now 
+of type EntityListWrapper and contains a list of EntityValueWrappers
+representing field_text of cardinality 1 (see above)
+
+field property                  wrapper property            wrapper class
+*field_text                     field_text                  List
+und-0-...                       0                           Structure (see F6 above)
+und-1-...                       1                           Structure (see F6 above)
+...                             ...                         ...
+und-N-...                       N                           Structure (see F6 above)
 
 
 Contributed field types
+***********************
 
-link
+link (link module)
 ****
 
-date
+Property wrapping (cardinality 1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_link                     field_link                  Structure (F7)
+und-0-url                       url                         Value
+und-0-title                     title                       Value
+und-0-attributes                -                           -
+
+Property wrapping (cardinality N+1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_link                     field_link                  List
+und-0-...                       0                           Structure (see F7 above)
+und-1-...                       1                           Structure (see F7 above)
+...                             ...                         ...
+und-N-...                       N                           Structure (see F7 above)
+
+
+date (date module)
 ****
+Property wrapping (cardinality 1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_date                     field_date                  Structure (F8)
+und-0-value                     value                       Value
+und-0-value2                    value2                      Value
+und-0-timezone                  -                           -
+und-0-timezone_bd               -                           -
+und-0-datetype                  -                           -
+-                               duration                    Value
+
+Property wrapping (cardinality N+1)
+-----------------
+field property                  wrapper property            wrapper class
+*field_date                     field_date                  List
+und-0-...                       0                           Structure (see F8 above)
+und-1-...                       1                           Structure (see F8 above)
+...                             ...                         ...
+und-N-...                       N                           Structure (see F8 above)
+
