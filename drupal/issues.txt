@@ -16,7 +16,13 @@
  -----------
  https://drupal.org/node/1494290
  
- Compare working site with the same original core, to identify private
+  Make a copy of the production site. See 'Backup and migrate a site'.
+  Verify the copy - install the copy on development sever and check if the site
+  works correctly.
+  
+  Update the core on the test site first to check if works correctly.
+ 
+ Compare site to be upgraded with the same original core, to identify private
  patches. Currently they are:
  /.htaccess - patch to protect original original images
  /modules/node/node.module - TODO

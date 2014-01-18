@@ -21,6 +21,7 @@ impose                  narzucać, ustanawiać
 ladder                  drabina
 leverage                wykorzystywać                           *
 lid                     pokrywka
+mitigate                łagodzić, rozładować
 neat                    schludny, staranny, czysty
 ongoing                 trwający, toczący się
 opt to                  zdecydować się (np. coś zrobić)
