@@ -15,6 +15,7 @@ dissect                 szczegółowo coś analizować
 encourage               zachęcać wspierać
 facet                   strona, aspekt
 fairly                  całkiem, dość
+havoc                   spustoszenie
 hence                   stąd
 immensely               niezmiernie
 impose                  narzucać, ustanawiać
@@ -34,6 +35,7 @@ rule of thumb           praktyczna zasada
 rung                    szczebel
 shallow                 płytki
 tackle                  załatwić, stawić czoła
+tedious                 nużący
 through                 przez, z powodu
 undergo                 przechodzić
 unveil                  odsłaniać
