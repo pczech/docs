@@ -1,28 +1,64 @@
+Default drupal 7.26 installation
+Entity API
+Field Collection
+
 EntityDrupalWrapper - entity wrapped up
 EntityListWrapper - array of wrappers (multivalue field/property)
 EntityStructureWrapper - wraps anything that isn't an entity and
     has more than one property.
 EntityValueWrapper - wraps a single value
 
-class hierarchy
+*******************************************************************************
+Class hierarchy
 ---------------
-class                               interfaces
-EntityMetadataWrapper
-    EntityStructureWrapepr          IteratorAggregate
-        EntityDrupalWrapper
-    EntityListWrapper               IteratorAggregate, ArrayAccess, Countable
-    EntityValueWrapper
 
-interface hierarchy
--------------------        
+class                               interfaces                                      class file
+--------------------------------------------------------------------------------------------------------
+core
+
+DrupalDefaultEntityController       DrupalEntityControllerInterface                 /includes/entity.inc
+    CommentController                                                               core: comment/comment.module
+    NodeController                                                                  core: node/node.module
+    TaxonomyTermController                                                          core: taxonomy/taxonomy.module
+    TaxonomyVocabularyController                                                    core: taxonomy/taxonomy.module
+    UserController                                                                  core: user/user.module
+    EntityAPIController             EntityAPIControllerRevisionableInterface        core: includes/entity.controller.inc
+        EntityAPIControllerExportable                                               core: includes/entity.controller.inc
+
+EntityMetadataWrapper                                                               entity: includes/entity.wrapper.inc
+    EntityStructureWrapper          IteratorAggregate                               entity: includes/entity.wrapper.inc
+        EntityDrupalWrapper                                                         entity: includes/entity.wrapper.inc
+    EntityListWrapper               IteratorAggregate, ArrayAccess, Countable       entity: includes/entity.wrapper.inc
+    EntityValueWrapper                                                              entity: includes/entity.wrapper.inc
+    
+Entity                                                                              entity: includes/entity.inc                                                         
+    FieldCollectionItemEntity                                                       field_collection: field_collection.module
+    
+
+EntityDefaultMetadataController                                                     entity: entity.info.inc
+    FieldCollectionItemMetadataController                                           field_collection: field_collection.info.inc
+    
+EntityDefaultExtraFieldsController  EntityExtraFieldsControllerInterface            entity: entity.info.inc
+
+
+*******************************************************************************
+Interface hierarchy
+-------------------
 Travesable
     ItaratorAggragate
+    
+    
+DrupalEntityControllerInterface                                                     /includes/entity.inc
+    EntityAPIControllerInterface                                                    entity: includes/entity.controller.inc
+        EntityAPIControllerRevisionableInterface                                    entity: includes/entity.controller.inc
         
+        
+EntityExtraFieldsControllerInterface                                                entity: entity.info.inc
 
-Core entities
-*************
+
+*******************************************************************************
 CRUD
-
+----
 entity_create                   entity_metadata_wrapper($type, $data)
 entity_load                     entity_metadata_wrapper($type, $id)
 entity_load_single
@@ -31,8 +67,28 @@ entity_delete                   $wrapper->delete()
 entity_delete_multiple
 
 
+*******************************************************************************
+Entities
+--------
+Core:
 comment
-*******
+file
+node
+taxonomy_term
+taxonomy_vocabulary
+user
+
+Contributed:
+field_collection_item
+
+
+*******************************************************************************
+Core entities details
+---------------------
+
+*******************************************************************************
+comment
+-------
 fieldable
 
 CRUD
@@ -66,8 +122,9 @@ language                        -                           -
 -                               edit_url                    Value
 
 
+*******************************************************************************
 file
-*****
+----
 non-fieldable
 
 CRUD
@@ -98,8 +155,9 @@ timestamp                       timestamp                   Value
 -                               url                         Value
 
 
+*******************************************************************************
 node
-****
+----
 fieldable
 
 CRUD
@@ -140,8 +198,9 @@ translate                       -                           -
 -                               comment_count_new           Value
 
 
+*******************************************************************************
 taxonomy_term
-*************
+-------------
 fieldable
 
 CRUD
@@ -169,8 +228,9 @@ weight                          weight                      Value
 -                               parents_all                 List   (terms)
 
 
+*******************************************************************************
 taxonomy_vocabulary
-*******************
+-------------------
 non-fieldable
 
 CRUD
@@ -196,8 +256,9 @@ weight                          -                           -
 -                               term_count                  Value
 
 
+*******************************************************************************
 user
-****
+----
 fieldable
 
 CRUD
@@ -234,8 +295,36 @@ data                            -                           -
 -                               roles                       List
 
 
+*******************************************************************************
+Contributed entities
+--------------------
+
+
+*******************************************************************************
+field_collection_item (module entity)
+---------------------
+fieldable 
+
+field_collection_schema() - schema['field_collection_item']
+FieldCollectionItemMetadataController->entityPropertyInfo()
+entity_get_property_info('field_collection_item')
+$wrapper->getPropertyInfo()
+
+CRUD
+field_collection_item_load
+
+entity property                 wrapper property            wrapper class
+item_id                         item_id                     Value
+revision_id                     revision_id                 Value
+field_name                      field_name                  Value
+archived                        archived                    Value
+-                               url                         Value
+-                               host_entity                 Drupal (any entity)
+
+
+*******************************************************************************
 Core fields
-***********
+-----------
 
 Core field types
 * - example name of field attached to entity/bundle. 
@@ -246,8 +335,9 @@ properties. These properties are presented below.
 For example, create a node with fields of various types and see result of
 node_load(). See also See pde_03, pde_04, pde_05 on branch 'chapter_05'
 
+*******************************************************************************
 Boolean
-*******
+-------
 
 Property wrapping (cardinality 1)
 -----------------
@@ -256,8 +346,9 @@ field property                  wrapper property            wrapper class
 und-0-value                     ^
 
 
+*******************************************************************************
 Decimal
-*******
+-------
 
 Property wrapping (cardinality 1)
 -----------------
@@ -279,8 +370,9 @@ und-1-value                     1                           Value
 und-N-value                     N                           Value
 
 
-File (e.g. field_file)
-****
+*******************************************************************************
+File
+----
 A file field attached to an entity is represented in the entity object as an
 array of properties related to File entity and some additional properties. The
 file field wrapper wraps the File entity properties in 'file' property
@@ -312,8 +404,9 @@ und-1-...                       1                           Structure (see F1 ab
 und-N-...                       N                           Structure (see F1 above)
 
 
+*******************************************************************************
 Float
-*****
+-----
 
 Property wrapping (cardinality 1)
 -----------------
@@ -335,8 +428,9 @@ und-1-value                     1                           Value
 und-N-value                     N                           Value
 
 
-Image (e.g. field_image)
-*****
+*******************************************************************************
+Image
+-----
 
 Property wrapping (cardinality 1)
 -----------------
@@ -360,8 +454,9 @@ und-1-...                       1                           Structure (see F2 ab
 und-N-...                       N                           Structure (see F2 above)
 
 
+*******************************************************************************
 Integer
-*******
+-------
 
 Property wrapping (cardinality 1)
 -----------------
@@ -383,8 +478,9 @@ und-1-value                     1                           Value
 und-N-value                     N                           Value
 
 
-List (float, integer, text) (e.g. field_list)
-***************************
+*******************************************************************************
+List (float, integer, text)
+---------------------------
 
 Property wrapping (cardinality 1)
 -----------------
@@ -406,8 +502,9 @@ und-1-value                     1                           Value
 und-N-value                     N                           Value
 
 
-Long_text (e.g. field_ltext)
-*********
+*******************************************************************************
+Long_text
+---------
 
 Property wrapping (cardinality 1)
 -----------------
@@ -431,8 +528,9 @@ und-1-...                       1                           Structure (see F3 ab
 und-N-...                       N                           Structure (see F3 above)
 
 
-Long text and summary (e.g. field_body) 
-*********************
+*******************************************************************************
+Long text and summary
+---------------------
 
 Property wrapping (cardinality 1)
 -----------------
@@ -454,8 +552,9 @@ und-1-...                       1                           Structure (see F4 ab
 und-N-...                       N                           Structure (see F4 above)
 
 
-Term reference (e.g. field_term)
-**************
+*******************************************************************************
+Term reference
+--------------
 
 Property wrapping (cardinality 1)
 -----------------
@@ -473,8 +572,9 @@ und-1-tid                       1                           Drupal (see F5 above
 und-N-tid                       N                           Drupal (see F5 above)
 
 
-Text (e.g. field_text)
-****
+*******************************************************************************
+Text
+----
 
 Property wrapping (cardinality 1)
 -----------------
@@ -498,11 +598,13 @@ und-1-...                       1                           Structure (see F6 ab
 und-N-...                       N                           Structure (see F6 above)
 
 
-Contributed field types
-***********************
+*******************************************************************************
+Contributed fields
+------------------
 
+*******************************************************************************
 link (link module)
-****
+----
 
 Property wrapping (cardinality 1)
 -----------------
@@ -522,8 +624,10 @@ und-1-...                       1                           Structure (see F7 ab
 und-N-...                       N                           Structure (see F7 above)
 
 
+*******************************************************************************
 date (date module)
-****
+----
+
 Property wrapping (cardinality 1)
 -----------------
 field property                  wrapper property            wrapper class
@@ -544,3 +648,38 @@ und-1-...                       1                           Structure (see F8 ab
 ...                             ...                         ...
 und-N-...                       N                           Structure (see F8 above)
 
+
+
+*******************************************************************************
+Property info handling
+----------------------
+
+Entity module provides property info for core entities. Contributed entities
+taking advantage of Entity module shall provide thier properties.
+See FieldCollectionItemMetadataController for example.
+
+entity_metadata_wrapper
+    new EntityDrupalWrapper
+        $this->setUp();
+            entity_get_property_info()
+    
+$wrapper->getPropertyInfo()
+    returns $this->propertyInfo['properties'];
+
+entity_get_property_info()                                                          entity: includes/entity.property.inc
+    module_invoke_all('entity_property_info');      //hook_entity_property_info
+        entity_entity_property_info
+            'metadata controller class'->entityPropertyInfo()
+                FieldCollectionItemMetadataController->->entityPropertyInfo()
+            entity_metadata_comment_entity_property_info                            entity: modules/comment.info.inc
+            entity_metadata_node_entity_property_info                               entity: modules/node.info.inc
+            entity_metadata_system_entity_property_info                             entity: modules/file.info.inc
+            entity_metadata_taxonomy_entity_property_info                           entity: modules/taxonomy.info.inc
+            entity_metadata_user_entity_property_info                               entity: modules/user.info.inc
+    drupal_alter('entity_property_info', $info);    //hook_entity_property_info_alter
+        entity_entity_property_info_alter
+            entity_metadata_comment_entity_property_info_alter                      entity: modules/comment.info.inc
+            entity_metadata_node_entity_property_info_alter                         entity: modules/node.info.inc
+            
+            
+BUNDLES - default + examples
