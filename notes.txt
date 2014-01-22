@@ -29,3 +29,47 @@ Update php.ini (e.g. /etc/php5/cgi/php.ini) and restart apache.
 Don't increase the values on production server!
 
 
+
+
+
+
+
+field_arkwork_ref
+    Field collection field_artwork_coll
+        View -> Ref Artworks View | Entity Reference View Widget
+    Field collection field_c_offer_artwork
+        View -> Ref Artworks View | Entity Reference View Widget
+
+field_artist
+    Painting
+        Autocomplete
+    Postcard
+        Autocomplete
+    Image
+        Autocomplete
+
+field_exh_artwork
+    Exhibition
+        Autocomplete
+
+field_gallery
+    Exhibition
+        Select list
+    Offer
+        Select list
+    Auction
+        Select list
+
+field_loc_artwork_r
+    Location
+        View -> Ref Artworks View | Entity Reference View Widget Loc
+
+field_painting
+    Image
+        Autocomplete
+
+field_postcard
+    Image
+        Autocomplete
+
+

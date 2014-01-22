@@ -2,11 +2,18 @@ Default drupal 7.26 installation
 Entity API
 Field Collection
 
-EntityDrupalWrapper - entity wrapped up
-EntityListWrapper - array of wrappers (multivalue field/property)
-EntityStructureWrapper - wraps anything that isn't an entity and
-    has more than one property.
-EntityValueWrapper - wraps a single value
+*******************************************************************************
+Wrapper Classes
+---------------
+
+EntityDrupalWrapper
+    entity wrapped up
+EntityListWrapper
+    array of wrappers (multivalue field/property)
+EntityStructureWrapper
+    wraps anything that isn't an entity and has more than one property.
+EntityValueWrapper
+    wraps a single value
 
 *******************************************************************************
 Class hierarchy
@@ -34,7 +41,6 @@ EntityMetadataWrapper                                                           
 Entity                                                                              entity: includes/entity.inc                                                         
     FieldCollectionItemEntity                                                       field_collection: field_collection.module
     
-
 EntityDefaultMetadataController                                                     entity: entity.info.inc
     FieldCollectionItemMetadataController                                           field_collection: field_collection.info.inc
     
@@ -47,12 +53,10 @@ Interface hierarchy
 Travesable
     ItaratorAggragate
     
-    
 DrupalEntityControllerInterface                                                     /includes/entity.inc
     EntityAPIControllerInterface                                                    entity: includes/entity.controller.inc
         EntityAPIControllerRevisionableInterface                                    entity: includes/entity.controller.inc
-        
-        
+            
 EntityExtraFieldsControllerInterface                                                entity: entity.info.inc
 
 
@@ -81,6 +85,26 @@ user
 Contributed:
 field_collection_item
 
+
+*******************************************************************************
+Bundles
+-------
+
+comment
+    comment_node_page
+    comment_node_article
+    comment_node_<content_type>
+
+file
+    -
+    
+node
+    page
+    article
+    <content_type>
+    
+taxonomy_term
+    
 
 *******************************************************************************
 Core entities details
