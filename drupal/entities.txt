@@ -104,6 +104,13 @@ node
     <content_type>
     
 taxonomy_term
+
+user
+    -
+    
+    
+Different fields can be attached to different bundles.
+
     
 
 *******************************************************************************
