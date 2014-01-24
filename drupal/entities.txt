@@ -46,6 +46,9 @@ EntityDefaultMetadataController                                                 
     
 EntityDefaultExtraFieldsController  EntityExtraFieldsControllerInterface            entity: entity.info.inc
 
+EntityDefaultUIController                                                           entity: includes/entity.ui.inc
+    EntityContentUIController                                                       entity: includes/entity.ui.inc
+        EntityBundleableUIController                                                entity: includes/entity.ui.inc
 
 *******************************************************************************
 Interface hierarchy
