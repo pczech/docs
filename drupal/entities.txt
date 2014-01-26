@@ -107,14 +107,17 @@ node
     <content_type>
     
 taxonomy_term
+    vocabulary
 
-user
+taxonomy_vocabulary
     -
     
-    
+user
+    -
+
+
 Different fields can be attached to different bundles.
 
-    
 
 *******************************************************************************
 Core entities details
@@ -714,6 +717,13 @@ entity_get_property_info()                                                      
         entity_entity_property_info_alter
             entity_metadata_comment_entity_property_info_alter                      entity: modules/comment.info.inc
             entity_metadata_node_entity_property_info_alter                         entity: modules/node.info.inc
-            
-            
-BUNDLES - default + examples
+
+
+*******************************************************************************
+Issues
+------
+
+001. 'admin ui' support.
+Entity API provides a controller to build entity forms. Then 'controller class'
+specified for the entity shall be EntityAPIControllerExportable.
+
