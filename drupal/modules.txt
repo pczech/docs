@@ -131,6 +131,7 @@ Development modules
  http://www.trellon.com/content/blog/view-views-api
  drupals_building_blocks.pdf
  drupal_7_views_cookbook.pdf
+ programmers_guide_to_drupal.pdf
  
  
  CTools API
