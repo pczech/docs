@@ -117,7 +117,24 @@ Development modules
  https://drupal.org/developing/api/entity/7
  https://drupal.org/project/examples
  drupal_7_module_development.pdf
- programmers_guide_to_drupal.pdf
  Programming Drupal 7 Entities.pdf
+ programmers_guide_to_drupal.pdf
+ Entity API README.txt
+ Entity API source code and test module
+ 
+ Views API
+ ---------
+ Views Advanced help
+ https://api.drupal.org/api/views
+ https://api.drupal.org/api/views/views.api.php/7
+ http://larsolesen.dk/node/273
+ http://www.trellon.com/content/blog/view-views-api
+ drupals_building_blocks.pdf
+ drupal_7_views_cookbook.pdf
+ 
+ 
+ CTools API
+ ----------
+ 
 
  
