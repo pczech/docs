@@ -91,6 +91,17 @@ field_update_instance
 field_view_field
 
 
+Comment API
+-----------
+comment_load
+
+
+File API
+--------
+file_save_data
+file_unmanaged_save_data
+
+
 Node API
 --------
 node_load
@@ -100,6 +111,13 @@ node_content_form
 node_type_get_types
 node_delete_multiple
 
+
+Taxonomy API
+------------
+taxonomy_term_save
+taxonomy_vocabulary_get_names
+taxonomy_vocabulary_save
+taxonomy_vocabulary_machine_name_load
 
 User API
 --------
@@ -151,6 +169,15 @@ field_attach_view
 
 Entity API (contributed)
 ------------------------
+entity_create
+entity_delete
+entity_save
+entity_get_property_info
+entity_load_multiple_by_name
+entity_load_unchanged
+entity_metadata_wrapper
+entity_ui_form_submit_build_entity
+hook_entity_property_info_alter
 
 
 Other
@@ -163,7 +190,9 @@ drupal_form_submit
 drupal_get_form
 drupal_get_path
 drupal_get_destination
+drupal_get_schema
 drupal_goto
+drupal_json_decode
 drupal_json_output
 drupal_map_assoc
 drupal_render
@@ -180,6 +209,7 @@ l
 t
 menu_get_item
 module_invoke_all
+module_load_include
 render
 search_index
 search_excerpt
@@ -198,7 +228,9 @@ xmlrpc_error
 
 PHP
 ---
+array_combine
 array_keys
+array_key_exists
 array_shift
 count
 debug_backtrace
@@ -218,10 +250,13 @@ mt_rand
 preg_match
 preg_match_all
 preg_replace
+print_r
 reset
 session_destroy
+sort
 strlen
 strpos
+str_pad
 str_replace
 substr
 trim
