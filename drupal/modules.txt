@@ -131,19 +131,26 @@ Development modules
  Views
  -----
  Views API documentation: 
+ Views Advanced help
+ drupal_7_views_cookbook.pdf
+ programmers_guide_to_drupal.pdf
+ drupals_building_blocks.pdf
  https://api.drupal.org/api/views
  https://api.drupal.org/api/views/views.api.php/7
  Using_Views_Programmatically-20110612.pdf
- Views Advanced help
  http://larsolesen.dk/node/273
  http://www.trellon.com/content/blog/view-views-api
  http://www.kdweb.co.uk/blog/drupal-module-views-hook-sequence
- drupals_building_blocks.pdf
- drupal_7_views_cookbook.pdf
- programmers_guide_to_drupal.pdf
  
  
  CTools
  ------
  CTools API documentation:
+ CTools Advanced help
+ drupals_building_blocks.pdf
+ http://internetdevels.com/blog/ctools-modal-api
+ http://drupalcontrib.org/api/drupal/contributions!ctools!ctools.api.php/7
+ http://drupal.stackexchange.com/questions/40150/drupal-7-how-to-get-ajax-response-displayed-in-a-ctools-modal
+ https://drupal.org/node/1196150 and related
+ https://drupal.org/sandbox/mehul/2021387
  
