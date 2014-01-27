@@ -153,4 +153,7 @@ Development modules
  http://drupal.stackexchange.com/questions/40150/drupal-7-how-to-get-ajax-response-displayed-in-a-ctools-modal
  https://drupal.org/node/1196150 and related
  https://drupal.org/sandbox/mehul/2021387
+ http://deeson-online.co.uk/labs/insert-form-pop-modal-ctools-and-drupal-7
+ http://drupion.com/blog/10-steps-creating-ctools-modal-window-drupal-7
+ 
  
