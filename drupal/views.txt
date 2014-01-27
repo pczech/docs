@@ -1,0 +1,10 @@
+handler
+-------
+a class that takes care of field display, sorting, filtering, contextual
+filtering, or relationships.
+
+plugin
+------
+a class related to the overall display of the View, and other classes that
+take care of the basic functions of Views.
+

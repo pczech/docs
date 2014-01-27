@@ -112,30 +112,38 @@ Development modules
  table by clicking the Inspect tab. So you can get the schema definition by
  using the schema module, and then copy and paste it into your .install file. 
  
- Entity API & Entity Core
- ------------------------
+ 
+ Entity API
+ ----------
+ Entity API documentation (includes Entity Core):
  https://drupal.org/developing/api/entity/7
+ 
  https://drupal.org/project/examples
  drupal_7_module_development.pdf
  Programming Drupal 7 Entities.pdf
  programmers_guide_to_drupal.pdf
  Entity API README.txt
- Entity API source code and test module
+ Entity API test module (entity/tests)
+ Collection Fields
+ Profile2
  
- Views API
- ---------
- Views Advanced help
+ 
+ Views
+ -----
+ Views API documentation: 
  https://api.drupal.org/api/views
  https://api.drupal.org/api/views/views.api.php/7
+ Using_Views_Programmatically-20110612.pdf
+ Views Advanced help
  http://larsolesen.dk/node/273
  http://www.trellon.com/content/blog/view-views-api
+ http://www.kdweb.co.uk/blog/drupal-module-views-hook-sequence
  drupals_building_blocks.pdf
  drupal_7_views_cookbook.pdf
  programmers_guide_to_drupal.pdf
  
  
- CTools API
- ----------
- 
-
+ CTools
+ ------
+ CTools API documentation:
  
