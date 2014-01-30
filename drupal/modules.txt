@@ -141,6 +141,10 @@ Development modules
  drupals_building_blocks.pdf
  drupal_7_views_cookbook.pdf
  programmers_guide_to_drupal.pdf
+ http://mustardseedmedia.com/podcast/episode30
+ Theming, using CSS in Views - video tutorials, etc.
+ https://drupal.org/documentation/modules/views
+ https://drupal.org/node/431846
  
  
  CTools
