@@ -116,9 +116,6 @@ Development modules
  Entity API
  ----------
  Entity API documentation (includes Entity Core):
- https://drupal.org/developing/api/entity/7
- 
- https://drupal.org/project/examples
  drupal_7_module_development.pdf
  Programming Drupal 7 Entities.pdf
  programmers_guide_to_drupal.pdf
@@ -126,26 +123,29 @@ Development modules
  Entity API test module (entity/tests)
  Collection Fields
  Profile2
+ https://drupal.org/developing/api/entity/7
+ https://drupal.org/project/examples
  
  
  Views
  -----
  Views API documentation: 
  Views Advanced help
- drupal_7_views_cookbook.pdf
- programmers_guide_to_drupal.pdf
- drupals_building_blocks.pdf
- https://api.drupal.org/api/views
- https://api.drupal.org/api/views/views.api.php/7
- Using_Views_Programmatically-20110612.pdf
- http://larsolesen.dk/node/273
- http://www.trellon.com/content/blog/view-views-api
- http://www.kdweb.co.uk/blog/drupal-module-views-hook-sequence
- http://mustardseedmedia.com/podcast/episode30
- Theming, using CSS in Views - video tutorials, etc.
- https://drupal.org/documentation/modules/views
- https://drupal.org/node/431846
- 
+    drupal_7_views_cookbook.pdf
+    programmers_guide_to_drupal.pdf
+    drupals_building_blocks.pdf
+    https://drupal.org/documentation/modules/views
+    https://drupal.org/node/431846 - Views tips and tricks
+    Using_Views_Programmatically-20110612.pdf
+    http://larsolesen.dk/node/273
+    http://www.trellon.com/content/blog/view-views-api
+    http://www.kdweb.co.uk/blog/drupal-module-views-hook-sequence
+    http://mustardseedmedia.com/podcast/episode30
+    http://www.grasmash.com/article/demystifying-views-api-developers-guide-integrating-views
+    https://isovera.com/blog/programmatically-creating-forms-views-drupal-7
+    Theming, using CSS in Views - video tutorials, etc.
+    https://api.drupal.org/api/views
+    https://api.drupal.org/api/views/views.api.php/7
  
  CTools
  ------
