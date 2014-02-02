@@ -73,3 +73,8 @@ field_postcard
         Autocomplete
 
 
+
+
+SEO, Links
+http://www.1websitedesigner.com/drupal-end-user-guide
+http://www.1websitedesigner.com/search-engine-optimization
