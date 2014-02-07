@@ -45,3 +45,4 @@ unveil                  odsłaniać
 weird                   dziwny
 whim                    zachcianka, kaprys
 viable                  wykonalny opłacalny możliwy             *
+venue                   miejsce
