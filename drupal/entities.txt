@@ -1,5 +1,5 @@
-Default drupal 7.26 installation
-Entity API
+Drupal 7.26
+Entity API 7.x-1.3
 Field Collection
 
 *******************************************************************************
@@ -21,9 +21,7 @@ Class hierarchy
 
 class                               interfaces                                      class file
 --------------------------------------------------------------------------------------------------------
-core
-
-DrupalDefaultEntityController       DrupalEntityControllerInterface                 /includes/entity.inc
+DrupalDefaultEntityController       DrupalEntityControllerInterface                 core: /includes/entity.inc
     CommentController                                                               core: comment/comment.module
     NodeController                                                                  core: node/node.module
     TaxonomyTermController                                                          core: taxonomy/taxonomy.module
@@ -49,6 +47,24 @@ EntityDefaultExtraFieldsController  EntityExtraFieldsControllerInterface        
 EntityDefaultUIController                                                           entity: includes/entity.ui.inc
     EntityContentUIController                                                       entity: includes/entity.ui.inc
         EntityBundleableUIController                                                entity: includes/entity.ui.inc
+
+EntityDefaultViewsController                                                        entity: views/entity.views.inc
+EntityFieldHandlerHelper                                                            entity: views/handlers/entity_views_field_handler_helper.inc
+entity_views_example_query                                                          entity: views/entity_views_example_query.php
+entity_views_handler_area_entity                                                    entity: views/handlers/entity_views_handler_area_entity.inc
+entity_views_handler_field_boolean                                                  entity: views/handlers/entity_views_handler_field_boolean.inc
+entity_views_handler_field_date                                                     entity: views/handlers/entity_views_handler_field_date.inc
+entity_views_handler_field_duration                                                 entity: views/handlers/entity_views_handler_field_duration.inc
+entity_views_handler_field_entity                                                   entity: views/handlers/entity_views_handler_field_entity.inc
+entity_views_handler_field_field                                                    entity: views/handlers/entity_views_handler_field_field.inc
+entity_views_handler_field_numeric                                                  entity: views/handlers/entity_views_handler_field_numeric.inc
+entity_views_handler_field_options                                                  entity: views/handlers/entity_views_handler_field_options.inc
+entity_views_handler_field_text                                                     entity: views/handlers/entity_views_handler_field_text.inc
+entity_views_handler_field_uri                                                      entity: views/handlers/entity_views_handler_field_uri.inc
+entity_views_handler_relationship                                                   entity: views/handlers/entity_views_handler_relationship.inc
+entity_views_handler_relationship_by_bundle                                         entity: views/handlers/entity_views_handler_relationship_by_bundle.inc
+entity_views_plugin_row_entity_view                                                 entity: views/plugins/entity_views_plugin_row_entity_view.inc
+
 
 *******************************************************************************
 Interface hierarchy
