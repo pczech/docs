@@ -8,7 +8,7 @@ Recall and familiarize with all options, settings available in Views UI first.
 
 handler
 -------
-a class that takes care of field display, sorting, filtering, contextual
+a class that takes care of displaying fields and areas, sorting, filtering, contextual
 filtering, or relationships.
 
 plugin
