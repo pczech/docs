@@ -1,0 +1,43 @@
+MPM prefork
+MPM worker
+
+/etc/apache2/mods-available/mpm_prefork.conf
+/etc/apache2/mods-available/mpm_worker.conf
+
+apache2
+-l - list of modules compiled into the server.
+-V - Print the version and build parameters of apache2.
+
+
+compiled
+
+a2dismod
+a2enmod
+service apache2 restart
+
+PHP cgi
+/etc/apache2/mods-available/mpm_worker.conf
+
+sites configuration
+
+ApacheBench
+ab -n 1000 -c 300 localhost/01
+
+MPM pre-fork, worker, event
+http://serverfault.com/questions/383526/how-do-i-select-which-apache-mpm-to-use/383634#383634
+http://stackoverflow.com/questions/1623914/what-is-thread-safe-or-non-thread-safe-in-php
+http://kb.parallels.com/en/113007
+
+mod-php / cgi, fcgi, php-fpm
+http://blog.layershift.com/which-php-mode-apache-vs-cgi-vs-fastcgi/
+http://coolpandaca.wordpress.com/2012/03/20/apache-mpm-worker-prefork-mod_php-mod_fcgid-mod_fastcgi-php-fpm-and-nginx/
+http://www.brandonturner.net/blog/2009/07/fastcgi_php_opcode_cache_benchmarks/
+http://coolpandaca.wordpress.com/2012/03/20/apache-mpm-worker-prefork-mod_php-mod_fcgid-mod_fastcgi-php-fpm-and-nginx/
+php-fpm
+http://www.php.net/manual/en/faq.installation.php#faq.installation.apache2
+http://www.php.net/manual/en/install.fpm.php
+http://kb.parallels.com/en/113007
+apache mod_fastcgi
+
+Benchmarking
+http://www.cyberciti.biz/tips/howto-performance-benchmarks-a-web-server.html

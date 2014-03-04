@@ -1,0 +1,48 @@
+TIME
+----
+date
+hwclock
+adjtimex
+
+apt-get
+ install <PACKAGE>
+ update
+
+
+date
+----
+
+dmesg
+-----
+-c clear after printing
+Older events are logged in the files /var/log/messages and /var/log/warn ?
+
+hwclock
+ -r
+ --systohc
+ /dev/rtc
+ /etc/adjtime
+
+shoutdown
+---------
+ -r reboot
+ TIME (now, +m, hh:mm)
+
+sudo
+----
+ -i - simulate initial login as root (changes the home directory to /root)
+
+runlevel
+--------
+ http://en.wikipedia.org/wiki/Runlevel
+
+X
+---------
+/usr/share/X11/xorg.conf.d
+http://en.wikipedia.org/wiki/X_Window_System_protocols_and_architecture
+http://beginlinux.wordpress.com/2009/01/05/remote-display-of-the-x-protocol/
+http://en.wikipedia.org/wiki/X_display_manager_%28program_type%29
+http://en.wikipedia.org/wiki/LightDM
+
+unix domain sockets
+http://lists.freebsd.org/pipermail/freebsd-performance/2005-February/001143.html

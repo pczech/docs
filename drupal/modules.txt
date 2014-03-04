@@ -132,10 +132,11 @@ Development modules
  Views API documentation: 
  Views Advanced help
  drupal_7_views_cookbook.pdf
+ programmers_guide_to_drupal.pdf
     
     >>drupal 6 Attachment Views<<
     
-    programmers_guide_to_drupal.pdf
+
     drupals_building_blocks.pdf
     https://drupal.org/documentation/modules/views
     https://drupal.org/node/431846 - Views tips and tricks

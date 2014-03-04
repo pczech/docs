@@ -9,10 +9,13 @@ cumbersome              nieporęczny, niewygodny, zawiły
 decent                  przyzwoity, sensowny
 deliberately            celowo, umyślnie
 delve into              wglębiać się w coś
+descend from            pochodzić od
 deserve                 zasługiwać na coś
 despite                 pomimo
+discourage              zniechęcać
 dissect                 szczegółowo coś analizować
 encourage               zachęcać wspierać
+evolve                  rozwijać się, ewoluować
 facet                   strona, aspekt
 fairly                  całkiem, dość
 havoc                   spustoszenie
@@ -20,6 +23,7 @@ hence                   stąd
 immensely               niezmiernie
 impose                  narzucać, ustanawiać
 ladder                  drabina
+leisure                 czas wolny
 leverage                wykorzystywać                           *
 lid                     pokrywka
 mitigate                łagodzić, rozładować
@@ -33,6 +37,7 @@ pertinent               trafny, mający związek z czymś
 pull apart              rozdzielać
 refine                  udoskonalać
 rely on                 bazować na, polegać na
+resilient               prężny, żywotny
 rudimentary             elementarny, podstawowy
 rule of thumb           praktyczna zasada
 rung                    szczebel
@@ -42,7 +47,10 @@ tedious                 nużący
 through                 przez, z powodu
 undergo                 przechodzić
 unveil                  odsłaniać
+wealth                  bogactwo, zamożność
 weird                   dziwny
+whatsoever              jakikolwiek
 whim                    zachcianka, kaprys
-viable                  wykonalny opłacalny możliwy             *
 venue                   miejsce
+versatile               wszechstronny, uniwersalny
+viable                  wykonalny opłacalny możliwy             *
