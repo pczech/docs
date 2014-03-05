@@ -150,6 +150,7 @@ Development modules
     Theming, using CSS in Views - video tutorials, etc.
     https://api.drupal.org/api/views
     https://api.drupal.org/api/views/views.api.php/7
+    http://www.thisisvisceral.com/2013/01/drupal-embed-views-display-module/
  
  CTools
  ------
