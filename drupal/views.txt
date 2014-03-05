@@ -69,10 +69,9 @@ views-view-field.tpl.php
 ---
 views-exposed-form.tpl.php
 views-more.tpl.php
-views-ui-display-tab-bucket.tpl.php
-views-ui-display-tab-setting.tpl.php
-views-ui-edit-item.tpl.php
-views-ui-edit-view.tpl.php
+views-ui-*.tpl.php
+theme templates for the Views user interface itself
+
 views-view-grouping.tpl.php
 views-view-row-comment.tpl.php
 views-view-summary.tpl.php
