@@ -88,6 +88,58 @@ plugin
 a class related to the overall display of the View, and other classes that
 take care of the basic functions of Views.
 
+*******************************************************************************
+Life Cycle
+----------
+
+$view = views_get_view(VIEW_ID)
+    Load the view from database. The function will search the database for a
+    view, by name, as well as check for default views provided by modules.
+    This action loads the $view object as well as any associated displays, but
+    does not instantiate any handlers. All handler settings are stored with the
+    associated display, which is either the default display or the specific
+    display if they are overridden.
+
+$view->set_arguments(ARGS)
+    Load arguments into the view. The view itself never really knows where the
+    arguments are coming from, although the display plugins get to make some
+    assumptions about that. For example, page displays know that they will come
+    from the URL, and block displays know that they don’t normally get
+    arguments.
+
+$view->set_display(DISPLAY_ID);
+    ?
+
+$view->pre_execute()
+    Run attachments and let the display do what it needs to do prior to
+    running:
+    - let modules modify the view just prior to executing it:
+      hook_views_pre_view()
+    - allow the display handler to set up for execution:
+      display_handler->pre_execute()
+      
+$view->build() (called also by $view->execute())
+    Build the query for the view:
+    - let modules modify the view just prior to building it:
+      hook_views_pre_build()
+    - create $this->build_info, which will ultimately hold the query and
+      arguments, plus assorted data about the query as needed, such as
+      breadcrumbs and title information. 
+    - initialize handlers: query object, all display plugins, and all field,
+      sort, filter, argument and relationship handlers:
+      $this->init_handlers()
+    - Let the handlers interact with each other if they really want:
+      $this->pre-query()
+    - Build exposed form, process it and render. Extract data from into
+      $this->exposed_input, which will be used for filter input when filters
+      are processed.
+      
+    - TODO
+    - let modules modify the view just after building it:
+      hook_views_post_build()
+      
+      
+$view->execute()
 
 
 *******************************************************************************

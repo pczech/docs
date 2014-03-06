@@ -20,6 +20,7 @@ evolve                  rozwijać się, ewoluować
 facet                   strona, aspekt
 fairly                  całkiem, dość
 feat                    wyczyn
+finicky                 wybredny
 for the sake of         ze względu na ...
 havoc                   spustoszenie
 hassle                  kłopot, zawracanie głowy
