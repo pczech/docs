@@ -49,6 +49,7 @@ rung                    szczebel
 shallow                 płytki
 signify                 oznaczać
 tackle                  załatwić, stawić czoła
+tear down               burzyć, wycinać
 tedious                 nużący
 through                 przez, z powodu
 undergo                 przechodzić

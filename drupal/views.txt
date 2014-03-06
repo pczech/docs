@@ -77,20 +77,79 @@ views-view-row-comment.tpl.php
 views-view-summary.tpl.php
 views-view-summary-unformatted.tpl.php
 
+******************************************************************************* 
+Handlers and Plugins
+--------------------
 
-handler
+Handler
 -------
-a class that takes care of displaying fields and areas, sorting, filtering, contextual
-filtering, or relationships.
+A class that takes care of displaying fields and areas, sorting, filtering,
+contextual filtering, or relationships.
 
-plugin
+Handlers provide all of the data necessary to build the query, and then extract
+the needed data from the query results. Five types of handlers exist, which
+correspond very closely to the SQL structure. Fields represent the fields used
+in the SELECT portion of the statement. Filters represent the WHERE clause.
+Sort criteria represent the ORDER BY clause. Relationships represent JOIN
+statements, and arguments are generally WHERE clauses that obtain their data
+from an external source. The handler objects are all derived from views_handler
+which contains most of the interface necessary to use a handler. That includes
+UI information as well as stub methods for interacting with the query at the
+right moment.
+
+Plugin
 ------
-a class related to the overall display of the View, and other classes that
+A class related to the overall display of the View, and other classes that
 take care of the basic functions of Views.
 
+Plugins are objects that control most of the real behavior of the view. The
+most important plugins are display, style, and row style. You can think of the
+display plugin as a way of telling the view where to display its content—that
+is, as a block, as a page with its own URL, or as an RSS feed. Display choices
+also can be more esoteric. Some displays simply attach themselves to other
+displays, essentially letting you run multiple views in the same view. A given
+view must always have a display to function, even if it is just the default
+display that does not put the view anywhere in particular (but does allow the
+view to be accessed from code elsewhere, which is a method known as embedding
+a view).
+
+Style plugins answer the question of how to display the view—that is, as a 
+table, as a list using <ul>, or as just each row one after another. Again, many
+other styles are added by other modules.
+
+Row styles are subordinate to styles, and inform Views how each record from a
+view is rendered. Row styles are not used by all styles. For example, the table
+style has to handle the HTML for the table, row, and cell items, so it does not
+use row styles. Most other styles simply care that they are displaying one blob
+of data after another, and they let the row style handle what each blob of data
+will look like. As with the display plugin, all views must utilize a style
+plugin or the view will not know how to render anything.
+
+Other types of plugins include the access, argument default, and argument
+validator plugins. These special-purpose plugins are less visible than the
+display and style plugins, but are often just as important.
+
+Access plugins determine whether the logged-in user can even see the results
+of a view.
+
+The argument default plugins allow views that use arguments to extract the data
+for the argument from their environment rather than having the argument passed
+directly (e.g., a view as a block gets no arguments, whereas a view as a page
+gets arguments from the URL).
+
+Validator plugins allow views to ensure that the argument data is useful and
+may also be used to transform the data. While an access plugin is required,
+the argument plugins are not required for a view to function.
+
+All plugin objects are derived from the views_plugin object, which primarily
+contains UI methods for telling Views about forms. The views_plugin object is,
+in turn, derived from views_object, which handles properties for the object
+and smoothes the process of getting defaults and translations.
+
+
 *******************************************************************************
-Life Cycle
-----------
+View Life Cycle
+---------------
 
 $view = views_get_view(VIEW_ID)
     Load the view from database. The function will search the database for a
@@ -130,16 +189,107 @@ $view->build() (called also by $view->execute())
       $this->init_handlers()
     - Let the handlers interact with each other if they really want:
       $this->pre-query()
-    - Build exposed form, process it and render. Extract data from into
+    - build exposed form, process it and render. Extract data from into
       $this->exposed_input, which will be used for filter input when filters
       are processed.
-      
-    - TODO
+    - build relationship
+    - build filters
+    - build arguments
+    - build fields
+    - build sort criteria
+    - allow area (header, footer, empty) handlers to affect the query
+    - allow display handler to affect the query
+    - allow style handler to affect the query
+    - allow exposed form to affect the query
+    - let modules modify the query just prior to finalizing it:
+      hook_views_query_alter()
+    - build the query (query object generates the actual query)
+    - the display asks any other displays on the view if they wish to attach
+      to this display, which could cause another display to run through the
+      entire process of building and executing a query, and allow icons and
+      links to be added to get to other displays, such as attached RSS or atom
+      feeds.
     - let modules modify the view just after building it:
       hook_views_post_build()
       
-      
 $view->execute()
+    - let modules modify the view just prior to executing it:
+      hook_views_pre_execute()
+    - execute the query. Results are then stored in $view->result
+    - let modules modify the view just after executing it:
+      hook_views_post_execute()
+
+$view->render()
+    - initialize the style plugin
+    - call pre_render() for exposed forms, pager, style, and, if the style
+      supports it, all fields.
+    - let modules modify the view just prior to rendering it:
+      hook_views_pre_render()
+    - rendering is delegated to the display plugin, which will call a theme
+      function. Each display plugin can now do its own thing, although most
+      will call the associated theme function for the display, which in turn
+      will delegate tasks down to the style, row style, and individual fields.
+    - let modules modify the view output after it is rendered:
+      hook_views_post_render()
+
+
+*******************************************************************************
+Hook order (see also View life cycle)
+----------
+
+hook_views_pre_view(&$view)
+This hook is called at the very beginning of views processing, before anything
+is done. Adding output to the view can be accomplished by placing text on 
+$view->attachment_before and $view->attachment_after.
+
+hook_views_pre_build(&$view)
+This hook is called right before the build process, but after displays are
+attached and the display performs its pre_execute phase. Adding output to the
+view can be accomplished by placing text on $view->attachment_before and
+$view->attachment_after.
+
+hook_views_query_alter(&$view, &$query)
+Alter the query before executing the query.
+
+hook_views_post_build(&$view)
+This hook is called right after the build process. The query is now fully
+built, but it has not yet been run through db_rewrite_sql. Adding output to
+the view can be accomplished by placing text on $view->attachment_before and
+$view->attachment_after.
+
+hook_views_pre_execute(&$view)
+This hook is called right before the execute process. The query is now fully
+built, but it has not yet been run through db_rewrite_sql. Adding output to
+the view can be accomplished by placing text on $view->attachment_before and
+$view->attachment_after.
+
+hook_views_post_execute(&$view)
+This hook is called right after the execute process. The query has been
+executed, but the pre_render() phase has not yet happened for handlers. Adding
+output to the view can be accomplished by placing text on
+$view->attachment_before and $view->attachment_after. Altering the content can
+be achieved by editing the items of $view->result.
+
+hook_views_pre_render(&$view)
+This hook is called right before the render process. The query has been
+executed, and the pre_render() phase has already happened for handlers, so all
+data should be available. Adding output to the view can be accomplished by
+placing text on $view->attachment_before and $view->attachment_after. Altering
+the content can be achieved by editing the items of $view->result. This hook
+can be utilized by themes.
+
+hook_views_post_render(&$view, &$output, &$cache)
+Post process any rendered data. This can be valuable to be able to cache a
+view and still have some level of dynamic output. In an ideal world, the actual
+output will include HTML comment based tokens, and then the post process can
+replace those tokens. Example usage. If it is known that the view is a node
+view and that the primary field will be a nid, you can do something like this:
+<!--post-FIELD-NID-->
+And then in the post render, create an array with the text that should go there:
+strtr($output, array('<!--post-FIELD-1-->' => 'output for FIELD of nid 1');
+All of the cached result data will be available in $view->result, as well, so
+all ids used in the query should be discoverable. This hook can be utilized by
+themes.
 
 
 *******************************************************************************
@@ -226,7 +376,7 @@ views_object                                                                    
                 entity_views_handler_field_date                                     entity: see entities.txt
             views_handler_field_entity                                              views: handlers/views_handler_field_entity.inc
                 views_handler_field_comment_link                                    views: modules/comment/views_handler_field_comment_link.inc
-                    views_handler_field_comment_link_approve                        views: modules/comment/views_handler_field_comment_link_approve.inc
+                  p  views_handler_field_comment_link_approve                        views: modules/comment/views_handler_field_comment_link_approve.inc
                     views_handler_field_comment_link_delete                         views: modules/comment/views_handler_field_comment_link_delete.inc
                     views_handler_field_comment_link_edit                           views: modules/comment/views_handler_field_comment_link_edit.inc
                     views_handler_field_comment_link_reply                          views: modules/comment/views_handler_field_comment_link_reply.inc
