@@ -1,3 +1,17 @@
+*******************************************************************************
+Entity API documentation (including Entity Core)
+------------------------
+drupal_7_module_development.pdf
+Programming Drupal 7 Entities.pdf
+programmers_guide_to_drupal.pdf
+Entity API README.txt
+Entity API test module (entity/tests)
+Collection Fields
+Profile2
+https://drupal.org/developing/api/entity/7
+https://drupal.org/project/examples
+
+Code base:
 Drupal 7.26
 Entity API 7.x-1.3
 Field Collection

@@ -1,167 +1,127 @@
 Development modules
 *******************
- 
- Administration menu
- -------------------
-  
- Coder
- -----
- 
- Coder options:
-    Select:     coder - main entry point to coder functionality. Called if no
-                options are given to the coder path, then you can select what
-                to review and run the reviews. If the path coder/review/MODULE
-                is used, then it sets the module in SELECT SPECIFIC MODULES
-                options and runs the review - this is used by 'Review code'
-                link in Modules menu. Sets also 'include files' in WHAT TO
-                REVIEW.
-    Default:    coder/review/default - review modules selected in WHAT TO REVIEW
-                settings in Settings menu.
-    Active:     coder/review/active - review Active modules (modifies WHAT TO
-                REVIEW settings).
-    Core:       coder/review/core - review Core and include files (modifies WHAT
-                TO REVIEW settings).
-    All:        coder/review/all - review all modules (selects all modules
-                available in SELECT SPECIFIC MODULES, SELECT SPECIFIC THEMES).
-    Files:      coder/review/files -specify files to be reviewed and then run
-                the review.
-    Patches:    coder/review/patches - specify patches to be reviewed and then
-                run the review.
-    Settings:   coder/default REVIEWS settings for all reviews and default WHAT
-                TO REVIEW settings for Default review.
-    
-    WHAT TO REVIEW:
-    active - select active modules in SELECT SPECIFIC MODULES and SELECT
-             SPECIFIC THEMES.
-    core - select core modules as above.
-    include files - review additional files, not only .module files.
-    
- For usual module development set 'minor' severity level to show all issues in
- Settings menu.
- 
- Ignore system
- If coder is throwing annoying warnings, you can tell coder to ignore the warning
- in your code using the comment:
- 
- // @ignore RULE_NAME:SCOPE
- 
- RULE_NAME: e.g. sniffer_commenting_inlinecomment_spacingafter
- SCOPE: file class | function | comment | number of lines
-    
-      
- Issues
- 
- Issue 01
- No result on pressing 'Default'
- See /var/log/apache2/error.log:
- PHP Fatal error:  Maximum execution time of 30 seconds exceeded in ...
- 
- Solution
- increase max_execution_time in /etc/php5/cgi/php.ini (if fcgi is used)
- restart apache: service apache2 restart
- 
- Issue 02
- No result on reviewing a module
- See /var/log/apache2/error.log
- PHP Fatal error:  Call to undefined method
- Coder requires PHP_CodeSniffer module:
- pear install PHP_CodeSniffer
- 
- Solution
- 7.x-2.0+14-dev (dev01 + pdd) works with PHP_CodeSniffer-1.4.7
- pear uninstall PHP_CodeSniffer
- pear install PHP_CodeSniffer-1.4.7
- try `pear upgrade` if `pear install` doesn't work.
 
- 7.x-2.1+1-dev (dev03 + det) doesn't work with 1.4.7 and 1.5.0
- Install 1.5.0 and apply patch #4 from https://drupal.org/node/2146275
- See Issue 04, PHP_CodeSniffer-1.4.6 is OK even for 7.x-2.1+4-dev
- 
- Issue 03
- 7.x-2.1+1-dev seems not to work well. 7.x-2.0+17-dev reports much more issues
- 
- Solution
- 7.x-2.1+2-dev works fine with PHP_CodeSniffer 1.4.6, PEAR 1.9.4, UBUNTU 12.04?
- See Issue 04
- 
- Issue 04
- Installation process.
- https://drupal.org/node/1419988
- (!) Add the Drupal coding standards definitions included with Coder to
- PHP_CodeSniffer's standards library:
- sudo ln -sv /path/to/coder/coder_sniffer/Drupal 
-    $(pear config-get php_dir)/PHP/CodeSniffer/Standards/Drupal
-    
- Solution
- When working with multiple installations like dev01, dev02, dev03, you should
- update the symbolic link to current working directory. Please always install
- the latest dev. version of Coder, if you need to go back and work with older
- installation, please update the Coder module there.
- Current working configuration: PHP_CodeSniffer-1.4.7 Coder 7.x-2.1+4-dev.
- 
- 
- Devel
- -----
- Supports dpm()
- 
- 
- Schema
- ------
- You should rarely have to write a schema from scratch. Going to Structure ->
- Schema will give you the ability to see a schema definition for any database
- table by clicking the Inspect tab. So you can get the schema definition by
- using the schema module, and then copy and paste it into your .install file. 
- 
- 
- Entity API
- ----------
- Entity API documentation (includes Entity Core):
- drupal_7_module_development.pdf
- Programming Drupal 7 Entities.pdf
- programmers_guide_to_drupal.pdf
- Entity API README.txt
- Entity API test module (entity/tests)
- Collection Fields
- Profile2
- https://drupal.org/developing/api/entity/7
- https://drupal.org/project/examples
- 
- 
- Views
- -----
- Views API documentation: 
- Views Advanced help
- drupal_7_views_cookbook.pdf
- programmers_guide_to_drupal.pdf
-    
-    >>drupal 6 Attachment Views<<
-    
+Administration menu
+-------------------
 
-    drupals_building_blocks.pdf
-    https://drupal.org/documentation/modules/views
-    https://drupal.org/node/431846 - Views tips and tricks
-    Using_Views_Programmatically-20110612.pdf
-    http://larsolesen.dk/node/273
-    http://www.trellon.com/content/blog/view-views-api
-    http://www.kdweb.co.uk/blog/drupal-module-views-hook-sequence
-    http://mustardseedmedia.com/podcast/episode30
-    http://www.grasmash.com/article/demystifying-views-api-developers-guide-integrating-views
-    https://isovera.com/blog/programmatically-creating-forms-views-drupal-7
-    Theming, using CSS in Views - video tutorials, etc.
-    https://api.drupal.org/api/views
-    https://api.drupal.org/api/views/views.api.php/7
-    http://www.thisisvisceral.com/2013/01/drupal-embed-views-display-module/
- 
- CTools
- ------
- CTools API documentation:
- CTools Advanced help
- drupals_building_blocks.pdf
- http://internetdevels.com/blog/ctools-modal-api
- http://drupalcontrib.org/api/drupal/contributions!ctools!ctools.api.php/7
- http://drupal.stackexchange.com/questions/40150/drupal-7-how-to-get-ajax-response-displayed-in-a-ctools-modal
- https://drupal.org/node/1196150 and related
- https://drupal.org/sandbox/mehul/2021387
- http://deeson-online.co.uk/labs/insert-form-pop-modal-ctools-and-drupal-7
- http://drupion.com/blog/10-steps-creating-ctools-modal-window-drupal-7
- 
+Coder
+-----
+
+Coder options:
+   Select:     coder - main entry point to coder functionality. Called if no
+               options are given to the coder path, then you can select what
+               to review and run the reviews. If the path coder/review/MODULE
+               is used, then it sets the module in SELECT SPECIFIC MODULES
+               options and runs the review - this is used by 'Review code'
+               link in Modules menu. Sets also 'include files' in WHAT TO
+               REVIEW.
+   Default:    coder/review/default - review modules selected in WHAT TO REVIEW
+               settings in Settings menu.
+   Active:     coder/review/active - review Active modules (modifies WHAT TO
+               REVIEW settings).
+   Core:       coder/review/core - review Core and include files (modifies WHAT
+               TO REVIEW settings).
+   All:        coder/review/all - review all modules (selects all modules
+               available in SELECT SPECIFIC MODULES, SELECT SPECIFIC THEMES).
+   Files:      coder/review/files -specify files to be reviewed and then run
+               the review.
+   Patches:    coder/review/patches - specify patches to be reviewed and then
+               run the review.
+   Settings:   coder/default REVIEWS settings for all reviews and default WHAT
+               TO REVIEW settings for Default review.
+   
+   WHAT TO REVIEW:
+   active - select active modules in SELECT SPECIFIC MODULES and SELECT
+            SPECIFIC THEMES.
+   core - select core modules as above.
+   include files - review additional files, not only .module files.
+
+For usual module development set 'minor' severity level to show all issues in
+Settings menu.
+
+Ignore system
+If coder is throwing annoying warnings, you can tell coder to ignore the warning
+in your code using the comment:
+
+// @ignore RULE_NAME:SCOPE
+
+RULE_NAME: e.g. sniffer_commenting_inlinecomment_spacingafter
+SCOPE: file class | function | comment | number of lines
+   
+     
+Issues
+
+Issue 01
+No result on pressing 'Default'
+See /var/log/apache2/error.log:
+PHP Fatal error:  Maximum execution time of 30 seconds exceeded in ...
+
+Solution
+increase max_execution_time in /etc/php5/cgi/php.ini (if fcgi is used)
+restart apache: service apache2 restart
+
+Issue 02
+No result on reviewing a module
+See /var/log/apache2/error.log
+PHP Fatal error:  Call to undefined method
+Coder requires PHP_CodeSniffer module:
+pear install PHP_CodeSniffer
+
+Solution
+7.x-2.0+14-dev (dev01 + pdd) works with PHP_CodeSniffer-1.4.7
+pear uninstall PHP_CodeSniffer
+pear install PHP_CodeSniffer-1.4.7
+try `pear upgrade` if `pear install` doesn't work.
+
+7.x-2.1+1-dev (dev03 + det) doesn't work with 1.4.7 and 1.5.0
+Install 1.5.0 and apply patch #4 from https://drupal.org/node/2146275
+See Issue 04, PHP_CodeSniffer-1.4.6 is OK even for 7.x-2.1+4-dev
+
+Issue 03
+7.x-2.1+1-dev seems not to work well. 7.x-2.0+17-dev reports much more issues
+
+Solution
+7.x-2.1+2-dev works fine with PHP_CodeSniffer 1.4.6, PEAR 1.9.4, UBUNTU 12.04?
+See Issue 04
+
+Issue 04
+Installation process.
+https://drupal.org/node/1419988
+(!) Add the Drupal coding standards definitions included with Coder to
+PHP_CodeSniffer's standards library:
+sudo ln -sv /path/to/coder/coder_sniffer/Drupal 
+   $(pear config-get php_dir)/PHP/CodeSniffer/Standards/Drupal
+
+Solution
+When working with multiple installations like dev01, dev02, dev03, you should
+update the symbolic link to current working directory. Please always install
+the latest dev. version of Coder, if you need to go back and work with older
+installation, please update the Coder module there.
+Current working configuration: PHP_CodeSniffer-1.4.7 Coder 7.x-2.1+4-dev.
+
+
+Devel
+-----
+Supports dpm()
+
+
+Schema
+------
+You should rarely have to write a schema from scratch. Going to Structure ->
+Schema will give you the ability to see a schema definition for any database
+table by clicking the Inspect tab. So you can get the schema definition by
+using the schema module, and then copy and paste it into your .install file. 
+
+
+CTools
+------
+CTools API documentation:
+CTools Advanced help
+drupals_building_blocks.pdf
+http://internetdevels.com/blog/ctools-modal-api
+http://drupalcontrib.org/api/drupal/contributions!ctools!ctools.api.php/7
+http://drupal.stackexchange.com/questions/40150/drupal-7-how-to-get-ajax-response-displayed-in-a-ctools-modal
+https://drupal.org/node/1196150 and related
+https://drupal.org/sandbox/mehul/2021387
+http://deeson-online.co.uk/labs/insert-form-pop-modal-ctools-and-drupal-7
+http://drupion.com/blog/10-steps-creating-ctools-modal-window-drupal-7

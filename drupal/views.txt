@@ -1,4 +1,28 @@
 *******************************************************************************
+API documentation
+----------------- 
+Views Advanced help
+drupal_7_views_cookbook.pdf
+programmers_guide_to_drupal.pdf
+drupals_building_blocks.pdf
+https://isovera.com/blog/programmatically-creating-forms-views-drupal-7
+https://drupal.org/documentation/modules/views
+https://drupal.org/node/431846 - Views tips and tricks
+https://api.drupal.org/api/views
+https://api.drupal.org/api/views/views.api.php/7
+http://www.trellon.com/content/blog/view-views-api
+http://www.grasmash.com/article/demystifying-views-api-developers-guide-integrating-views
+http://www.kdweb.co.uk/blog/drupal-module-views-hook-sequence
+http://www.dave.st/content/creating-datetime-view-handler-views2
+http://larsolesen.dk/node/273
+http://www.thisisvisceral.com/2013/01/drupal-embed-views-display-module/
+
+    Using_Views_Programmatically-20110612.pdf
+    http://mustardseedmedia.com/podcast/episode30
+    Theming, using CSS in Views - video tutorials, etc.
+    drupal 6 Attachment Views
+
+*******************************************************************************
 SQL query building
 ------------------
 Relationship: JOIN
