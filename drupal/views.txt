@@ -1,11 +1,11 @@
 *******************************************************************************
 API documentation
 ----------------- 
-Views Advanced help
-drupal_7_views_cookbook.pdf
-programmers_guide_to_drupal.pdf
-drupals_building_blocks.pdf
-https://isovera.com/blog/programmatically-creating-forms-views-drupal-7
+Views Advanced help (vat: vah)
+drupal_7_views_cookbook.pdf (vat: dvc)
+programmers_guide_to_drupal.pdf (vat: pgd)
+drupals_building_blocks.pdf (theory)
+https://isovera.com/blog/programmatically-creating-forms-views-drupal-7 (vat: vform)
 https://drupal.org/documentation/modules/views
 https://drupal.org/node/431846 - Views tips and tricks
 https://api.drupal.org/api/views
@@ -16,8 +16,7 @@ http://www.kdweb.co.uk/blog/drupal-module-views-hook-sequence
 http://www.dave.st/content/creating-datetime-view-handler-views2
 http://larsolesen.dk/node/273
 http://www.thisisvisceral.com/2013/01/drupal-embed-views-display-module/
-
-    Using_Views_Programmatically-20110612.pdf
+Using_Views_Programmatically-20110612.pdf
     http://mustardseedmedia.com/podcast/episode30
     Theming, using CSS in Views - video tutorials, etc.
     drupal 6 Attachment Views
@@ -174,88 +173,142 @@ and smoothes the process of getting defaults and translations.
 *******************************************************************************
 View Life Cycle
 ---------------
+0>  views_page()
+    Usual menu callback function stored in menu_router table as page_callback
+    field. Its arguments like $name, $display_id are kept in page_arguments
+    field.
+    Example vform: views_page('vform', 'page')
 
-$view = views_get_view(VIEW_ID)
+1>  $view = views_get_view($name)
     Load the view from database. The function will search the database for a
     view, by name, as well as check for default views provided by modules.
     This action loads the $view object as well as any associated displays, but
     does not instantiate any handlers. All handler settings are stored with the
     associated display, which is either the default display or the specific
     display if they are overridden.
-
-$view->set_arguments(ARGS)
+    Example: $view = views_get_view('vform')
+    
+2>  $view->execute_display($display_id, $args)
+    Execute the given display, with the given arguments.
+    Example: execute_display('page', NULL)
+    
+3>  $view->set_display($display_id)
+    Set the display as current. Create and init display plugin object, that
+    will be called soon as $view->display_handler->...
+    See also $view->unit_display().
+    
+3>  $view->pre_execute($args)
+    Run attachments and let the display do what it needs to do prior to
+    running.
+    
+4>  $view->set_arguments($args)
     Load arguments into the view. The view itself never really knows where the
     arguments are coming from, although the display plugins get to make some
     assumptions about that. For example, page displays know that they will come
     from the URL, and block displays know that they don’t normally get
     arguments.
 
-$view->set_display(DISPLAY_ID);
-    ?
-
-$view->pre_execute()
-    Run attachments and let the display do what it needs to do prior to
-    running:
-    - let modules modify the view just prior to executing it:
-      hook_views_pre_view()
-    - allow the display handler to set up for execution:
-      display_handler->pre_execute()
+4>  hook_views_pre_view($view, $display_id, $args)
+    Let modules modify the view just prior to executing it.
+ 
+4>  $view->display_handler->pre_execute()
+    Allow the display handler to set up for execution.
       
-$view->build() (called also by $view->execute())
-    Build the query for the view:
-    - let modules modify the view just prior to building it:
-      hook_views_pre_build()
-    - create $this->build_info, which will ultimately hold the query and
-      arguments, plus assorted data about the query as needed, such as
-      breadcrumbs and title information. 
-    - initialize handlers: query object, all display plugins, and all field,
-      sort, filter, argument and relationship handlers:
-      $this->init_handlers()
-    - Let the handlers interact with each other if they really want:
-      $this->pre-query()
-    - build exposed form, process it and render. Extract data from into
-      $this->exposed_input, which will be used for filter input when filters
-      are processed.
-    - build relationship
-    - build filters
-    - build arguments
-    - build fields
-    - build sort criteria
-    - allow area (header, footer, empty) handlers to affect the query
-    - allow display handler to affect the query
-    - allow style handler to affect the query
-    - allow exposed form to affect the query
-    - let modules modify the query just prior to finalizing it:
-      hook_views_query_alter()
-    - build the query (query object generates the actual query)
-    - the display asks any other displays on the view if they wish to attach
-      to this display, which could cause another display to run through the
-      entire process of building and executing a query, and allow icons and
-      links to be added to get to other displays, such as attached RSS or atom
-      feeds.
-    - let modules modify the view just after building it:
-      hook_views_post_build()
+3>  $view->display_handler->execute()
+    Execute the view. Display handler is e.g. object of class
+    views_plugin_display_page and it handles the view execution.
+    
+4>  $display_handler->view->build()
+    Build the query for the view.
+    
+5>  hook_views_pre_build()
+    Let modules modify the view just prior to building it.
+    
+5>  create $this->build_info
+    It will ultimately hold the query and arguments, plus assorted data about
+    the query as needed, such as breadcrumbs and title information.
+
+5>  $view->init_query()
+    Create and initialize the query object.
+
+5>  $view->init_handlers()
+    Acquire and attach all of the handlers: all display plugins, and all field,
+    sort, filter, argument and relationship handlers.
+    
+5>  $view->_pre_query()    
+    Let the handlers interact with each other if they really want.
       
-$view->execute()
-    - let modules modify the view just prior to executing it:
-      hook_views_pre_execute()
-    - execute the query. Results are then stored in $view->result
-    - let modules modify the view just after executing it:
-      hook_views_post_execute()
+5>  Build exposed form, process it and render. Extract data from into
+    $this->exposed_input, which will be used for filter input when filters
+    are processed, build relationship, filters , arguments, fields, sort
+    criteria. Allow to affect the query by area (header, footer, empty)
+    handlers, display handler, style handler and exposed form.
+      
+6>  hook_views_query_alter()
+    Let modules modify the query just prior to finalizing it (invoked by query
+    object in alter() method).
 
-$view->render()
-    - initialize the style plugin
-    - call pre_render() for exposed forms, pager, style, and, if the style
-      supports it, all fields.
-    - let modules modify the view just prior to rendering it:
-      hook_views_pre_render()
-    - rendering is delegated to the display plugin, which will call a theme
-      function. Each display plugin can now do its own thing, although most
-      will call the associated theme function for the display, which in turn
-      will delegate tasks down to the style, row style, and individual fields.
-    - let modules modify the view output after it is rendered:
-      hook_views_post_render()
+6>  hook_views_query_substitutions()
+    Let modules perform replacements in the query before being performed
+    (invoked by query object in build() method).
+      
+5>  $view->query->build($this) 
+    Build the query (query object generates the actual query).
+    
+5>  $view->attach_displays()
+    Ask any other displays on the view if they wish to attach to this display,
+    which could cause another display to run through the entire process of
+    building and executing a query, and allow icons and links to be added to
+    get to other displays, such as attached RSS or atom feeds.
+    
+5>  hook_views_post_build()
+    Let modules modify the view just after building it.
+    
+4>  $display_handler->view->render()
+    Render the view.
+    
+5>  $view->execute($display_id)
+    Execute the view.
 
+6>  hook_views_pre_execute()
+    Let modules modify the view just prior to executing it.
+    
+6>  $view->query->execute($this)
+    Execute the query. Results are then stored in $view->result.
+    
+7>  hook_query_alter()
+7>  hook_query_TAG_alter()
+8>  views_query_views_alter()
+
+6>  hook_views_post_execute()
+    Let modules modify the view just after executing it.
+    
+5>  drupal_theme_initialize()
+  
+5>  $view->init_style()
+    Initialize the style plugin.
+    
+5>  $view->field[$id]->pre_render($this->result)
+    Give field handlers the opportunity to perform additional queries
+    using the entire result set prior to rendering.
+    
+5>  $view->style_plugin->pre_render($this->result)
+    Give style plugin the opportunity to perform additional queries
+    using the entire result set prior to rendering.
+    
+5>  hook_views_pre_render()
+    Let modules modify the view just prior to rendering it.
+
+5>  $view->display_handler->render()
+    Rendering is delegated to the display plugin, which will call a theme
+    function. Each display plugin can now do its own thing, although most
+    will call the associated theme function for the display, which in turn
+    will delegate tasks down to the style, row style, and individual fields.
+      
+5>  hook_views_post_render()
+    Let modules modify the view output after it is rendered.
+      
+3>  $view->post_execute()
 
 *******************************************************************************
 Hook order (see also View life cycle)
