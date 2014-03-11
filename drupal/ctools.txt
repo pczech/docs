@@ -1,0 +1,28 @@
+*******************************************************************************
+API documentation
+----------------- 
+CTools Advanced help
+drupals_building_blocks.pdf
+http://internetdevels.com/blog/ctools-modal-api
+http://drupalcontrib.org/api/drupal/contributions!ctools!ctools.api.php/7
+http://drupal.stackexchange.com/questions/40150/drupal-7-how-to-get-ajax-response-displayed-in-a-ctools-modal
+https://drupal.org/node/1196150 and related
+https://drupal.org/sandbox/mehul/2021387
+http://deeson-online.co.uk/labs/insert-form-pop-modal-ctools-and-drupal-7
+http://drupion.com/blog/10-steps-creating-ctools-modal-window-drupal-7
+
+
+*******************************************************************************
+Class hierarchy
+---------------
+
+class                               interfaces                                      class file
+--------------------------------------------------------------------------------------------------------
+ctools_export_ui                                                                     ctools: plugins/export_ui/ctools_export_ui.class.php
+
+
+ctools_context
+
+
+(...)
+    views_content_plugin_display_ctools_context                                     ctools: views-content/plugins/views/views_content_plugin_display_ctools_context.inc

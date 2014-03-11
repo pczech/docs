@@ -112,16 +112,3 @@ Schema will give you the ability to see a schema definition for any database
 table by clicking the Inspect tab. So you can get the schema definition by
 using the schema module, and then copy and paste it into your .install file. 
 
-
-CTools
-------
-CTools API documentation:
-CTools Advanced help
-drupals_building_blocks.pdf
-http://internetdevels.com/blog/ctools-modal-api
-http://drupalcontrib.org/api/drupal/contributions!ctools!ctools.api.php/7
-http://drupal.stackexchange.com/questions/40150/drupal-7-how-to-get-ajax-response-displayed-in-a-ctools-modal
-https://drupal.org/node/1196150 and related
-https://drupal.org/sandbox/mehul/2021387
-http://deeson-online.co.uk/labs/insert-form-pop-modal-ctools-and-drupal-7
-http://drupion.com/blog/10-steps-creating-ctools-modal-window-drupal-7
