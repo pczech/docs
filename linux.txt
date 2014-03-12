@@ -56,3 +56,8 @@ https://www.virtualbox.org/manual
 A guest system installation ISO image can be mounted directly to CD/DVD drive:
 Settings -> Storage -> IDE -> Empty -> [CD Menu icon] -> 
   Choose a virtual CD/DVD disk file.
+
+pstree
+top
+ps
+
