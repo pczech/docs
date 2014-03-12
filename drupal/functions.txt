@@ -104,13 +104,14 @@ file_unmanaged_save_data
 
 Node API
 --------
+node_content_form
+node_delete_multiple
 node_load
+node_load_multiple
+node_save
 node_types_rebuild
 node_type_delete
-node_content_form
 node_type_get_types
-node_delete_multiple
-
 
 Taxonomy API
 ------------
@@ -180,6 +181,18 @@ entity_ui_form_submit_build_entity
 hook_entity_property_info_alter
 
 
+Views
+-----
+views_api_version
+hook_field_views_data_alter
+hook_views_api
+hook_views_data
+hook_views_data_alter
+hook_views_default_views
+hook_views_query_alter
+hook_views_plugins
+
+
 Other
 -----
 cache_clear_all
@@ -233,6 +246,7 @@ array_keys
 array_key_exists
 array_shift
 count
+ctype_upper
 debug_backtrace
 empty
 exit

@@ -46,3 +46,12 @@ http://en.wikipedia.org/wiki/LightDM
 
 unix domain sockets
 http://lists.freebsd.org/pipermail/freebsd-performance/2005-February/001143.html
+
+
+
+
+
+pstree
+top
+ps
+
