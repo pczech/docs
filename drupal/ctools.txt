@@ -12,6 +12,12 @@ http://deeson-online.co.uk/labs/insert-form-pop-modal-ctools-and-drupal-7
 http://drupion.com/blog/10-steps-creating-ctools-modal-window-drupal-7
 http://ygerasimov.com/ctools-plugins-system
 http://drupal.stackexchange.com/questions/33336/what-are-ctools-plugin-content-type-access-etc-and-how-does-one-create-them
+http://drupal.stackexchange.com/questions/51468/how-do-i-implement-ctools-plugins-from-other-modules
+http://drupal.stackexchange.com/questions/35186/whats-the-difference-between-page-manager-and-panels
+http://drupalize.me/videos/basics-views-content-panes
+http://deeson-online.co.uk/labs/insert-form-pop-modal-ctools-and-drupal-7
+http://stevector.com/ctools_plugins_presentation/#1
+http://drupal7tutorials.com/drupal-7-module/ctools
 
 
 *******************************************************************************
@@ -28,9 +34,33 @@ Term Depth access                       term_depth
 Ctools plugins test                     tests
 Views content panes                     views_content
 
+
 *******************************************************************************
-Hooks
------
+Plugins
+-------
+
+
+Plugin Type
+The types provided by CTools module and submodules.
+
+CTools
+------
+ctools/plugins:
+
+access
+arguments
+cache
+content_types
+contexts
+export_ui
+relationships
+
+Page Manager
+ctools/page_managers/plugins:
+
+page_wizards
+task_handlers
+tasks
 
 
 *******************************************************************************

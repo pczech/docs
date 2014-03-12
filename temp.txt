@@ -1,38 +1,9 @@
-To be moved to ctools.txt:
-
-http://ygerasimov.com/ctools-plugins-system
-http://drupal.stackexchange.com/questions/51468/how-do-i-implement-ctools-plugins-from-other-modules
-http://drupal.stackexchange.com/questions/35186/whats-the-difference-between-page-manager-and-panels
-http://drupalize.me/videos/basics-views-content-panes
-http://deeson-online.co.uk/labs/insert-form-pop-modal-ctools-and-drupal-7
-http://stevector.com/ctools_plugins_presentation/#1
-
-
-ctools_include
-
-
-Plugin Type
-The types provided by CTools module and submodules.
-
-CTools
-------
-ctools/plugins:
-
-access
-arguments
-cache
-content_types
-contexts
-export_ui
-relationships
-
-CTools Page Manager
-ctools/page_managers/plugins:
-
-page_wizards
-task_handlers
-tasks
-
-
-Add to backlog: play with Panels.
-
+Panels:
+drupals_building_blocks.pdf
+Drupal 6 Panels Cookbook.pdf
+manual_drupal_panels_0.pdf
+Drupal 7 - od podstaw.PDF
+https://drupal.org/node/1857644
+https://drupal.org/node/946356
+http://drupalize.me/series/building-websites-drupal-7-using-panels
+http://www.wdtutorials.com/2011/06/21/drupal-7-how-use-views-and-panels-together
