@@ -10,6 +10,27 @@ https://drupal.org/node/1196150 and related
 https://drupal.org/sandbox/mehul/2021387
 http://deeson-online.co.uk/labs/insert-form-pop-modal-ctools-and-drupal-7
 http://drupion.com/blog/10-steps-creating-ctools-modal-window-drupal-7
+http://ygerasimov.com/ctools-plugins-system
+http://drupal.stackexchange.com/questions/33336/what-are-ctools-plugin-content-type-access-etc-and-how-does-one-create-them
+
+
+*******************************************************************************
+Submodules
+----------
+Bulk Export                             bulk_export
+Custom rulesets                         ctools_access_ruleset
+CTools AJAX Example                     ctools_ajax_sample
+Custom content panes                    ctools_custom_content
+CTools Plugin Example                   ctools_plugin_example
+Page manager                            page_manager
+Stylizer                                stylizer
+Term Depth access                       term_depth
+Ctools plugins test                     tests
+Views content panes                     views_content
+
+*******************************************************************************
+Hooks
+-----
 
 
 *******************************************************************************
@@ -18,11 +39,41 @@ Class hierarchy
 
 class                               interfaces                                      class file
 --------------------------------------------------------------------------------------------------------
-ctools_export_ui                                                                     ctools: plugins/export_ui/ctools_export_ui.class.php
+ctools_export_ui                                                                    ctools: plugins/export_ui/ctools_export_ui.class.php
+    ctools_access_ruleset_ui                                                        ctools/ctools_access_ruleset: plugins/export_ui/ctools_access_ruleset_ui.class.php
+    ctools_custom_content_ui                                                        ctools/ctools_custom_content: plugins/export_ui/ctools_custom_content_ui.class.php
+    stylizer_ui                                                                     ctools/stylizer_ui: plugins/export_ui/stylizer_ui.class.php
+    views_ui                                                                        views: plugins/export_ui/views_iu.class.php
 
+shellColours                                                                        ctools/drush: ctools.drush.inc
 
-ctools_context
+ctools_context                                                                      ctools: includes/context.inc
+ctools_context_required                                                             ctools: incldes/context.inc
+    ctools_context_optional                                                         ctools: incldes/context.inc
 
+ctools_math_expr                                                                    ctools: includes/math-expr.inc
+ctools_math_expr_stack                                                              ctools: includes/math-expr.inc
 
-(...)
-    views_content_plugin_display_ctools_context                                     ctools: views-content/plugins/views/views_content_plugin_display_ctools_context.inc
+ctools_stylizer_image_processor                                                     ctools: includes/stylizer.inc
+
+(DrupalWebTestCase)
+    CtoolsExportCrudTestCase                                                        ctools/tests: ctools_export_test/ctools_export.test
+    CtoolsContextKeywordsSubstitutionTestCase                                       ctools/tests: context.test
+    CtoolsCssTestCase                                                               ctools/tests: css.test
+    CtoolsPluginsGetInfoTestCase                                                    ctools/tests: ctools.plugins.test
+    CtoolsMathExpressionStackTestCase                                               ctools/tests: math_expression_stack.test
+    CtoolsMathExpressionTestCase                                                    ctools/tests: math_expression.test
+    CtoolsObjectCache                                                               ctools/tests: object_cache.test
+ctoolsCachedPluginArray                                                             ctools/tests: plugins/cached/ctoolsCachedPluginArray.class.php
+    ctoolsCachedPluginArray2                                                        ctools/tests: plugins/cached/ctoolsCachedPluginArray2.class.php
+        ctoolsNotCachedPluginArray                                                  ctools/tests: plugins/not_cached/ctoolsNotCachedPluginArray.class.php
+ctoolsNotCachedPluginArray2                                                         ctools/tests: plugins/not_cached/ctoolsNotCachedPluginArray2.class.php
+    
+(views_plugin_display)
+    views_content_plugin_display_ctools_context                                     ctools/views_content: plugins/views/views_content_plugin_display_ctools_context.inc
+    views_content_plugin_display_panel_pane                                         ctools/views_content: plugins/views/views_content_plugin_display_panel_pane.inc
+
+(views_plugin_style)
+    views_content_plugin_style_ctools_context                                       ctools/views_content: plugins/views/views_content_plugin_style_ctools_context.inc
+    
+    
