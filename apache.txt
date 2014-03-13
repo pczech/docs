@@ -81,3 +81,16 @@ than configured in phpMyAdmin.
 Update php.ini (e.g. /etc/php5/cgi/php.ini) and restart apache.
 Don't increase the values on production server!
 
+
+XDebug
+------
+
+Timeout during waiting on breakpoint (fcgid module used).
+
+See /var/log/apache2/error.log:
+mod_fcgid: read data timeout in 600 seconds.
+Solution:
+Increase 
+FcgidIOTimeout in /etc/apache2/mods-available/fcgid.conf
+FcgidIOTimeout 1800 (30 minutes)
+

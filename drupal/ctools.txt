@@ -39,7 +39,6 @@ Views content panes                     views_content
 Plugins
 -------
 
-
 Plugin Type
 The types provided by CTools module and submodules.
 
@@ -56,11 +55,69 @@ export_ui
 relationships
 
 Page Manager
+------------
 ctools/page_managers/plugins:
 
 page_wizards
 task_handlers
 tasks
+
+Plugins content_types
+---------------------
+
+node_form_log                       node_form               node_form_log.inc           Form            Revision log message for the node
+        ctools_node_form_log_content_type_render
+        ctools_node_form_log_content_type_admin_title
+        ctools_node_form_log_content_type_edit_form       
+node_form_language
+node_form_menu
+node_form_buttons
+node_form_comment
+node_form_title
+node_form_publishing
+node_form_path
+node_form_author
+form
+entity_form_field
+node_body
+node_created
+node_links
+node_author
+node_comment_form
+node_attachments
+node_content
+node_type_desc
+node_updated
+node_terms
+node_title
+node_comments
+user_signature
+user_profile
+user_picture
+page_actions
+page_slogan
+page_breadcrumb
+page_primary_links
+page_logo
+page_title
+page_tabs
+page_feed_icons
+page_help
+page_messages
+page_site_name
+page_secondary_links
+vocabulary_terms
+search_result
+search_form
+block
+term_description
+term_list
+token
+node
+entity_field_extra
+entity_field
+custom
+comment_reply_form  
 
 
 *******************************************************************************

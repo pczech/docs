@@ -112,3 +112,24 @@ Schema will give you the ability to see a schema definition for any database
 table by clicking the Inspect tab. So you can get the schema definition by
 using the schema module, and then copy and paste it into your .install file. 
 
+Panels
+------
+Modules and features dependencies
+Panels->A Page->Pane->Content->View is visible if there is Views Content Panes submodule is enabled
+(thus Views module too) and at least one View is defined.
+
+CTools Page Manager:
+    Structure->Pages
+    Structure->Panels->Dashboard->Create New... Panel Page
+    Structure->Panels->Create New... Panel Page
+    
+    
+Panels->Views Content Panes (and a View):
+    Structure->Panels-><PAGE>->Edit->Content->Views
+
+
+Panels features:
+Panel Page: CTools->Page Manager
+Panel Node: Panels->Panel Node
+
+ 

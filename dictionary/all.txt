@@ -15,6 +15,7 @@ delve into              wglębiać się w coś
 descend from            pochodzić od
 deserve                 zasługiwać na coś
 despite                 pomimo
+devise                  wymyślać, obmyślać
 discourage              zniechęcać
 dissect                 szczegółowo coś analizować
 encourage               zachęcać wspierać
@@ -39,6 +40,7 @@ ongoing                 trwający, toczący się
 opt to                  zdecydować się (np. coś zrobić)
 outline                 zarys, nakreślać
 overwhelm               przytłaczać, zalewać
+pane                    płaszczyzna, szyba
 parlance                żargon
 pertinent               trafny, mający związek z czymś
 pull apart              rozdzielać

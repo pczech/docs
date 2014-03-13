@@ -1,9 +1,26 @@
 Panels:
-drupals_building_blocks.pdf
-Drupal 6 Panels Cookbook.pdf
-manual_drupal_panels_0.pdf
 Drupal 7 - od podstaw.PDF
-https://drupal.org/node/1857644
-https://drupal.org/node/946356
-http://drupalize.me/series/building-websites-drupal-7-using-panels
-http://www.wdtutorials.com/2011/06/21/drupal-7-how-use-views-and-panels-together
+    drupals_building_blocks.pdf
+    Drupal 6 Panels Cookbook.pdf
+    manual_drupal_panels_0.pdf
+    https://drupal.org/node/1857644
+    https://drupal.org/node/946356
+    http://drupalize.me/series/building-websites-drupal-7-using-panels
+    http://www.wdtutorials.com/2011/06/21/drupal-7-how-use-views-and-panels-together
+    http://drupal.org/node/629860
+
+
+TODO
+----
+Check Panel Page -> Optional features:
+Selection rules
+Contexts
+
+Do czego to?
+
+View UI and at least one View is required to
+ 
+ 
+ 
+ 
+ 
