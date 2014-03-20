@@ -36,6 +36,89 @@ Views content panes                     views_content
 
 
 *******************************************************************************
+Page Manager
+------------
+
+UI
+  Structure->Pages
+  Structure->Panels->Dashboard->Create New... Panel Page
+  Structure->Panels->Create New... Panel Page
+
+  Structure->Pages-><PAGE>->Edit:
+    Clone | Export | Delete | Disable | Add variant | Import variant
+ 
+    Summary
+      Status
+      Path
+      Access
+      Menu
+            
+    Settings
+      Basic
+        Administrative title
+        Administrative description
+        Path
+        Make this your site home page
+        Use this page in an admin overlay
+      
+      Access
+        Context exists
+        Current theme
+        Front page                
+        PHP Code
+        String: URL path
+        User: Bundle
+        User: permission
+        User: role
+        
+      Menu
+        No menu entry
+        Normal menu entry
+        Menu tab
+        Default menu tab
+        Local action
+        
+    Variants
+    Clone | Export | Delete | Disable
+    
+      (HTTP response code)
+      Summary
+        Storage  
+        Status
+        Selection rule
+        Response code
+        
+      General
+        Administrative title
+        Response code
+        
+      Selection rules
+        Context exists
+        Current theme
+        Front page
+        Node page: Body Field
+        Node: (un)published
+        Node: Bundle
+        Node: accessible
+        Node: type 
+        PHP Code
+        String: URL path
+        User: Bundle
+        User: permission
+        User: role
+    
+Panels->Views Content Panes (and a View):
+    Structure->Panels-><PAGE>->Edit->Content->Views
+
+
+Panels features:
+Panel Page: CTools->Page Manager
+Panel Node: Panels->Panel Node
+
+ 
+
+
+*******************************************************************************
 Plugins
 -------
 
@@ -51,16 +134,71 @@ arguments
 cache
 content_types
 contexts
-export_ui
-relationships
 
-Page Manager
-------------
-ctools/page_managers/plugins:
+access
+------
+  <PAGE>->Settings->Access
+  <PAGE>->Settings->Variants-><VARIANT>->Selection rules
+  
+  Name                                  Title                           plugins/access/             context required    Access  Selection Rules
+  *compare_users                         User: compare                   compare_users.inc           user user           -       -
+  context_exists                        Context exists                  context_exists.inc          any                 v       v
+  front                                 Front page                      front.inc                   -                   v       v
+  node_access                           Node: accessible                node_access.inc             node user           -       v?
+  node_status                           Node: (un)published             node_status.inc             node                -       v?
+  node_type                             Node: type                      node_type.inc               node                -       v?
+  perm                                  User: permission                perm.inc                    user                v       v
+  php                                   PHP Code                        php.inc                     -                   v       v
+  role                                  User: role                      role.inc                    user                v       v
+  *string_length                         String: length                  string_length.inc           string              -       -
+  *string_equal                          String: comparison              string_equal.inc            string              -       -
+  *term                                  Taxonomy: term                  term.inc                    taxonomy_term terms -       -
+  *term_has_parent                       Taxonomy: term has parent(s)    term_has_parent.inc         taxonomy_term terms -       -
+  *term_parent                           Taxonomy: parent term           term_parent.inc             taxonomy_term terms -       -
+  *term_vocabulary                       Taxonomy: vocabulary            term_vocabulary.inc         taxonomy_term terms 
+                                                                                                    taxonomy_vocabulary -       -
+  theme                                 Current theme                   theme.inc                   -                   v       v
+  path_visibility                       String: URL path                path_visibility.inc         Path                v       v
+  
+  *entity_bundle:comment                 Comment: Bundle                 entity_bundle.inc           ?                   -       -
+  *entity_bundle:file                    File: Bundle                    entity_bundle.inc           ?                   -       -
+  entity_bundle:node                    Node: Bundle                    entity_bundle.inc           ?                   -       v?
+  *entity_bundle:taxonomy_term           Taxonomy term: Bundle           entity_bundle.inc           ?                   -       -
+  *entity_bundle:taxonomy_vocabulary     Taxonomy vocabulary: Bundle     entity_bundle.inc           ?                   -       -
+  entity_bundle:user                    User: Bundle                    entity_bundle.inc           ?                   v       v
+  entity_field_value:node:article:body  Node page: Body Field           entity_field_value.inc      ?                  -       v?
+  *entity_field_value:node:article:field_image   Node article: Image Field   entity_field_value.inc  ?                   -       -
+  entity_field_value:node:article:field_tags    <TODO>
+  entity_field_value:node:page:body     Node page: Body Field           entity_field_value.inc      -?                  -       v?
+  entity_field_value:comment:comment_node_article:comment_body
+  entity_field_value:comment:comment_node_page:comment_body
 
-page_wizards
-task_handlers
-tasks
+arguments
+cache
+content_types
+
+contexts
+  <PAGE>->Settings->Variants-><VARIANT>->Context
+
+  Name                                  Title                           plugins/contexts/               Contexts  
+  entity:comment                        Comment                         entity.inc                      v
+  entity:node                           Node                            entity.inc                      v?
+  entity:file                           File                            entity.inc                      v
+  entity:taxonomy_term
+  entity:taxonomy_vocabulary
+  entity:user
+  token
+  string
+  term
+  user                                  User                            user.inc                        v
+  node_edit_form
+  user_edit_form
+  node                                  Node                            node.inc                        v?
+  node_add_form                         Node add form                   node_add_form.inc               v
+  vocabulary
+  terms 
+  export_ui
+  relationships
 
 Plugins content_types
 ---------------------
@@ -120,6 +258,15 @@ custom
 comment_reply_form  
 
 
+Page Manager
+------------
+ctools/page_managers/plugins:
+
+page_wizards
+task_handlers
+tasks
+
+
 *******************************************************************************
 Class hierarchy
 ---------------
@@ -135,8 +282,8 @@ ctools_export_ui                                                                
 shellColours                                                                        ctools/drush: ctools.drush.inc
 
 ctools_context                                                                      ctools: includes/context.inc
-ctools_context_required                                                             ctools: incldes/context.inc
-    ctools_context_optional                                                         ctools: incldes/context.inc
+ctools_context_required                                                             ctools: includes/context.inc
+    ctools_context_optional                                                         ctools: includes/context.inc
 
 ctools_math_expr                                                                    ctools: includes/math-expr.inc
 ctools_math_expr_stack                                                              ctools: includes/math-expr.inc

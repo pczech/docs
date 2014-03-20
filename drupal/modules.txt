@@ -119,10 +119,72 @@ Panels->A Page->Pane->Content->View is visible if there is Views Content Panes s
 (thus Views module too) and at least one View is defined.
 
 CTools Page Manager:
-    Structure->Pages
-    Structure->Panels->Dashboard->Create New... Panel Page
-    Structure->Panels->Create New... Panel Page
+  Structure->Pages
+  Structure->Panels->Dashboard->Create New... Panel Page
+  Structure->Panels->Create New... Panel Page
+
+  Structure->Pages-><PAGE>->Edit:
+    Clone | Export | Delete | Disable | Add variant | Import variant
+ 
+    Summary
+      Status
+      Path
+      Access
+      Menu
+            
+    Settings
+      Basic
+        Administrative title
+        Administrative description
+        Path
+        Make this your site home page
+        Use this page in an admin overlay
+      
+      Access
+        Context exists
+        Current theme
+        Front page                
+        PHP Code
+        String: URL path
+        User: Bundle
+        User: permission
+        User: role
+        
+      Menu
+        No menu entry
+        Normal menu entry
+        Menu tab
+        Default menu tab
+        Local action
+        
+    Variants
+    Clone | Export | Delete | Disable
     
+      (HTTP response code)
+      Summary
+        Storage  
+        Status
+        Selection rule
+        Response code
+        
+      General
+        Administrative title
+        Response code
+        
+      Selection rules
+        Context exists
+        Current theme
+        Front page
+        Node page: Body Field
+        Node: (un)published
+        Node: Bundle
+        Node: accessible
+        Node: type 
+        PHP Code
+        String: URL path
+        User: Bundle
+        User: permission
+        User: role
     
 Panels->Views Content Panes (and a View):
     Structure->Panels-><PAGE>->Edit->Content->Views
