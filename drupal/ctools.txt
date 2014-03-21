@@ -60,16 +60,6 @@ UI
         Path
         Make this your site home page
         Use this page in an admin overlay
-      
-      Access
-        Context exists
-        Current theme
-        Front page                
-        PHP Code
-        String: URL path
-        User: Bundle
-        User: permission
-        User: role
         
       Menu
         No menu entry
@@ -92,20 +82,8 @@ UI
         Administrative title
         Response code
         
-      Selection rules
-        Context exists
-        Current theme
-        Front page
-        Node page: Body Field
-        Node: (un)published
-        Node: Bundle
-        Node: accessible
-        Node: type 
-        PHP Code
-        String: URL path
-        User: Bundle
-        User: permission
-        User: role
+        
+        
     
 Panels->Views Content Panes (and a View):
     Structure->Panels-><PAGE>->Edit->Content->Views
@@ -137,41 +115,106 @@ contexts
 
 access
 ------
-  <PAGE>->Settings->Access
-  <PAGE>->Settings->Variants-><VARIANT>->Selection rules
+  Name                                          Title                           plugins/access/             ctools_context_required
+  compare_users                                 User: compare                   compare_users.inc           user, user
+  context_exists                                Context exists                  context_exists.inc          any
+  entity_bundle:<TYPE>                          <TYPE>: Bundle                  entity_bundle.inc           ?
+  entity_field_value:<TYPE>:<BUNDLE>:<FIELD>    <TYPE> <BUNDLE>: <FIELD>        entity_field_value.inc      ?
+  front                                         Front page                      front.inc                   -
+  node_access                                   Node: accessible                node_access.inc             user, node
+  node_language(L)                              Node: language                  node_language.inc           node
+  node_status                                   Node: (un)published             node_status.inc             node
+  node_type                                     Node: type                      node_type.inc               node
+  path_visibility                               String: URL path                path_visibility.inc         -
+  perm                                          User: permission                perm.inc                    user
+  php                                           PHP Code                        php.inc                     -
+  role                                          User: role                      role.inc                    user
+  site_language(L)                              User: language                  site_language.inc           -
+  string_length                                 String: length                  string_length.inc           string
+  string_equal                                  String: comparison              string_equal.inc            string
+  term                                          Taxonomy: term                  term.inc                    taxonomy_term, terms
+  term_has_parent                               Taxonomy: term has parent(s)    term_has_parent.inc         taxonomy_term, terms
+  term_parent                                   Taxonomy: parent term           term_parent.inc             taxonomy_term, terms
+  term_vocabulary                               Taxonomy: vocabulary            term_vocabulary.inc         taxonomy_term, terms, taxonomy_vocabulary
+  theme                                         Current theme                   theme.inc                   -
+
+(L) - if (module_exists('locale'))
+   
   
-  Name                                  Title                           plugins/access/             context required    Access  Selection Rules
-  *compare_users                         User: compare                   compare_users.inc           user user           -       -
-  context_exists                        Context exists                  context_exists.inc          any                 v       v
-  front                                 Front page                      front.inc                   -                   v       v
-  node_access                           Node: accessible                node_access.inc             node user           -       v?
-  node_status                           Node: (un)published             node_status.inc             node                -       v?
-  node_type                             Node: type                      node_type.inc               node                -       v?
-  perm                                  User: permission                perm.inc                    user                v       v
-  php                                   PHP Code                        php.inc                     -                   v       v
-  role                                  User: role                      role.inc                    user                v       v
-  *string_length                         String: length                  string_length.inc           string              -       -
-  *string_equal                          String: comparison              string_equal.inc            string              -       -
-  *term                                  Taxonomy: term                  term.inc                    taxonomy_term terms -       -
-  *term_has_parent                       Taxonomy: term has parent(s)    term_has_parent.inc         taxonomy_term terms -       -
-  *term_parent                           Taxonomy: parent term           term_parent.inc             taxonomy_term terms -       -
-  *term_vocabulary                       Taxonomy: vocabulary            term_vocabulary.inc         taxonomy_term terms 
-                                                                                                    taxonomy_vocabulary -       -
-  theme                                 Current theme                   theme.inc                   -                   v       v
-  path_visibility                       String: URL path                path_visibility.inc         Path                v       v
+Examples (depends on defined entity types, bundles and fields)
+--------
+entity_bundle:<TYPE>:
+  entity_bundle:comment                 Comment: Bundle
+  entity_bundle:file                    File: Bundle
+  entity_bundle:node                    Node: Bundle
+  entity_bundle:taxonomy_term           Taxonomy term: Bundle
+  entity_bundle:taxonomy_vocabulary     Taxonomy vocabulary: Bundle
+  entity_bundle:user                    User: Bundle
+  ...
+
+entity_field_value:<TYPE>:<BUNDLE>:<FIELD>:  
+  entity_field_value:comment:comment_node_article:comment_body      Comment comment_node_article: Comment Field
+  entity_field_value:comment:comment_node_page:comment_body         Comment comment_node_page: Comment Field
+  entity_field_value:node:article:body                              Node article: Body Field
+  entity_field_value:node:article:field_tags                        Node article: Tags Field
+  entity_field_value:node:article:field_image                       Node article: Image Field
+  entity_field_value:node:page:body                                 Node page: Body Field
+  ...
   
-  *entity_bundle:comment                 Comment: Bundle                 entity_bundle.inc           ?                   -       -
-  *entity_bundle:file                    File: Bundle                    entity_bundle.inc           ?                   -       -
-  entity_bundle:node                    Node: Bundle                    entity_bundle.inc           ?                   -       v?
-  *entity_bundle:taxonomy_term           Taxonomy term: Bundle           entity_bundle.inc           ?                   -       -
-  *entity_bundle:taxonomy_vocabulary     Taxonomy vocabulary: Bundle     entity_bundle.inc           ?                   -       -
-  entity_bundle:user                    User: Bundle                    entity_bundle.inc           ?                   v       v
-  entity_field_value:node:article:body  Node page: Body Field           entity_field_value.inc      ?                  -       v?
-  *entity_field_value:node:article:field_image   Node article: Image Field   entity_field_value.inc  ?                   -       -
-  entity_field_value:node:article:field_tags    <TODO>
-  entity_field_value:node:page:body     Node page: Body Field           entity_field_value.inc      -?                  -       v?
-  entity_field_value:comment:comment_node_article:comment_body
-  entity_field_value:comment:comment_node_page:comment_body
+UI (Page Manager)
+--
+access:
+
+<PAGE>->Settings->Access
+  Option
+  ------
+  Context exists
+  Current theme
+  Front page
+  PHP Code
+  String: URL path
+  User: Bundle
+  User: permission
+  User: role
+  
+<PAGE>->Settings->Variants-><VARIANT>->Selection rules
+  Option                                        Contexts
+  ------                                        --------
+  Comment: Bundle                               Comment
+  Comment comment_node_article: Comment Field   Comment
+  Comment comment_node_page: Comment Field      Comment
+  Context exists                                -
+  Current theme                                 -
+  File: Bundle                                  File
+  Front page                                    -
+  Node article: Body Field                      Node, Node add form, Node edit form 
+  Node article: Tags Field                      Node, Node add form, Node edit form
+  Node article: Image Field                     Node, Node add form, Node edit form
+  Node page: Body Field                         Node, Node add form, Node edit form
+  Node: (un)published                           Node, Node add form, Node edit form
+  Node: Bundle                                  Node, Node add form, Node edit form
+  Node: accessible                              Node, Node add form, Node edit form
+  Node: type                                    Node, Node add form, Node edit form
+  PHP Code                                      -
+  String: comparison                            String
+  String: length                                String
+  String: URL path                              -
+  Taxonomy: parent term                         Taxonomy term
+  Taxonomy: term                                Taxonomy term
+  Taxonomy: term has parent(s)                  Taxonomy term
+  Taxonomy term: Bundle                         Taxonomy term
+  Taxonomy: vocabulary                          Taxonomy vocabulary, Taxonomy term
+  Taxonomy vocabulary: Bundle                   Taxonomy vocabulary
+  User: compare                                 User (additional)
+  User: Bundle                                  -
+  User: permission                              -
+  User: role                                    -
+
+The context 'user' is created automatically by Page Manager.
+
+context:
+
+
 
 arguments
 cache
@@ -180,25 +223,31 @@ content_types
 contexts
   <PAGE>->Settings->Variants-><VARIANT>->Context
 
-  Name                                  Title                           plugins/contexts/               Contexts  
-  entity:comment                        Comment                         entity.inc                      v
-  entity:node                           Node                            entity.inc                      v?
-  entity:file                           File                            entity.inc                      v
-  entity:taxonomy_term
-  entity:taxonomy_vocabulary
-  entity:user
-  token
-  string
-  term
-  user                                  User                            user.inc                        v
-  node_edit_form
-  user_edit_form
-  node                                  Node                            node.inc                        v?
+  Name                                  Title                           plugins/contexts/               Contexts
+  entity:<TYPE>                         <TYPE>                          entity.inc                      v
+  string                                String                          string.inc                      v
+  token                                 Token                           token.inc                       v  
+  term                                  Taxonomy term                   term.inc                        deprecated
+  terms                                 Taxonomy terms                  terms.inc                       deprecated
+  node                                  Node                            node.inc                        deprecated
   node_add_form                         Node add form                   node_add_form.inc               v
+  node_edit_form                        Node edit form                  node_edit_form.inc              v
+  user                                  User                            user.inc                        deprecated
+  user_edit_form                        User edit form                  user_edit_form.inc              v
   vocabulary
-  terms 
   export_ui
   relationships
+
+
+Examples (depends on defined entity types, bundles and fields)
+--------
+  entity:comment                        Comment                         entity.inc                      v
+  entity:node                           Node                            entity.inc                      v
+  entity:file                           File                            entity.inc                      v
+  entity:taxonomy_term                  Taxonomy term                   entity.inc                      v
+  entity:taxonomy_vocabulary            Taxonomy vocabulary             entity.inc                      v
+  entity:user                           User                            entity.inc                      v
+
 
 Plugins content_types
 ---------------------
