@@ -93,28 +93,34 @@ Panels features:
 Panel Page: CTools->Page Manager
 Panel Node: Panels->Panel Node
 
- 
+
 
 
 *******************************************************************************
 Plugins
 -------
-
-Plugin Type
-The types provided by CTools module and submodules.
+The plugin types provided by CTools and submodules.
 
 CTools
 ------
-ctools/plugins:
+ctools/plugins:  
+  access 
+  arguments
+  cache
+  content_types
+  contexts  
+  export_ui
+  relationships
+  
+Page manager
+------------
+ctools/page_manager/plugins:
+  page_wizards
+  task_handlers
+  tasks
 
-access
-arguments
-cache
-content_types
-contexts
-
-access
-------
+ctools/plugins/access:
+----------------------
   Name                                          Title                           plugins/access/             ctools_context_required
   compare_users                                 User: compare                   compare_users.inc           user, user
   context_exists                                Context exists                  context_exists.inc          any
@@ -139,9 +145,9 @@ access
   theme                                         Current theme                   theme.inc                   -
 
 (L) - if (module_exists('locale'))
-   
-  
-Examples (depends on defined entity types, bundles and fields)
+
+
+Examples (depends on defined entity types, bundles and fields):
 --------
 entity_bundle:<TYPE>:
   entity_bundle:comment                 Comment: Bundle
@@ -160,11 +166,160 @@ entity_field_value:<TYPE>:<BUNDLE>:<FIELD>:
   entity_field_value:node:article:field_image                       Node article: Image Field
   entity_field_value:node:page:body                                 Node page: Body Field
   ...
-  
-UI (Page Manager)
---
-access:
 
+
+ctools/plugins/arguments:
+-------------------------
+  Name                      Title                           plugins/arguments/              ctools_context_required
+  entity_id:<TYPE>          Entity: ID                      entity_id.inc                   -
+  nid                       Node: ID                        nid.inc                         no ui
+  node_edit                 Node edit form: node ID         node_edit.inc                   -
+  node_add                  Node add form: node type        node_add.inc                    -
+  rid                       Revision: ID                    rid.inc                         -
+  string                    String                          string.inc                      -
+  term                      Taxonomy term: ID               term.inc                        -
+  terms                     Taxonomy term (multiple): ID    terms.inc                       -
+  uid                       User: ID                        uid.inc                         no ui
+  user_edit                 User edit form: User ID         user_edit.inc                   -
+  user_name                 User: name                      user_name.inc                   -
+  vid                       Vocabulary: ID                  vid.inc                         no ui
+
+Examples (depends on defined entity types):
+--------
+entity_id:<TYPE>:
+  entity_id:comment                     Comment: ID
+  entity_id:file                        File: ID
+  entity_id:node                        Node: ID
+  entity_id:taxonomy_term               Taxonomy term: ID
+  entity_id:taxonomy_vocabulary         Taxonomy vocabulary: ID
+  entity_id:user                        User: ID
+ 
+
+ctools/plugins/cache:
+---------------------
+
+
+ctools/plugins/content_types:
+-----------------------------
+  Name                      Title                           plugins/contexts/                           ctools_context_required
+  block                     Block                           block/block.inc                             -
+  comment_reply_form        Comment Reply Form              comment/comment_reply_form.inc              node
+  custom                    Custom content                  custom/custom.inc                           -
+  entity_field              Entity field                    entity_context/entity_field.inc             -
+  entity_field_extra        Entity extra field              entity_context/entity_field_extra.inc       -
+  entity_form_field         Entity field                    form/entity_form_field.inc                  -
+  form                      General form                    form/form.inc                               form
+  node                      Existing node                   node/node.inc                               -
+  node_attachments          Attached files                  node_context/node_attachments.inc           node
+  node_author               Node author                     node_context/node_author.inc                node
+  node_body                 Node body                       node_context/node_body.inc                  node (deprecated)
+  node_comment_form         Comment form                    node_context/node_comment_form.inc          node
+  node_comments             Node comments                   node_context/node_comments.inc              node
+  node_content              Node content                    node_context/node_content.inc               node
+  node_created              Node created date               node_context/node_created.inc               node
+  node_form_author          Node form author information    node_form/node_form_author.inc              node_form
+  node_form_buttons         Node form submit buttons        node_form/node_form_buttons.inc             node_form
+  node_form_comment         Node form comment settings      node_form/node_form_comment.inc             node_form
+  node_form_language        Node form languages             node_form/node_form_language.inc            node_form
+  node_form_log             Node form revision log message  node_form/node_form_log.inc                 node_form
+  node_form_menu            Node form menu settings         node_form/node_form_menu.inc                node_form
+  node_form_path            Node form url path settings     node_form/node_form_path.inc                node_form
+  node_form_publishing      Node form publishing options    node_form/node_form_publishing.inc          node_form
+  node_form_title           Node form title field           node_form/node_form_title.inc               node_form
+  node_links                Node links                      node_context/node_links.inc                 node
+  node_terms                Node terms                      node_context/node_terms.inc                 node
+  node_title                Node title                      node_context/node_title.inc                 node
+  node_type_desc            Node type description           node_context/node_type_desc.inc             node
+  node_updated              Node last updated date          node_context/node_updated.inc               node
+  page_actions              Actions                         page/page_actions.inc                       -
+  page_breadcrumb           Breadcrumb                      page/page_breadcrumb.inc                    -
+  page_feed_icons           Feed icons                      page/page_feed_icons.inc                    -
+  page_help                 Help                            page/page_help.inc                          -
+  page_logo                 Site logo                       page/page_logo.inc                          -
+  page_messages             Status messages                 page/page_messages.inc                      -
+  page_primary_links        Primary navigation links        page/page_primary_links.inc                 -
+  page_secondary_links      Secondary navigation links      page/page_secondary_links.inc               -
+  page_site_name            Site name                       page/page_site_name.inc                     -
+  page_slogan               Site slogan                     page/page_slogan.inc                        -
+  page_tabs                 Tabs                            page/page_tabs.inc                          -
+  page_title                Page title                      page/page_title.inc                         -
+  search_form               Advanced search form            search/search_form.inc                      string
+  search_result             Search results                  search/search_result.inc                    string
+  term_description          Term description                term_context/term_description.inc           term, taxonomy_term
+  term_list                 List of related terms           term_context/term_list.inc                  term, taxonomy_term
+  token                     Tokens                          token/token.inc                             -
+  user_picture              User picture                    user_context/user_picture.inc               user
+  user_profile              User profile                    user_context/user_profile.inc               user
+  user_signature            User signature                  user_context/user_signature.inc             user
+  vocabulary_terms          Vocabulary terms                vocabulary_context/vocabulary_terms.inc     entity:taxonomy_vocabulary
+  
+
+ctools/plugins/contexts:
+------------------------
+  Name                      Title                           plugins/contexts/               Contexts
+  entity:<TYPE>             <TYPE>                          entity.inc                      v
+  node_add_form             Node add form                   node_add_form.inc               v
+  node_edit_form            Node edit form                  node_edit_form.inc              v
+  node                      Node                            node.inc                        deprecated
+  string                    String                          string.inc                      v
+  term                      Taxonomy term                   term.inc                        deprecated
+  terms                     Taxonomy terms                  terms.inc                       deprecated
+  token                     Token                           token.inc                       v
+  user                      User                            user.inc                        deprecated
+  user_edit_form            User edit form                  user_edit_form.inc              v
+  vocabulary                Taxonomy vocabulary             vocabulary.inc                  deprecated
+  export_ui                 ?W domu tego nie ma???
+  relationships
+
+Examples (depends on defined entity types, bundles and fields):
+--------
+entity:<TYPE>:
+  entity:comment                        Comment
+  entity:node                           Node
+  entity:file                           File
+  entity:taxonomy_term                  Taxonomy term
+  entity:taxonomy_vocabulary            Taxonomy vocabulary
+  entity:user                           User
+  ...
+
+
+ctools/plugins/relationships:
+-----------------------------
+  Name                                  Title                               plugins/relationships/                  ctools_context_required
+  book_parent                           Book parent                         book_parent.inc                         node
+  entity_from_field:<RELATIONSHIP>      Entity                              entity_from_field.inc                   ?
+  entity_from_schema:<RELATIONSHIP>     Entity                              entity_from_schema.inc                  ?
+  node_edit_form_from_node              Node edit form from node            node_edit_form_from_node.inc            node
+  term_parent                           Term parent                         term_parent.inc                         entity:taxonomy_term
+  term_from_node                        Term from node                      term_from_node.inc                      node  
+  terms_from_node                       Multiple terms from node            terms_from_node.inc                     node
+  user_category_edit_form_from_user     User category edit form from user   user_category_edit_form_from_user.inc   user  
+  user_from_node                        Node author                         user_from_node.inc                      node
+  
+Examples
+--------
+entity_from_schema:<RELATIONSHIP>:
+  entity_from_schema:nid-comment-node                       Node from Comment (on comment.comment_node)
+  entity_from_schema:nid-node-comment                       Comment from Node (on comment.comment_node)
+  entity_from_schema:uid-comment-user                       User from Comment (on comment.comment_author)
+  entity_from_schema:uid-user-comment                       Comment from User (on comment.comment_author)
+  entity_from_schema:uid-node-user                          User from Node (on node.node_author)
+  entity_from_schema:uid-user-node                          Node from User (on node.node_author)
+  entity_from_schema:uid-file-user                          User from File (on file_managed.file_owner)
+  entity_from_schema:uid-user-file                          File from User (on file_managed.file_owner)
+  entity_from_schema:vid-taxonomy_term-taxonomy_vocabulary  Taxonomy vocabulary from Taxonomy term (on taxonomy_term_data.vocabulary)
+  entity_from_schema:vid-taxonomy_vocabulary-taxonomy_term  Taxonomy term from Taxonomy vocabulary (on taxonomy_term_data.vocabulary)
+  ...
+
+entity_from_field:<RELATIONSHIP>:
+  entity_from_field:field_tags-node-taxonomy_term           Taxonomy term from Node (on Node: Tags [field_tags])
+  entity_from_field:field_image-node-file                   File from Node (on Node: Image [field_image])
+  ...
+
+*******************************************************************************
+UI (Page manager)
+-----------------
+ctools/plugins/access:
 <PAGE>->Settings->Access
   Option
   ------
@@ -210,110 +365,52 @@ access:
   User: permission                              -
   User: role                                    -
 
-The context 'user' is created automatically by Page Manager.
+The context 'user' is created automatically by Page manager.
 
-context:
+ctools/plugins/content_types:
+NOT SHOWN
 
+ctools/plugins/context:
+<PAGE>->Settings->Variants-><VARIANT>->Context
+  Option
+  ------
+  Comment
+  Node
+  Node add form
+  Node edit form
+  File
+  Taxonomy term
+  Taxonomy vocabulary
+  String
+  Token
+  User
+  User edit form
+  
+ctools/plugins/relationships:
+<PAGE>->Settings->Variants-><VARIANT>->Context
+  Option                                                                        Contexts
+  ------                                                                        --------
+  Book parent                                                                   Node, Node add form, Node edit form
+  Comment from Node (on comment.comment_node)                                   Node, Node add form, Node edit form
+  Comment from User (on comment.comment_author)                                 User
+  File from User (on file_managed.file_owner)                                   User
+  File from Node (on Node: Image [field_image])                                 Node, Node add form, Node edit form
+  Multiple terms from node                                                      Node, Node add form, Node edit form
+  Node author                                                                   deprecated
+  Node edit form from node                                                      Node, Node add form, Node edit form
+  Node from Comment (on comment.comment_node)                                   Comment
+  Node from User (on node.node_author)                                          User
+  Taxonomy vocabulary from Taxonomy term (on taxonomy_term_data.vocabulary)     Taxonomy term
+  Taxonomy term from Taxonomy vocabulary (on taxonomy_term_data.vocabulary)     Taxonomy vocabulary
+  Taxonomy term from Node (on Node: Tags [field_tags])                          Node, Node add form, Node edit form
+  Term from node                                                                Node, Node add form, Node edit form
+  Term parent                                                                   Taxonomy term
+  User category edit form from user                                             User
+  User from Comment (on comment.comment_author)                                 Comment
+  User from File (on file_managed.file_owner)                                   File
+  User from Node (on node.node_author)                                          Node, Node add form, Node edit form
 
-
-arguments
-cache
-content_types
-
-contexts
-  <PAGE>->Settings->Variants-><VARIANT>->Context
-
-  Name                                  Title                           plugins/contexts/               Contexts
-  entity:<TYPE>                         <TYPE>                          entity.inc                      v
-  string                                String                          string.inc                      v
-  token                                 Token                           token.inc                       v  
-  term                                  Taxonomy term                   term.inc                        deprecated
-  terms                                 Taxonomy terms                  terms.inc                       deprecated
-  node                                  Node                            node.inc                        deprecated
-  node_add_form                         Node add form                   node_add_form.inc               v
-  node_edit_form                        Node edit form                  node_edit_form.inc              v
-  user                                  User                            user.inc                        deprecated
-  user_edit_form                        User edit form                  user_edit_form.inc              v
-  vocabulary
-  export_ui
-  relationships
-
-
-Examples (depends on defined entity types, bundles and fields)
---------
-  entity:comment                        Comment                         entity.inc                      v
-  entity:node                           Node                            entity.inc                      v
-  entity:file                           File                            entity.inc                      v
-  entity:taxonomy_term                  Taxonomy term                   entity.inc                      v
-  entity:taxonomy_vocabulary            Taxonomy vocabulary             entity.inc                      v
-  entity:user                           User                            entity.inc                      v
-
-
-Plugins content_types
----------------------
-
-node_form_log                       node_form               node_form_log.inc           Form            Revision log message for the node
-        ctools_node_form_log_content_type_render
-        ctools_node_form_log_content_type_admin_title
-        ctools_node_form_log_content_type_edit_form       
-node_form_language
-node_form_menu
-node_form_buttons
-node_form_comment
-node_form_title
-node_form_publishing
-node_form_path
-node_form_author
-form
-entity_form_field
-node_body
-node_created
-node_links
-node_author
-node_comment_form
-node_attachments
-node_content
-node_type_desc
-node_updated
-node_terms
-node_title
-node_comments
-user_signature
-user_profile
-user_picture
-page_actions
-page_slogan
-page_breadcrumb
-page_primary_links
-page_logo
-page_title
-page_tabs
-page_feed_icons
-page_help
-page_messages
-page_site_name
-page_secondary_links
-vocabulary_terms
-search_result
-search_form
-block
-term_description
-term_list
-token
-node
-entity_field_extra
-entity_field
-custom
-comment_reply_form  
-
-
-Page Manager
-------------
-ctools/page_managers/plugins:
-
-page_wizards
-task_handlers
-tasks
+Available relationships depend also on already added relationships.
 
 
 *******************************************************************************
