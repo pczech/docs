@@ -36,10 +36,8 @@ Views content panes                     views_content
 
 
 *******************************************************************************
-Page Manager
-------------
-
-UI
+UI (Page manager)
+-----------------
   Structure->Pages
   Structure->Panels->Dashboard->Create New... Panel Page
   Structure->Panels->Create New... Panel Page
@@ -60,6 +58,9 @@ UI
         Path
         Make this your site home page
         Use this page in an admin overlay
+        
+      Access
+        See Plugins->UI (Page manager)
         
       Menu
         No menu entry
@@ -82,9 +83,13 @@ UI
         Administrative title
         Response code
         
+      Selection rules
+        See Plugins->UI (Page manager)
         
-        
-    
+      Context
+        See Plugins->UI (Page manager)
+
+
 Panels->Views Content Panes (and a View):
     Structure->Panels-><PAGE>->Edit->Content->Views
 
@@ -92,8 +97,6 @@ Panels->Views Content Panes (and a View):
 Panels features:
 Panel Page: CTools->Page Manager
 Panel Node: Panels->Panel Node
-
-
 
 
 *******************************************************************************
@@ -197,6 +200,11 @@ entity_id:<TYPE>:
 
 ctools/plugins/cache:
 ---------------------
+  Name                      Title                           plugins/contexts/cache/
+  export_ui                 Export UI wizard cache          export_ui.inc
+  simple                    Simple                          simple.inc     
+                                                            page_manager/plugins/cache/
+  page_manager_context      Page manager context            page_manager_context.inc
 
 
 ctools/plugins/content_types:
@@ -283,6 +291,12 @@ entity:<TYPE>:
   ...
 
 
+ctools/plugins/export_ui:
+-------------------------
+  Name                  Title                   plugins/export_ui/      class
+  ctools_export_ui      ctools_export_ui        ctools_export_ui.inc    ctools_export_ui
+
+
 ctools/plugins/relationships:
 -----------------------------
   Name                                  Title                               plugins/relationships/                  ctools_context_required
@@ -315,6 +329,31 @@ entity_from_field:<RELATIONSHIP>:
   entity_from_field:field_tags-node-taxonomy_term           Taxonomy term from Node (on Node: Tags [field_tags])
   entity_from_field:field_image-node-file                   File from Node (on Node: Image [field_image])
   ...
+
+
+ctools/page_manager/plugins/page_wizards:
+----------------------------------------
+  NO PLUGINS
+
+ctools/page_manager/plugins/task_handlers:
+-----------------------------------------
+  Name              Title                   plugins/task_handlers/
+  http_response     HTTP response code      http_response.inc
+  
+ 
+ctools/page_manager/plugins/tasks:
+---------------------------------
+  Name              Title                       plugins/tasks/
+  comment_reply     Comment Reply page          comment_reply.inc
+  page              Custom pages                page.inc
+  node_edit         Node add/edit form          node_edit.inc
+  node_view         User profile template       user_view.inc
+  search            Search                      search.inc
+  term_view         Taxonomy term template      term_view.inc
+  user_edit         User Edit Template          user_edit.inc
+  user_view         User profile template       user_view.inc
+
+ 
 
 *******************************************************************************
 UI (Page manager)
@@ -367,8 +406,11 @@ ctools/plugins/access:
 
 The context 'user' is created automatically by Page manager.
 
+ctools/plugins/arguments
+NOT VISIBLE
+
 ctools/plugins/content_types:
-NOT SHOWN
+NOT VISIBLE
 
 ctools/plugins/context:
 <PAGE>->Settings->Variants-><VARIANT>->Context
@@ -385,6 +427,9 @@ ctools/plugins/context:
   Token
   User
   User edit form
+  
+ctools/plugins/export_ui:
+NOT VISIBLE
   
 ctools/plugins/relationships:
 <PAGE>->Settings->Variants-><VARIANT>->Context
@@ -449,11 +494,11 @@ ctoolsCachedPluginArray                                                         
         ctoolsNotCachedPluginArray                                                  ctools/tests: plugins/not_cached/ctoolsNotCachedPluginArray.class.php
 ctoolsNotCachedPluginArray2                                                         ctools/tests: plugins/not_cached/ctoolsNotCachedPluginArray2.class.php
     
-(views_plugin_display)
+(views_plugin_display)                                                              views.txt
     views_content_plugin_display_ctools_context                                     ctools/views_content: plugins/views/views_content_plugin_display_ctools_context.inc
     views_content_plugin_display_panel_pane                                         ctools/views_content: plugins/views/views_content_plugin_display_panel_pane.inc
 
-(views_plugin_style)
+(views_plugin_style)                                                                views.txt
     views_content_plugin_style_ctools_context                                       ctools/views_content: plugins/views/views_content_plugin_style_ctools_context.inc
     
     

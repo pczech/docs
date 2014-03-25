@@ -1,0 +1,141 @@
+*******************************************************************************
+API documentation
+----------------- 
+TODO
+
+
+*******************************************************************************
+Submodules
+----------
+Mini panels                             panels_mini
+Panel nodes                             panels_node
+Panels In-Place Editor                  panels_ipe
+Panels translation                      i18n_panels
+
+
+*******************************************************************************
+Plugin list
+-----------
+The plugin types provided by Panels and submodules.
+
+Panels
+------
+panels/plugins:
+  cache
+  display_renderers  
+  layouts
+  styles
+  
+Mini panels
+-----------
+panels/panels_mini/plugins:
+TODO
+
+Panel nodes
+-----------
+NO PLUGINS
+
+Panels In-Place Editor
+----------------------
+panels/panels_ipe/plugins:
+TODO
+
+Panels translation
+------------------
+NO PLUGINS
+
+
+*******************************************************************************
+Plugin details
+--------------
+
+panels/plugins/cache:
+--------------------
+  Name                          Title                           plugins/cache/
+  simple
+
+  
+panels/plugins/display_renderers:
+--------------------------------
+  Name                          Title                           plugins/display_renderers/
+  editor
+  simple
+  standard
+
+  
+panels/plugins/layouts:
+----------------------
+  Name                          Title                           plugins/layouts/
+  flexible
+  onecol
+  twocol
+  twocol_bricks
+  twocol_stacked
+  threecol_25_50_25
+  threecol_25_50_25_stacked  
+  threecol_33_34_33
+  threecol_33_34_33_stacked
+
+
+panels/plugins/styles:
+---------------------
+  Name                          Title                           plugins/styles/
+  block
+  default
+  list 
+  naked
+  rounded_corners
+
+
+*******************************************************************************
+TODO
+UI (Page manager)
+-----------------
+ctools/plugins/access:
+<PAGE>->Settings->Access
+  Option
+  ------
+  
+<PAGE>->Settings->Variants-><VARIANT>->Selection rules
+  Option                                        Contexts
+  ------                                        --------
+
+ctools/plugins/arguments
+NOT VISIBLE
+
+ctools/plugins/content_types:
+NOT VISIBLE
+
+ctools/plugins/context:
+<PAGE>->Settings->Variants-><VARIANT>->Context
+  
+ctools/plugins/export_ui:
+NOT VISIBLE
+  
+ctools/plugins/relationships:
+<PAGE>->Settings->Variants-><VARIANT>->Context
+  Option                                                                        Contexts
+  ------                                                                        --------
+
+
+*******************************************************************************
+Class hierarchy
+---------------
+
+class                               interfaces                                      class file
+--------------------------------------------------------------------------------------------------------
+panels_allowed_layouts                                                              panels: includes/common.inc
+panels_display                                                                      panels: panels.module
+panels_cache_object                                                                 panels: includes/plugins.inc
+panels_renderer_standard                                                            panels: plugins/display_renderers/panels_renderer_standard.class.php
+    panels_renderer_editor                                                          panels: plugins/display_renderers/panels_renderer_editor.class.php
+        panels_renderer_ipe                                                         panels: plugins/display_renderers/panels_renderer_ipe.class.php
+    panels_renderer_simple                                                          panels: plugins/display_renderers/panels_renderer_simple.class.php
+PanelsLegacyState                                                                   panels: includes/legacy.inc
+
+(ctools_export_ui)                                                                  ctools.txt
+    panels_layouts_ui                                                               panels/plugins/export_ui/panels_layouts_ui.class.php
+    panels_mini_ui                                                                  panels/panels_mini/plugins/export_ui/panels_mini_ui.class.php
+
+(views_plugin_row_fields)                                                           views.txt    
+    panels_views_plugin_row_fields                                                  panels/plugins/views/panels_views_plugin_row_fields.class.php
