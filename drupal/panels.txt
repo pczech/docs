@@ -14,6 +14,103 @@ Panels translation                      i18n_panels
 
 
 *******************************************************************************
+UI (CTools + Panels)
+--------------------
+  Structure->Panels->Dashboard
+    Create New...
+      Panel Page (Disabled, requires CTools->Page manager)
+      Custom layout
+      Panel node (Disabled, requires Panels->Panel node)
+    Manage custom layouts (Structure->Panels->Layouts)
+      EMPTY
+      
+  Structure->Panels->Layouts
+    Add flexible layout
+    Import
+    
+  Structure->Panels->Settings
+    (General) EMPTY
+
+    
+UI (CTools + Page manager + Panels)
+-----------------------------------
+  Structure->Pages->Wizards
+    Landing page (compare with ctools.txt)
+    
+  Structure->Panels->Dashboard
+    Create New...
+      Panel Page
+      Custom layout
+      Panel node (Disabled, requires Panels->Panel node)
+    Page wizards (Structure->Pages->Wizards)
+      Landing page
+    Manage pages (Structure->Pages->List)(1)
+      <PAGES>
+    Manage custom layouts (Structure->Panels->Layouts)
+      EMPTY
+      
+  Structure->Panels->Layouts
+    Add flexible layout
+    Import
+      
+  Structure->Panels->Settings
+    General
+    Panel pages
+    
+  (1)Structure->Pages->List-><PAGE>->Edit:
+    Clone | Export | Delete | Disable | Add variant | Import variant
+    
+    Add variant
+      HTTP response code
+      Panel page
+ 
+    Summary
+      Status
+      Path
+      Access
+      Menu
+            
+    Settings
+      Basic
+        Administrative title
+        Administrative description
+        Path
+        Make this your site home page
+        Use this page in an admin overlay
+        
+      Access
+        See Plugins->UI (Page manager)
+        
+      Menu
+        No menu entry
+        Normal menu entry
+        Menu tab
+        Default menu tab
+        Local action
+        
+    Variants
+    Clone | Export | Delete | Disable
+    
+      (HTTP response code)
+      Summary
+        Storage  
+        Status
+        Selection rule
+        Response code
+        
+      General
+        Administrative title
+        Response code
+        
+      Selection rules
+        See Plugins->UI (Page manager)
+        
+      Context
+        See Plugins->UI (Page manager)
+      
+    
+
+*******************************************************************************
 Plugin list
 -----------
 The plugin types provided by Panels and submodules.

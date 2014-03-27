@@ -1,3 +1,43 @@
 SEO, Links
 http://www.1websitedesigner.com/drupal-end-user-guide
 http://www.1websitedesigner.com/search-engine-optimization
+
+hosting home.pl migration
+-------------------------
+create FTP account:
+Usługi -> Hosting -> serwerXXX -> Konta FTP
+
+Login and load index.html to main www directory
+
+Configure private folder:
+https://pomoc.home.pl/produkty/panel/137
+
+Move common tools to the folder e.g. pack.php, install.php
+
+Create /tools folder
+
+Make backups for all sites 01, 02, 03, 01-01:
+ Clear cache
+ Export database using phpMyAdmin
+ Pack and copy source files via FTP
+
+Install e.g. 01:
+ Create a database
+ Login to the database and import XXX.sql.gz
+ Install source files via FTP
+ Update database settings in sites/default/settings.php
+ Done
+ 
+Create email accounts and aliases
+
+Assign domain to the new server
+
+If new passwords are set, update them e.g. in your email client. 
+
+In old service:
+ Delete email accounts
+ Delete databases (drop tables first)
+ Delete source files
+ Delete private folder settings
+ Delete FTP account
+ 

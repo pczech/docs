@@ -28,22 +28,30 @@ Custom rulesets                         ctools_access_ruleset
 CTools AJAX Example                     ctools_ajax_sample
 Custom content panes                    ctools_custom_content
 CTools Plugin Example                   ctools_plugin_example
-Page manager                            page_manager
+Page manager*                           page_manager
 Stylizer                                stylizer
 Term Depth access                       term_depth
 Ctools plugins test                     tests
 Views content panes                     views_content
 
+*Page manager is crucial to Panels and CTools UI.
 
 *******************************************************************************
-UI (Page manager)
------------------
-  Structure->Pages
-  Structure->Panels->Dashboard->Create New... Panel Page
-  Structure->Panels->Create New... Panel Page
-
-  Structure->Pages-><PAGE>->Edit:
+UI (CTools + Page manager)
+--------------------------
+  Structure->Pages->List
+    Add custom page
+    Import page
+    <PAGES>(1)
+            
+  Structure->Pages->Wizards
+    EMPTY
+    
+  (1)Structure->Pages->List-><PAGE>->Edit:
     Clone | Export | Delete | Disable | Add variant | Import variant
+    
+    Add variant
+      HTTP response code
  
     Summary
       Status
@@ -88,16 +96,7 @@ UI (Page manager)
         
       Context
         See Plugins->UI (Page manager)
-
-
-Panels->Views Content Panes (and a View):
-    Structure->Panels-><PAGE>->Edit->Content->Views
-
-
-Panels features:
-Panel Page: CTools->Page Manager
-Panel Node: Panels->Panel Node
-
+  
 
 *******************************************************************************
 Plugins
