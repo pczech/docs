@@ -50,14 +50,21 @@ UI (CTools + Page manager)
   (1)Structure->Pages->List-><PAGE>->Edit:
     Clone | Export | Delete | Disable | Add variant | Import variant
     
-    Add variant
+    Variants:
       HTTP response code
  
     Summary
-      Status
-      Path
-      Access
-      Menu
+      Summary
+        Storage
+        Status
+        Path
+        Access
+        Menu
+      Panel: HTTP response code
+        Storage  
+        Status
+        Selection rule
+        Response code
             
     Settings
       Basic
@@ -80,24 +87,27 @@ UI (CTools + Page manager)
     Variants
     Clone | Export | Delete | Disable
     
-      (HTTP response code)
+      HTTP response code:
+        Summary
+          Storage  
+          Status
+          Selection rule
+          Response code
+        
+        General
+          Administrative title
+          Response code
+        
+        Selection rules
+          See Plugins->UI (Page manager)
+        
+        Context
+          See Plugins->UI (Page manager)
+          
       Summary
-        Storage  
-        Status
-        Selection rule
-        Response code
-        
-      General
-        Administrative title
-        Response code
-        
-      Selection rules
-        See Plugins->UI (Page manager)
-        
-      Context
-        See Plugins->UI (Page manager)
-  
+        EMPTY
 
+      
 *******************************************************************************
 Plugins
 -------
@@ -208,57 +218,59 @@ ctools/plugins/cache:
 
 ctools/plugins/content_types:
 -----------------------------
-  Name                      Title                           plugins/contexts/                           ctools_context_required
-  block                     Block                           block/block.inc                             -
-  comment_reply_form        Comment Reply Form              comment/comment_reply_form.inc              node
-  custom                    Custom content                  custom/custom.inc                           -
-  entity_field              Entity field                    entity_context/entity_field.inc             -
-  entity_field_extra        Entity extra field              entity_context/entity_field_extra.inc       -
-  entity_form_field         Entity field                    form/entity_form_field.inc                  -
-  form                      General form                    form/form.inc                               form
-  node                      Existing node                   node/node.inc                               -
-  node_attachments          Attached files                  node_context/node_attachments.inc           node
-  node_author               Node author                     node_context/node_author.inc                node
-  node_body                 Node body                       node_context/node_body.inc                  node (deprecated)
-  node_comment_form         Comment form                    node_context/node_comment_form.inc          node
-  node_comments             Node comments                   node_context/node_comments.inc              node
-  node_content              Node content                    node_context/node_content.inc               node
-  node_created              Node created date               node_context/node_created.inc               node
-  node_form_author          Node form author information    node_form/node_form_author.inc              node_form
-  node_form_buttons         Node form submit buttons        node_form/node_form_buttons.inc             node_form
-  node_form_comment         Node form comment settings      node_form/node_form_comment.inc             node_form
-  node_form_language        Node form languages             node_form/node_form_language.inc            node_form
-  node_form_log             Node form revision log message  node_form/node_form_log.inc                 node_form
-  node_form_menu            Node form menu settings         node_form/node_form_menu.inc                node_form
-  node_form_path            Node form url path settings     node_form/node_form_path.inc                node_form
-  node_form_publishing      Node form publishing options    node_form/node_form_publishing.inc          node_form
-  node_form_title           Node form title field           node_form/node_form_title.inc               node_form
-  node_links                Node links                      node_context/node_links.inc                 node
-  node_terms                Node terms                      node_context/node_terms.inc                 node
-  node_title                Node title                      node_context/node_title.inc                 node
-  node_type_desc            Node type description           node_context/node_type_desc.inc             node
-  node_updated              Node last updated date          node_context/node_updated.inc               node
-  page_actions              Actions                         page/page_actions.inc                       -
-  page_breadcrumb           Breadcrumb                      page/page_breadcrumb.inc                    -
-  page_feed_icons           Feed icons                      page/page_feed_icons.inc                    -
-  page_help                 Help                            page/page_help.inc                          -
-  page_logo                 Site logo                       page/page_logo.inc                          -
-  page_messages             Status messages                 page/page_messages.inc                      -
-  page_primary_links        Primary navigation links        page/page_primary_links.inc                 -
-  page_secondary_links      Secondary navigation links      page/page_secondary_links.inc               -
-  page_site_name            Site name                       page/page_site_name.inc                     -
-  page_slogan               Site slogan                     page/page_slogan.inc                        -
-  page_tabs                 Tabs                            page/page_tabs.inc                          -
-  page_title                Page title                      page/page_title.inc                         -
-  search_form               Advanced search form            search/search_form.inc                      string
-  search_result             Search results                  search/search_result.inc                    string
-  term_description          Term description                term_context/term_description.inc           term, taxonomy_term
-  term_list                 List of related terms           term_context/term_list.inc                  term, taxonomy_term
-  token                     Tokens                          token/token.inc                             -
-  user_picture              User picture                    user_context/user_picture.inc               user
-  user_profile              User profile                    user_context/user_profile.inc               user
-  user_signature            User signature                  user_context/user_signature.inc             user
-  vocabulary_terms          Vocabulary terms                vocabulary_context/vocabulary_terms.inc     entity:taxonomy_vocabulary
+  Name                      Category        Title                           plugins/contexts/                           ctools_context_required
+  block                         Block                           block/block.inc                             -
+  comment_reply_form            Comment Reply Form              comment/comment_reply_form.inc              node
+  custom                        Custom content                  custom/custom.inc                           -
+  entity_field                  Entity field                    entity_context/entity_field.inc             -
+  entity_field_extra            Entity extra field              entity_context/entity_field_extra.inc       -
+  entity_form_field             Entity field                    form/entity_form_field.inc                  -
+  form                          General form                    form/form.inc                               form
+  node                          Existing node                   node/node.inc                               -
+  node_attachments              Attached files                  node_context/node_attachments.inc           node
+  node_author                   Node author                     node_context/node_author.inc                node
+  node_body                     Node body                       node_context/node_body.inc                  node (deprecated)
+  node_comment_form             Comment form                    node_context/node_comment_form.inc          node
+  node_comments                 Node comments                   node_context/node_comments.inc              node
+  node_content                  Node content                    node_context/node_content.inc               node
+  node_created                  Node created date               node_context/node_created.inc               node
+  node_form_attachments         Form                            Node form file attachments      node_form/node_form_attachments.inc         node_form
+  node_form_author              Form                            Node form author information    node_form/node_form_author.inc              node_form
+  node_form_book                Form                            Node form book options          node_form/node_form_book.inc                node_form
+  node_form_buttons             Form                            Node form submit buttons        node_form/node_form_buttons.inc             node_form
+  node_form_comment             Form                            Node form comment settings      node_form/node_form_comment.inc             node_form
+  node_form_language            Form                            Node form languages             node_form/node_form_language.inc            node_form
+  node_form_log                 Node form revision log message  node_form/node_form_log.inc                 node_form
+  node_form_menu                Node form menu settings         node_form/node_form_menu.inc                node_form
+  node_form_path                Node form url path settings     node_form/node_form_path.inc                node_form
+  node_form_publishing          Node form publishing options    node_form/node_form_publishing.inc          node_form
+  node_form_title               Node form title field           node_form/node_form_title.inc               node_form
+  node_links                    Node links                      node_context/node_links.inc                 node
+  node_terms                    Node terms                      node_context/node_terms.inc                 node
+  node_title                    Node title                      node_context/node_title.inc                 node
+  node_type_desc                Node type description           node_context/node_type_desc.inc             node
+  node_updated                  Node last updated date          node_context/node_updated.inc               node
+  page_actions              Page elements                       Actions                         page/page_actions.inc                       -
+  page_breadcrumb           Page elements                       Breadcrumb                      page/page_breadcrumb.inc                    -
+  page_feed_icons           Page elements                       Feed icons                      page/page_feed_icons.inc                    -
+  page_help                 Page elements                       Help                            page/page_help.inc                          -
+  page_logo                 Page elements                       Site logo                       page/page_logo.inc                          -
+  page_messages             Page elements                       Status messages                 page/page_messages.inc                      -
+  page_primary_links        Page elements                       Primary navigation links        page/page_primary_links.inc                 -
+  page_secondary_links      Page elements                       Secondary navigation links      page/page_secondary_links.inc               -
+  page_site_name            Page elements                       Site name                       page/page_site_name.inc                     -
+  page_slogan               Page elements                       Site slogan                     page/page_slogan.inc                        -
+  page_tabs                 Page elements                       Tabs                            page/page_tabs.inc                          -
+  page_title                Page elements                       Page title                      page/page_title.inc                         -
+  search_form               Widgets                             Advanced search form            search/search_form.inc                      string
+  search_result             Widgets                             Search results                  search/search_result.inc                    string
+  term_description          Taxonomy term                       Term description                term_context/term_description.inc           term, taxonomy_term
+  term_list                 Taxonomy term                       List of related terms           term_context/term_list.inc                  term, taxonomy_term
+  token                     ?<VARIABLE>                         Tokens                          token/token.inc                             -
+  user_picture              User                                User picture                    user_context/user_picture.inc               user
+  user_profile              User                                User profile                    user_context/user_profile.inc               user
+  user_signature            User                                User signature                  user_context/user_signature.inc             user
+  vocabulary_terms          Vocabulary                          Vocabulary terms                vocabulary_context/vocabulary_terms.inc     entity:taxonomy_vocabulary
   
 
 ctools/plugins/contexts:

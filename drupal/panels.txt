@@ -58,17 +58,29 @@ UI (CTools + Page manager + Panels)
     Panel pages
     
   (1)Structure->Pages->List-><PAGE>->Edit:
-    Clone | Export | Delete | Disable | Add variant | Import variant
+    Clone | Export | Delete | Disable | Add variant | Import variant | Reorder variants
     
-    Add variant
+    Variants:
       HTTP response code
-      Panel page
+      Panel
  
     Summary
-      Status
-      Path
-      Access
-      Menu
+      Summary
+        Storage
+        Status
+        Path
+        Access
+        Menu
+      Panel: HTTP response code
+        Storage  
+        Status
+        Selection rule
+        Response code
+      Panel: panel
+        Storage  
+        Status
+        Selection rule
+        Layout
             
     Settings
       Basic
@@ -91,24 +103,61 @@ UI (CTools + Page manager + Panels)
     Variants
     Clone | Export | Delete | Disable
     
-      (HTTP response code)
-      Summary
-        Storage  
-        Status
-        Selection rule
-        Response code
+      HTTP response code:
+        Summary
+          Storage  
+          Status
+          Selection rule
+          Response code
         
-      General
-        Administrative title
-        Response code
+        General
+          Administrative title
+          Response code
         
-      Selection rules
-        See Plugins->UI (Page manager)
+        Selection rules
+          See Plugins->UI (Page manager)
         
-      Context
-        See Plugins->UI (Page manager)
-      
-    
+        Context
+          See Plugins->UI (Page manager)
+          
+      panel:
+        Summary
+          Storage  
+          Status
+          Selection rule
+          Layout
+        
+        General
+          Administrative title
+          Disable Drupal blocks/regions
+          Remove body CSS classes
+          Add body CSS classes
+          Renderer
+            Standard
+          CSS ID
+          CSS code
+        
+        Selection rules
+          See Plugins->UI (Page manager)
+        
+        Context
+          See Plugins->UI (Page manager)
+          
+        Layout
+          Category
+            Builders
+            Columns: 1
+            Columns: 2
+            Columns: 3
+            
+        Content
+          Display settings
+          Title type
+          Title
+          'Layout content manager'
+          
+        Preview
+
 
 *******************************************************************************
 Plugin list
@@ -119,9 +168,14 @@ Panels
 ------
 panels/plugins:
   cache
-  display_renderers  
+  display_renderers
+  export_ui             (extensions to CTools)  
   layouts
+  page_wizards          (extensions to Page manager)
+  style_bases
   styles
+  task_handlers         (extensions to Page manager)
+  views
   
 Mini panels
 -----------
@@ -148,72 +202,127 @@ Plugin details
 
 panels/plugins/cache:
 --------------------
+plugin module:  panels
+plugin type:    cache
+
   Name                          Title                           plugins/cache/
-  simple
+  simple                        Simple cache                    simple.inc
 
   
 panels/plugins/display_renderers:
 --------------------------------
-  Name                          Title                           plugins/display_renderers/
-  editor
-  simple
-  standard
+plugin module:  panels
+plugin type:    display_renderers
+
+  Name                          Renderer class                  plugins/display_renderers/
+  editor                        panels_renderer_editor          editor.inc
+  simple                        panels_renderer_simple          simple.inc
+  standard                      panels_renderer_standard        standard.inc
+
+
+panels/plugins/export_ui:
+------------------------
+plugin module:  ctools
+plugin type:    export_ui
+
+  Name                          Title                       plugins/export_ui/
+  ...
+  panels_layouts                Layouts                     panels_layouts.inc
 
   
 panels/plugins/layouts:
 ----------------------
-  Name                          Title                           plugins/layouts/
-  flexible
-  onecol
-  twocol
-  twocol_bricks
-  twocol_stacked
-  threecol_25_50_25
-  threecol_25_50_25_stacked  
-  threecol_33_34_33
-  threecol_33_34_33_stacked
+plugin module:  panels
+plugin type:    layouts
 
+  Name                          Category        Title                           plugins/layouts/
+  flexible                      Builders        Flexible                        flexible.inc
+  onecol                        Columns: 1      Single column                   onecol.inc
+  twocol                        Columns: 2      Two column                      twocol.inc
+  twocol_bricks                 Columns: 2      Two column bricks               twocol_bricks.inc
+  twocol_stacked                Columns: 2      Two column stacked              twocol_stacked.inc
+  threecol_25_50_25             Columns: 3      Three column 25/50/25           threecol_25_50_25.inc
+  threecol_25_50_25_stacked     Columns: 3      Three column 25/50/25 stacked   threecol_25_50_25_stacked.inc
+  threecol_33_34_33             Columns: 3      Three column 33/34/33           threecol_33_34_33.inc
+  threecol_33_34_33_stacked     Columns: 3      Three column 33/34/33 stacked   threecol_33_34_33_stacked.inc
+
+
+panels/plugins/style_bases:
+--------------------------
+plugin module:  TODO
+plugin type:    TODO
+
+  Name                          Title                           plugins/styles/
+  TODO
 
 panels/plugins/styles:
 ---------------------
+plugin module:  panels
+plugin type:    styles
+
   Name                          Title                           plugins/styles/
-  block
-  default
-  list 
-  naked
-  rounded_corners
+  block                         System block                    block.inc
+  default                       No style                        default.inc
+  list                          List                            list.inc
+  naked                         No markup at all                naked.inc
+  rounded_corners               Rounded corners                 rounded_corners.inc
+
+
+panels/plugins/page_wizards:
+---------------------------
+plugin module:  page_manager
+plugin type:    page_wizards
+
+  Name                          Title                           plugins/styles/
+  landing_page                  Landing page                    landing_page.inc
+
+
+panels/plugins/task_handlers:
+----------------------------
+plugin module:  page_manager
+plugin type:    task_handlers
+
+  Name                          Title                           plugins/task_handlers/
+  ...
+  panel_context                 Panel                           panel_context.inc
+  
+panels/plugins/views:
+--------------------
+plugin module:  TODO
+plugin type:    TODO
+
+  Name                          Title                           plugins/views/
+  TODO
 
 
 *******************************************************************************
-TODO
 UI (Page manager)
 -----------------
-ctools/plugins/access:
-<PAGE>->Settings->Access
-  Option
-  ------
-  
-<PAGE>->Settings->Variants-><VARIANT>->Selection rules
-  Option                                        Contexts
-  ------                                        --------
-
-ctools/plugins/arguments
-NOT VISIBLE
+panels/plugins/layouts:
+<PAGE>->Variants->panel->Layout
+  Category
+  --------
+  Builders
+    Flexible
+  Columns: 1
+    Single column
+  Columns: 2
+    Two column, Two column bricks, Two column stacked
+  Columns: 3
+    Three column 25/50/25, Three column 25/50/25 stacked, Three column 33/34/33, Three column 33/34/33 stacked
 
 ctools/plugins/content_types:
-NOT VISIBLE
-
-ctools/plugins/context:
-<PAGE>->Settings->Variants-><VARIANT>->Context
-  
-ctools/plugins/export_ui:
-NOT VISIBLE
-  
-ctools/plugins/relationships:
-<PAGE>->Settings->Variants-><VARIANT>->Context
-  Option                                                                        Contexts
-  ------                                                                        --------
-
+<PAGE>->Variants->panel->Content->Add content
+  Category                      Contexts
+  --------                      --------
+  Activity                      -
+  Menus                         -
+  Miscellaneous                 -
+  Page elements                 -
+  User                          User
+  User (tokens)                 User
+  Widgets                       -
+  TODO
 
 *******************************************************************************
 Class hierarchy
