@@ -230,14 +230,14 @@ ctools/plugins/content_types:
   node                      Custom              Existing node                   node/node.inc                               -
   node_attachments          Node                Attached files                  node_context/node_attachments.inc           node
   node_author               Node                Node author                     node_context/node_author.inc                node
-  node_body                 Node                Node body                       node_context/node_body.inc                  node (deprecated)
+  node_body                 Node                Node body                       node_context/node_body.inc                  node (deprecated?)
   node_book_children        Node                Book children                   node_context/node_book_children.inc         node
   node_book_nav             Node                Book navigation                 node_context/node_book_nav.inc              node
   node_comment_form         Node                Comment form                    node_context/node_comment_form.inc          node
   node_comments             Node                Node comments                   node_context/node_comments.inc              node
   node_content              Node                Node content                    node_context/node_content.inc               node
   node_created              Node                Node created date               node_context/node_created.inc               node
-  node_form_attachments     Form                Node form file attachments      node_form/node_form_attachments.inc         node_form
+  node_form_attachments     Form                Node form file attachments      node_form/node_form_attachments.inc         node_form (deprecated?)
   node_form_author          Form                Node form author information    node_form/node_form_author.inc              node_form
   node_form_book            Form                Node form book options          node_form/node_form_book.inc                node_form
   node_form_buttons         Form                Node form submit buttons        node_form/node_form_buttons.inc             node_form

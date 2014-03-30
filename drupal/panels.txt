@@ -158,6 +158,21 @@ UI (CTools + Page manager + Panels)
           
         Preview
 
+UI (Panel nodes)
+----------------
+  Structure->Content Types->Panel
+    Settings of content type 'Panel' like for any other content type.
+  
+  Content->Add content->Panel
+  Structure->Panels->
+    Dashboard->Create new...Panel node
+  
+  Structure->Panels->  
+    Settings->Panel nodes
+    
+UI (Mini panels)
+----------------
+
 
 *******************************************************************************
 Plugin list
@@ -180,7 +195,8 @@ panels/plugins:
 Mini panels
 -----------
 panels/panels_mini/plugins:
-TODO
+  export_ui             (extension to CTools)
+  content_types         (extension to CTools)
 
 Panel nodes
 -----------
@@ -255,6 +271,7 @@ plugin type:    TODO
   Name                          Title                           plugins/styles/
   TODO
 
+
 panels/plugins/styles:
 ---------------------
 plugin module:  panels
@@ -296,6 +313,23 @@ plugin type:    TODO
   TODO
 
 
+panels/panels_mini/content_types:
+---------------------------------
+plugin module:  ctools
+plugin type:    content_types
+
+  Name                          Title                           plugins/content_types/
+  panels_mini                   Mini panels                     panels_mini.inc
+
+panels/panels_mini/export_ui:
+-----------------------------
+plugin module:  ctools
+plugin type:    export_ui
+
+  Name                          Title                           plugins/export_ui/
+  panels_mini                   Mini panel                      panels_mini.inc
+
+
 *******************************************************************************
 UI (Page manager)
 -----------------
@@ -317,98 +351,151 @@ ctools/plugins/content_types:
   Category                      Contexts
   --------                      --------
   Activity                      -
+  Comment                       Comment, Node, Node add form, Node edit form
+  Comment (tokens)              Comment
+  File (tokens)                 File
+  Form                          Comment, Node, Node add form, Node edit form
   Menus                         -
   Miscellaneous                 -
+  Node                          Node, Node add form, Node edit form
+  Node (tokens)                 Node, Node add form, Node edit form
   Page elements                 -
+  Taxonomy_term                 Taxonomy term
   User                          User
   User (tokens)                 User
+  Vocabulary                    Taxonomy vocabulary
   Widgets                       -
 
 
 <PAGE>->Variants->panel->Content->Add content->
+  Option                            plugin name                 Contexts
+  ------                            -----------                 --------
   Activity
-    Recent comments                 block
-    Who's new                       block
-    Who's online                    block
+    Recent comments                 block                       -
+    Who's new                       block                       -
+    Who's online                    block                       -
+    
+  Comment
+    Field: <NAME> (<MACHINE>)       entity_field                Comment
+    Comment reply form              comment_reply_form          Node, Node add form, Node edit form
+  
+  Field: <NAME> (<MACHINE>):  
+    Field: Comment (comment_body)   Comment
+    
+    Available fields correspond to fields of comment, node added to Contexts.
+  
+  Comment (tokens)
+    <COMMENT TOKENS>                                            Comment
+    
+  File
+    <FILE TOKENS>                                               File
+  
+  Form
+    Field form: <NAME>              entity_form_field           Comment, Node, Node add form, Node edit form
+    General form                    form                        Node add form, Node edit form
+    Node form author information    node_form_author            Node add form, Node edit form
+    Node form book options          node_form_book              Node add form, Node edit form
+    Node form comment settings      node_form_comment           Node add form, Node edit form
+    Node form languages             node_form_language          Node add form, Node edit form
+    Node form menu settings         node_form_menu              Node add form, Node edit form
+    Node form publishing options    node_form_publishing        Node add form, Node edit form
+    Node form revision log message  node_form_log               Node add form, Node edit form
+    Node form submit buttons        node_form_buttons           Node add form, Node edit form
+    Node form title field           node_form_title             Node add form, Node edit form
+    Node form url path settings     node_form_path              Node add form, Node edit form
+    
+    
+  Field form: <NAME>:
+    Field form: Comment     Comment
+    Field form: Body        Node, Node add form, Node edit form
+    Field form: Image       Node, Node add form, Node edit form
+    Field form: Tags        Node, Node add form, Node edit form
+    
+    Available fields correspond to fields of comment, node added to Contexts.
   
   Menus
-    Development                     block
-    Navigation                      block
-    Management                      block
-    User menu                       block
-    Main menu                       block
+    Development                     block                       -
+    Navigation                      block                       -
+    Management                      block                       -
+    User menu                       block                       -
+    Main menu                       block                       -
     
   Miscellaneous
-    TODO
+    TODO                            search_form                 -
+    
+  Node
+    Attached files                  node_attachments            Node, Node add form, Node edit form
+    Book children                   node_book_children          Node, Node add form, Node edit form
+    Book navigation                 node_book_nav               Node, Node add form, Node edit form
+    Comment form                    node_comment_form           Node, Node add form, Node edit form
+    Field: <NAME> (<MACHINE>)       Entity field                Node, Node add form, Node edit form
+    Node author                     node_author                 Node, Node add form, Node edit form
+    Node body                       node_body                   Node, Node add form, Node edit form
+    Node comments                   node_comments               Node, Node add form, Node edit form
+    Node content                    node_content                Node, Node add form, Node edit form
+    Node created date               node_created                Node, Node add form, Node edit form
+    Node last updated date          node_updated                Node, Node add form, Node edit form
+    Node links                      node_links                  Node, Node add form, Node edit form
+    Node terms                      node_terms                  Node, Node add form, Node edit form
+    Node title                      node_title                  Node, Node add form, Node edit form
+    Node type description           node_type_desc              Node, Node add form, Node edit form
+    
+
+  Field: <NAME> (<MACHINE>):
+    Field: Body (body)              Node, Node add form, Node edit form
+    Field: Image (field_image)      Node, Node add form, Node edit form
+    Field: Tags (field_tags)        Node, Node add form, Node edit form
+    
+    Available fields correspond to fields of node added to Contexts.
+  
+  Node (tokens)
+  <NODE TOKENS>
   
   Page elements
-    Actions                         page_actions
-    Breadcrumb                      page_breadcrumb
-    Feed icons                      page_feed_icons
-    Help                            page_help
-    Page title                      page_title
-    Primary navigation links        page_primary_links
-    Secondary navigation links      page_secondary_links
-    Site logo                       page_logo
-    Site name                       page_site_name
-    Site slogan                     page_slogan
-    Status messages                 page_messages
-    System help                     help
-    Tabs                            page_tabs
+    Actions                         page_actions                -
+    Breadcrumb                      page_breadcrumb             -
+    Feed icons                      page_feed_icons             -
+    Help                            page_help                   -
+    Page title                      page_title                  -
+    Primary navigation links        page_primary_links          -
+    Secondary navigation links      page_secondary_links        -
+    Site logo                       page_logo                   -
+    Site name                       page_site_name              -
+    Site slogan                     page_slogan                 -
+    Status messages                 page_messages               -
+    System help                     help                        -
+    Tabs                            page_tabs                   -
+    
+  Taxonomy term
+    Description                     entity_field_extra          Taxonomy term
+    List of related terms           term_list                   Taxonomy term
+    Term description                term_description            Taxonomy term
     
     
- Name                      Category            Title                           plugins/contexts/                           ctools_context_required
- comment_reply_form        Comment             Comment Reply Form              comment/comment_reply_form.inc              node
-  contact                   Widgets             Contact form                    contact/contact.inc                         -
-  custom                    <CUSTOM>            Custom content                  custom/custom.inc                           -
-  entity_field              ?<DYNAMIC>          Entity field                    entity_context/entity_field.inc             -
-  entity_field_extra        ?<DYNAMIC>          Entity extra field              entity_context/entity_field_extra.inc       -
-  entity_form_field         Form                Entity field                    form/entity_form_field.inc                  -
-  form                      Form                General form                    form/form.inc                               form
-  node                      Custom              Existing node                   node/node.inc                               -
-  node_attachments          Node                Attached files                  node_context/node_attachments.inc           node
-  node_author               Node                Node author                     node_context/node_author.inc                node
-  node_body                 Node                Node body                       node_context/node_body.inc                  node (deprecated)
-  node_book_children        Node                Book children                   node_context/node_book_children.inc         node
-  node_book_nav             Node                Book navigation                 node_context/node_book_nav.inc              node
-  node_comment_form         Node                Comment form                    node_context/node_comment_form.inc          node
-  node_comments             Node                Node comments                   node_context/node_comments.inc              node
-  node_content              Node                Node content                    node_context/node_content.inc               node
-  node_created              Node                Node created date               node_context/node_created.inc               node
-  node_form_attachments     Form                Node form file attachments      node_form/node_form_attachments.inc         node_form
-  node_form_author          Form                Node form author information    node_form/node_form_author.inc              node_form
-  node_form_book            Form                Node form book options          node_form/node_form_book.inc                node_form
-  node_form_buttons         Form                Node form submit buttons        node_form/node_form_buttons.inc             node_form
-  node_form_comment         Form                Node form comment settings      node_form/node_form_comment.inc             node_form
-  node_form_language        Form                Node form languages             node_form/node_form_language.inc            node_form
-  node_form_log             Form                Node form revision log message  node_form/node_form_log.inc                 node_form
-  node_form_menu            Form                Node form menu settings         node_form/node_form_menu.inc                node_form
-  node_form_path            Form                Node form url path settings     node_form/node_form_path.inc                node_form
-  node_form_publishing      Form                Node form publishing options    node_form/node_form_publishing.inc          node_form
-  node_form_title           Form                Node form title field           node_form/node_form_title.inc               node_form
-  node_links                Node                Node links                      node_context/node_links.inc                 node
-  node_terms                Node                Node terms                      node_context/node_terms.inc                 node
-  node_title                Node                Node title                      node_context/node_title.inc                 node
-  node_type_desc            Node                Node type description           node_context/node_type_desc.inc             node
-  node_updated              Node                Node last updated date          node_context/node_updated.inc               node
-  search_form               Widgets             Advanced search form            search/search_form.inc                      string
-  search_result             Widgets             Search results                  search/search_result.inc                    string
-  term_description          Taxonomy term       Term description                term_context/term_description.inc           term, taxonomy_term
-  term_list                 Taxonomy term       List of related terms           term_context/term_list.inc                  term, taxonomy_term
-  token                     ?<DYNAMIC>          Tokens                          token/token.inc                             -
-  user_contact              User                User contact form               contact/user_contact.inc                    user
-  user_picture              User                User picture                    user_context/user_picture.inc               user
-  user_profile              User                User profile                    user_context/user_profile.inc               user
-  user_signature            User                User signature                  user_context/user_signature.inc             user
-  vocabulary_terms          Vocabulary          Vocabulary terms                vocabulary_context/vocabulary_terms.inc     entity:taxonomy_vocabulary
+  User
+    History                         entity_field_extra          User
+    User picture                    user_picture                User
+    User profile                    user_profile                User
+    User signature                  user_signature              User
+    
+  User (tokens)
+    <USER TOKENS>
+    
+  Vocabulary
+    Vocabulary terms                vocabulary_terms            Taxonomy vocabulary
 
-Block               Title               Module              Category (ctools/plugins/content_types/block)
-  syndicate           Syndicate           node                Widgets
-  recent              Recent content      node                Widgets
-  form                Search form         search              Widgets
-  login               User login          user                Widgets
-  main                Main page content   system              -
-  powered-by          Powered by Drupal   system              Widgets
+  Widgets
+    Advanced search form            search_form                 -
+    Contact form                    contact                     (contact module)
+    Powered by Drupal               block                       -
+    Recent content                  block                       -
+    Search form                     block                       -
+    Search results                  search_result               String
+    Syndicate                       block                       -
+    User login                      block                       -
+    
+  (Custom)
+  Existing node                     node                        -  
 
 *******************************************************************************
 Class hierarchy
