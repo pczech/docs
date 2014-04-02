@@ -1,7 +1,16 @@
 *******************************************************************************
 API documentation
 ----------------- 
-TODO
+http://drupalize.me/series/building-websites-drupal-7-using-panels
+https://drupal.org/node/627126 Creating complex layouts with Panels
+Advanced Help (missing topics)
+
+TODO: experiment with arguments e.g.
+node/%node/edit
+user/%user/edit
+...
+http://drupalize.me/videos/rearrange-node-edit-form
+Find Panels tutorials
 
 
 *******************************************************************************
@@ -172,7 +181,18 @@ UI (Panel nodes)
     
 UI (Mini panels)
 ----------------
-
+  Structure->Mini panels
+    List (1)
+      Add (2)
+      Import
+    Settings (3)
+      
+  Structure->Panels->Dashboard
+    Create new...->Mini panel->Go to list (2)
+    Manage mini panels(1)
+    
+  Structure->Panels->Settings->Mini panels (3)
+    
 
 *******************************************************************************
 Plugin list
