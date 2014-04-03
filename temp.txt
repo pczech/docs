@@ -1,26 +1,13 @@
-Panels:
-Drupal 7 - od podstaw.PDF
-    drupals_building_blocks.pdf
-    Drupal 6 Panels Cookbook.pdf
-    manual_drupal_panels_0.pdf
-    https://drupal.org/node/1857644
-    https://drupal.org/node/946356
-    http://drupalize.me/series/building-websites-drupal-7-using-panels
-    http://www.wdtutorials.com/2011/06/21/drupal-7-how-use-views-and-panels-together
-    http://drupal.org/node/629860
+Backlog:
+przejrzeć wszystkie tutoriale Daily Dose of Drupal
+Floating Block jako reklama?
+Przygotować znak towarowy - model pisma obrazkowego - prosty
+Sprawdzić bazy patentowe - kategorie porównać z innymi serwisami.
+Rejestracja znaku towarowego, ochrona domeny
 
+TODO:
+Ochrona danych osobowych whois
 
-TODO
-----
-Check Panel Page -> Optional features:
-Selection rules
-Contexts
-
-Do czego to?
-
-View UI and at least one View is required to
- 
- 
- 
- 
+Sprawdzić dostęp do <>@gmail i zmienić email w danych abonenta domen
+.pl - panel, globalne - obsługa użytkownika, eu. - OK.
  

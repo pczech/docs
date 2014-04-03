@@ -1,16 +1,60 @@
 *******************************************************************************
-API documentation
------------------ 
-http://drupalize.me/series/building-websites-drupal-7-using-panels
-https://drupal.org/node/627126 Creating complex layouts with Panels
+Documentation
+------------- 
+Drupal 7 - od podstaw.PDF
 Advanced Help (missing topics)
 
-TODO: experiment with arguments e.g.
-node/%node/edit
-user/%user/edit
-...
-http://drupalize.me/videos/rearrange-node-edit-form
+    Drupal 6 Panels Cookbook.pdf    
+    drupals_building_blocks.pdf
+    manual_drupal_panels_0.pdf
+
+    Panels 3: Tutorials                             https://drupal.org/node/946356
+    Creating complex layouts with Panels            https://drupal.org/node/627126 
+    Panels 3 Documentation                          https://drupal.org/node/496278 
+    Case Study: Concern Fast                        https://drupal.org/node/629860
+    Building Custom Layouts with Panels             https://drupal.org/node/1857644
+
+    TODO: experiment with arguments e.g.
+    node/%node/edit
+    user/%user/edit
+    ...
+    http://drupalize.me/series/building-websites-drupal-7-using-panels
+    http://drupalize.me/videos/rearrange-node-edit-form
+
+    http://www.wdtutorials.com/2011/06/21/drupal-7-how-use-views-and-panels-together
+
+    https://www.lullabot.com/blog/video/building-websites-drupal-7-using-panels
+
+    Using Context in Panels and Views - Part 1      http://www.youtube.com/watch?v=tmPZZW4j9Vc
+    Using Context in Panels and Views - Part 2      http://www.youtube.com/watch?v=KuzEXhmTGiw
+
+    Display Modules, Part 2: Page Layouts with Panels       http://www.youtube.com/watch?v=3CAW4bhJlIw
+    Display Modules, Part 1: Content layout with Display Suite  http://www.youtube.com/watch?v=55jmuORfNF4
+
+    Panelizer and Drupal                            http://www.youtube.com/watch?v=vy6fnsawNjE
+    Using the Panelizer                             http://www.youtube.com/watch?v=1MrqxE0Vszw
+
+    Creating A Custom Page Using Panels             http://www.youtube.com/watch?v=IcsnRMmfPvs
+
+    http://planningdrupalsites.com/feeditem/what-are-drupal-panels-contexts
+
+    Daily Dose of Drupal
+
+    http://www.youtube.com/
+    http://codekarate.com/daily-dose-of-drupal
+
+    128 Panels Module Basics (part 1)
+    129 Panels Module (part 2) - Override Node View Page
+    130 Panels Module (part 3) - Layout Builder
+    133 Panels Module Variants and Selection Rules
+    134 Panels Module Visibility Rules
+    135 Panels Module Contexts
+    136 Panels Module Contexts Relationships
+
+
+
 Find Panels tutorials
+
 
 
 *******************************************************************************
