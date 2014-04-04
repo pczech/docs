@@ -39,6 +39,7 @@ Advanced Help (missing topics)
     http://planningdrupalsites.com/feeditem/what-are-drupal-panels-contexts
 
     Daily Dose of Drupal
+    --------------------
 
     http://www.youtube.com/
     http://codekarate.com/daily-dose-of-drupal
@@ -50,8 +51,15 @@ Advanced Help (missing topics)
     134 Panels Module Visibility Rules
     135 Panels Module Contexts
     136 Panels Module Contexts Relationships
-
-
+    
+    Drupalize.me
+    ------------
+    http://drupalize.me/series/learning-page-manager (13 movies)
+    
+    http://drupalize.me/series/building-websites-drupal-7-using-panels (7 movies)
+    
+    
+    http://codekarate.com/blog/drupal-7-views-exposed-filters-blocks-and-panels
 
 Find Panels tutorials
 
