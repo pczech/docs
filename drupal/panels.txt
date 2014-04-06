@@ -3,8 +3,8 @@ Documentation
 ------------- 
 Drupal 7 - od podstaw.PDF
 Advanced Help (missing topics)
-
-    Drupal 6 Panels Cookbook.pdf    
+Drupal 6 Panels Cookbook.pdf
+    
     drupals_building_blocks.pdf
     manual_drupal_panels_0.pdf
 
