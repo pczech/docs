@@ -2,9 +2,121 @@
 Documentation
 ------------- 
 Drupal 7 - od podstaw.PDF
-Advanced Help (missing topics)
 Drupal 6 Panels Cookbook.pdf
+Advanced Help (missing topics)
+
+drupalize.me
+------------
+Learning Page Manager (13 movies)
+http://drupalize.me/series/learning-page-manager
+    Overview of the Page Manager Series
+    Node Page Overrides, Contexts & Page Redirects
+    Variants and Selection Rules
+    Introduction to Panels
+    Basics of Views Content Panes
+    More View Panes
+    Panel Pane Settings
+    Menu Items and Access Control
+    Contextual Administration
+    More Contextual Objects
+    The Views Context
+    Rearrange Node Edit Form
+    Page Manager Import and Export Plus Additional Modules
+
+Building Websites in Drupal 7 Using Panels (7 movies)
+http://drupalize.me/series/building-websites-drupal-7-using-panels
+    Introduction to Building Websites Using the Panels Module
+    Setting up a Multi-Column Home Page
+    Adjusting the Settings for Each Panel Pane
+    Creating Different Versions of the Same Page (variants)
+    Quickly Duplicating Variants by Cloning
+    Templates for Content
+    Custom Panels Layouts
+
+Daily Dose of Drupal
+--------------------
+http://www.youtube.com/
+http://codekarate.com/daily-dose-of-drupal
+    128 Panels Module Basics (part 1)
+    129 Panels Module (part 2) - Override Node View Page
+    130 Panels Module (part 3) - Layout Builder
+    133 Panels Module Variants and Selection Rules
+    134 Panels Module Visibility Rules
+    135 Panels Module Contexts
+    136 Panels Module Contexts Relationships
+
+    wdtutorials.com
+    ---------------
+    Panels #1 Basics
+        http://www.wdtutorials.com/2014/02/05/drupal-tutorial-panels-1-basics-article
+        http://www.wdtutorials.com/2014/02/06/drupal-tutorial-panels-1-basics-video
     
+    Panels #2 : Selection And Visibility Rules
+        http://www.wdtutorials.com/2014/02/06/drupal-tutorial-panels-2-selection-and-visibility-rules-article
+        http://www.wdtutorials.com/2014/02/06/drupal-tutorial-panels-2-selection-and-visibility-rules-video
+ 
+    Panels #3 : Layout Designer
+        http://www.wdtutorials.com/2014/02/06/drupal-tutorial-panels-3-layout-designer-article
+        http://www.wdtutorials.com/2014/02/06/drupal-tutorial-panels-3-layout-designer-video
+    
+    Panels #4 : Custom Pages And Contexts
+        http://www.wdtutorials.com/2014/02/11/drupal-tutorial-panels-4-custom-pages-and-contexts-article
+        http://www.wdtutorials.com/2014/02/11/drupal-tutorial-panels-4-custom-pages-and-contexts-video
+    
+    Panels #5 : Context Relationships
+        http://www.wdtutorials.com/2014/02/13/drupal-tutorial-panels-5-context-relationships-article
+        http://www.wdtutorials.com/2014/02/13/drupal-tutorial-panels-5-context-relationships-video
+    
+    Panels #6 : Related Content With Views Content Panes 
+        http://www.wdtutorials.com/2014/02/14/drupal-tutorial-panels-6-related-content-views-content-panes-article
+        http://www.wdtutorials.com/2014/02/14/drupal-tutorial-panels-6-related-content-views-content-panes-video
+    
+    Panels #7 : In-Place Editor
+        http://www.wdtutorials.com/2014/02/15/drupal-tutorial-panels-7-place-editor-article
+        http://www.wdtutorials.com/2014/02/15/drupal-tutorial-panels-7-place-editor-video
+    
+    Panels #8 : Panelizer
+        http://www.wdtutorials.com/2014/02/17/drupal-tutorial-panels-8-panelizer-article
+        http://www.wdtutorials.com/2014/02/17/drupal-tutorial-panels-8-panelizer-video
+    
+    Panels #9 : Panels Everywhere
+        http://www.wdtutorials.com/2014/02/17/drupal-tutorial-panels-9-panels-everywhere-article
+        http://www.wdtutorials.com/2014/02/17/drupal-tutorial-panels-9-panels-everywhere-video
+ 
+    Panels #10 : Panelized Views Rows
+        http://www.wdtutorials.com/2014/02/18/drupal-tutorial-panels-10-panelized-views-rows-video
+        http://www.wdtutorials.com/2014/02/18/drupal-tutorial-panels-10-panelized-views-rows-article
+ 
+    Panels #11 : Fieldable Panels Panes
+        http://www.wdtutorials.com/2014/02/19/drupal-tutorial-panels-11-fieldable-panels-panes-video
+ 
+    Panels #12 : Mini Panels
+        http://www.wdtutorials.com/2014/02/20/drupal-tutorial-panels-12-mini-panels-video
+ 
+    Panels #13 : Rearrange Node Edit Form
+        http://www.wdtutorials.com/2014/02/20/drupal-tutorial-panels-13-rearrange-node-edit-form-video
+ 
+    Panels #14 : Panels Extra Layouts
+        http://www.wdtutorials.com/2014/02/22/drupal-tutorial-panels-14-panels-extra-layouts
+ 
+    Panels #15 : Page Redirects
+        http://www.wdtutorials.com/2014/02/23/drupal-tutorial-panels-15-page-redirects
+ 
+    Panels #16 : Omega Base Theme
+        http://www.wdtutorials.com/2014/02/24/drupal-tutorial-panels-16-omega-base-theme
+ 
+    Panels #17 : Pane Template Suggestions
+        http://www.wdtutorials.com/2014/03/04/drupal-tutorial-panels-17-pane-template-suggestions
+ 
+    How to use Views and Panels together
+        http://www.wdtutorials.com/2011/06/21/drupal-7-how-use-views-and-panels-together
+
+    Using Context in Panels and Views - Part 1      http://www.youtube.com/watch?v=tmPZZW4j9Vc
+    Using Context in Panels and Views - Part 2      http://www.youtube.com/watch?v=KuzEXhmTGiw
+
+    Display Modules, Part 2: Page Layouts with Panels       http://www.youtube.com/watch?v=3CAW4bhJlIw
+    Display Modules, Part 1: Content layout with Display Suite  http://www.youtube.com/watch?v=55jmuORfNF4
+
     drupals_building_blocks.pdf
     manual_drupal_panels_0.pdf
 
@@ -14,55 +126,29 @@ Drupal 6 Panels Cookbook.pdf
     Case Study: Concern Fast                        https://drupal.org/node/629860
     Building Custom Layouts with Panels             https://drupal.org/node/1857644
 
-    TODO: experiment with arguments e.g.
-    node/%node/edit
-    user/%user/edit
-    ...
-    http://drupalize.me/series/building-websites-drupal-7-using-panels
-    http://drupalize.me/videos/rearrange-node-edit-form
+    Panelizer
+    http://www.youtube.com/watch?v=vy6fnsawNjE
+    http://www.youtube.com/watch?v=1MrqxE0Vszw
+    http://www.ostraining.com/blog/drupal/panelizer/
 
-    http://www.wdtutorials.com/2011/06/21/drupal-7-how-use-views-and-panels-together
-
-    https://www.lullabot.com/blog/video/building-websites-drupal-7-using-panels
-
-    Using Context in Panels and Views - Part 1      http://www.youtube.com/watch?v=tmPZZW4j9Vc
-    Using Context in Panels and Views - Part 2      http://www.youtube.com/watch?v=KuzEXhmTGiw
-
-    Display Modules, Part 2: Page Layouts with Panels       http://www.youtube.com/watch?v=3CAW4bhJlIw
-    Display Modules, Part 1: Content layout with Display Suite  http://www.youtube.com/watch?v=55jmuORfNF4
-
-    Panelizer and Drupal                            http://www.youtube.com/watch?v=vy6fnsawNjE
-    Using the Panelizer                             http://www.youtube.com/watch?v=1MrqxE0Vszw
-
-    Creating A Custom Page Using Panels             http://www.youtube.com/watch?v=IcsnRMmfPvs
-
-    http://planningdrupalsites.com/feeditem/what-are-drupal-panels-contexts
-
-    Daily Dose of Drupal
-    --------------------
-
-    http://www.youtube.com/
-    http://codekarate.com/daily-dose-of-drupal
-
-    128 Panels Module Basics (part 1)
-    129 Panels Module (part 2) - Override Node View Page
-    130 Panels Module (part 3) - Layout Builder
-    133 Panels Module Variants and Selection Rules
-    134 Panels Module Visibility Rules
-    135 Panels Module Contexts
-    136 Panels Module Contexts Relationships
+    Creating Panels Layouts in Code
+    http://www.youtube.com/watch?v=VWxwYObBW2E
     
-    Drupalize.me
-    ------------
-    http://drupalize.me/series/learning-page-manager (13 movies)
-    
-    http://drupalize.me/series/building-websites-drupal-7-using-panels (7 movies)
-    
-    
+    http://drupal.stackexchange.com/questions/74251/how-to-programmaticaly-create-a-custom-panel-pane-in-drupal-7
+    http://manueg.okkernoot.net/blog/201002/how-load-panel-pages-code
+        
     http://codekarate.com/blog/drupal-7-views-exposed-filters-blocks-and-panels
 
-Find Panels tutorials
-
+    Landing page
+    http://www.youtube.com/watch?v=-s4MORA0jeA
+    http://unbounce.com/landing-page-articles/what-is-a-landing-page/
+    http://s1l.org/leadpages-drupal-tutorial
+    http://drupal.stackexchange.com/questions/102278/admin-landing-page-how-to-create
+    http://www.jacksonriver.com/news/drupal-panelizer-architecting-landing-pages
+    
+    Views exposed filters
+    https://drupal.org/node/1547774
+    http://codekarate.com/blog/drupal-7-views-exposed-filters-blocks-and-panels
 
 
 *******************************************************************************
