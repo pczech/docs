@@ -101,8 +101,8 @@ Panels #7 : In-Place Editor
 Panels #13 : Rearrange Node Edit Form
     http://www.wdtutorials.com/2014/02/20/drupal-tutorial-panels-13-rearrange-node-edit-form-video
  
-    Panels #14 : Panels Extra Layouts
-        http://www.wdtutorials.com/2014/02/22/drupal-tutorial-panels-14-panels-extra-layouts
+Panels #14 : Panels Extra Layouts
+    http://www.wdtutorials.com/2014/02/22/drupal-tutorial-panels-14-panels-extra-layouts
  
 Panels #15 : Page Redirects
     http://www.wdtutorials.com/2014/02/23/drupal-tutorial-panels-15-page-redirects
@@ -121,17 +121,28 @@ How to use Views and Panels together
 
     drupals_building_blocks.pdf
     manual_drupal_panels_0.pdf
-
-    Panels 3: Tutorials                             https://drupal.org/node/946356
-    Creating complex layouts with Panels            https://drupal.org/node/627126 
+    
+    drupal.org
     Panels 3 Documentation                          https://drupal.org/node/496278 
-    Case Study: Concern Fast                        https://drupal.org/node/629860
     Building Custom Layouts with Panels             https://drupal.org/node/1857644
+    Panels Everywhere Documentation                 https://drupal.org/node/1556570
+    Case Study: Concern Fast                        https://drupal.org/node/629860
 
     Panelizer
     http://www.youtube.com/watch?v=vy6fnsawNjE
     http://www.youtube.com/watch?v=1MrqxE0Vszw
     http://www.ostraining.com/blog/drupal/panelizer/
+    
+    Panels Everywhere, Theming Panels
+    http://www.youtube.com/watch?v=v6zMcfTxkhc
+    http://www.youtube.com/watch?v=8t58piu8HhQ
+    http://www.youtube.com/watch?v=qSLPRo_cyxI
+    http://www.youtube.com/watch?v=aTk3v8oPIw8
+    http://www.youtube.com/watch?v=offn3lw9fzQ
+    
+    https://drupal.org/node/1556570
+    http://awebfactory.com.ar/node/435
+    http://sf2010.drupal.org/conference/sessions/panels-panels-everywhere.html
 
     Creating Panels Layouts in Code
     http://www.youtube.com/watch?v=VWxwYObBW2E
