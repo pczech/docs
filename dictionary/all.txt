@@ -2,6 +2,7 @@ adhere                  przestrzegać czegoś
 ajar                    uchylony
 brevity                 zwięzłość
 brush on                podszkolić się w czymś
+boast                   chwalić się, szczycić się czymś
 carving                 rzeźba
 claim                   prawo, roszczenie, żądanie
 clutter                 zaśmiecać
@@ -20,8 +21,10 @@ discourage              zniechęcać
 dissect                 szczegółowo coś analizować
 encourage               zachęcać wspierać
 evolve                  rozwijać się, ewoluować
+exhaustive              wyczerpujący
 facet                   strona, aspekt
 fairly                  całkiem, dość
+fancy                   fantazyjny, wyszukany
 feat                    wyczyn
 finicky                 wybredny
 for the sake of         ze względu na ...
@@ -30,12 +33,15 @@ hassle                  kłopot, zawracanie głowy
 hence                   stąd
 immensely               niezmiernie
 impose                  narzucać, ustanawiać
+intricacy               zawiłość, złożoność
 ladder                  drabina
 leisure                 czas wolny
 leverage                wykorzystywać                           *
 lid                     pokrywka
+myriad                  niezliczony
 mitigate                łagodzić, rozładować
 neat                    schludny, staranny, czysty
+oddball                 dziwak, dziwaczny
 ongoing                 trwający, toczący się
 opt to                  zdecydować się (np. coś zrobić)
 outline                 zarys, nakreślać
@@ -50,8 +56,10 @@ resilient               prężny, żywotny
 rudimentary             elementarny, podstawowy
 rule of thumb           praktyczna zasada
 rung                    szczebel
+scatter                 rozrzucać, rozpraszać
 shallow                 płytki
 signify                 oznaczać
+seemingly               pozornie
 tackle                  załatwić, stawić czoła
 tear down               burzyć, wycinać
 tedious                 nużący

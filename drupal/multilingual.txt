@@ -1,0 +1,70 @@
+*******************************************************************************
+Documentation
+-------------
+Drupal 7 Multilingual Sites.pdf
+
+Multilingual Guide
+https://drupal.org/documentation/multilingual
+
+Translate Drupal to your language
+https://drupal.org/contribute/translations
+
+Recycling old translations
+https://drupal.org/node/11311
+
+Issues
+Menu items created by Views are not visible in Translation Settings
+https://drupal.org/node/1914996
+
+Clean up text database
+There are many old translations in database /private/...
+
+How to translate content type names
+https://drupal.org/node/2107219
+
+Entity translation
+http://adellefrank.com/blog/how-to-set-up-simple-multilingual-drupal-7-site-using-field-entity-translation
+
+Node translation vs. Entity (field) translation
+http://drupal.stackexchange.com/questions/17466/node-translation-vs-entity-field-translation
+
+
+*******************************************************************************
+Locale (core)
+-------------
+Multilingual interface
+See:
+  Advanced help
+  https://drupal.org/documentation/modules/locale/
+
+Configuration -> Regional and language -> Regional settings:
+  Languages
+    List
+      Add language
+    Detection and selection (URL, Session, User, Browser, Default)
+      
+  Translate interface
+    Overview
+    Translate
+    Import
+    Export
+
+Add language
+
+
+Content translation (requires Locale)
+
+
+*******************************************************************************
+Multilingual setup
+------------------
+Enable locale (core)
+Add languages
+  Configuration -> Regional and language -> Regional settings -> Languages
+  -> Add language
+  
+Do not change the default language once you have started translating.
+TODO: change default language, disable other languages.
+Issue: menu links not translated
+
+  
