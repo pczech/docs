@@ -64,7 +64,8 @@ Add languages
   -> Add language
   
 Do not change the default language once you have started translating.
-TODO: change default language, disable other languages.
-Issue: menu links not translated
+Issue: menu links not translated if default language is changed.
+
+
 
   
