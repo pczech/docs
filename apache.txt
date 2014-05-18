@@ -12,9 +12,6 @@ apache2
 -l - list of modules compiled into the server.
 -V - Print the version and build parameters of apache2.
 
-
-compiled
-
 a2dismod
 a2enmod
 service apache2 restart
@@ -50,25 +47,77 @@ http://www.cyberciti.biz/tips/howto-performance-benchmarks-a-web-server.html
 *******************************************************************************
 PHP
 ---
+localhost/tools/whoami should return <user>. It returns www-data if apache module
+mod-php is enabled.
+Check phpinfo():
+  Server API: Apache 2.0 Handler - php5 module is enabled and active,
+  then suexec doesn't work.
+Disable mod-php: a2dismod php5
+Restart apache: service apache2 restart
+Check phpinfo():
+  Server API:  CGI/FastCGI
+  
+suexec
+------
+/usr/lib/apache2/suexec -V
+ -D SUEXEC_CONFIG_DIR=/etc/apache2/suexec/
+ -D AP_GID_MIN=100
+ -D AP_LOG_EXEC="/var/log/apache2/suexec.log"
+ -D AP_SAFE_PATH="/usr/local/bin:/usr/bin:/bin"
+ -D AP_UID_MIN=100
 
-apache, php
------------
-localhost/tools/whoami should return piotr. It returns www-data if  apache
-module php is enabled.
+man suexec-custom
+man suexec-pristine
 
-/etc/php5/apache2/php.ini
+
+Config files
+------------
+See phpinfo() for active configuration.
+
+/etc/php5/apache2/php.ini   - mod-php
+/etc/php5/cgi/php.ini       - cgi/fcgi
+
 /usr/bin/php/php.ini
 
-/etc/php5/conf.d/20-xdebug.ini
-
-
 /etc/apache2/modes-available/fcgid.conf
-file:///usr/share/doc/libapache2-mod-fcgid/mod_fcgid.html.en
+Spec: /usr/share/doc/libapache2-mod-fcgid/mod_fcgid.html.en
 
+
+*******************************************************************************
+XDEBUG
+------
+Ubuntu 14.04
+Enable remote debug mode in /etc/php5/mods-available/xdebug.ini:
+  xdebug.remote_enable=1
+Enable xdebug module: php5enmod xdebug
+  Then a symbolic link 20-xdebug.ini is created in /etc/php5/<CNF>/conf.d/
+Restart apache: service apache2 restart
+Check phpinfo()
+
+<CNF>: apache2 (php-mod), cgi (cgi/fcgi) cli (cli)
+
+For details see:
+http://duraturk.wordpress.com/2014/04/27/php5enmod/
+/etc/php5/mods-available/xdebug.ini
+/etc/php5/cgi/conf.d
+/etc/php5/apache2/conf.d
+
+
+Timeout during waiting on breakpoint (for fcgid)
+------------------------------------------------
+See /var/log/apache2/error.log:
+  mod_fcgid: read data timeout in 600 seconds.
+Solution:
+Increase FcgidIOTimeout in /etc/apache2/mods-available/fcgid.conf:
+FcgidIOTimeout 1800 (30 minutes)
+
+
+*******************************************************************************
 phpmyadmin
 ----------
-increase login timeout
 
+increase login timeout
+----------------------
 /etc/phpmyadmin/config.inc.php:
 
 $cfg['LoginCookieValidity'] = <your_new_timeout>;
@@ -81,16 +130,12 @@ than configured in phpMyAdmin.
 Update php.ini (e.g. /etc/php5/cgi/php.ini) and restart apache.
 Don't increase the values on production server!
 
+Don't increase the values on production server!
 
-XDebug
-------
+Increase file size for database import
+--------------------------------------
+check which php.ini is in use by calling phpinfo() (localhost/tools/info.php),
+it can be for example /etc/php5/cgi/php.ini
 
-Timeout during waiting on breakpoint (fcgid module used).
-
-See /var/log/apache2/error.log:
-mod_fcgid: read data timeout in 600 seconds.
-Solution:
-Increase 
-FcgidIOTimeout in /etc/apache2/mods-available/fcgid.conf
-FcgidIOTimeout 1800 (30 minutes)
-
+find and change 'upload_max_filesize' parameter (default is 2M)
+restart apache.

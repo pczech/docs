@@ -1,0 +1,28 @@
+https://drupal.org/node/1158446
+drupal_search_engine_optimization.pdf
+
+Tutorials:
+http://www.youtube.com/watch?v=-uJ0wMAkGIc
+
+Modules:
+XML Sitemap
+- problems with multi-language content. Node links depends on default language set for it. E.g.
+/de/node_pl
+/en/node_de
+- no map for views, panels with dynamic paths like node/%node/...
+
+TODO: check again basic XML sitemap only with menu link for multilingual site.
+
+Global Redirect
+OK
+Canonical Links - check Views/Panles
+Mulilingual sites: wrong canonical links: /en/en/ /de/de/, double entry for nodes
+(core handles canonical links for nodes, Global Redirect adds own canonical links)
+
+Use Global Redirect to eliminate duplicate URLs: /node/17 - redirect to
+/articles/article
+
+http://coolestguidesontheplanet.com/drupal-seo-settings-configuring-basics-hiding-node/
+
+metatag
+http://ftp.drupal.org/files/projects/metatag-7.x-1.0-beta9.tar.gz
