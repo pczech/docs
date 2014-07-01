@@ -21,6 +21,7 @@ Mulilingual sites: wrong canonical links: /en/en/ /de/de/, double entry for node
 
 Use Global Redirect to eliminate duplicate URLs: /node/17 - redirect to
 /articles/article
+http://www.advomatic.com/dark_arts_of_seo_why_global_redirect_wont_help_you
 
 http://coolestguidesontheplanet.com/drupal-seo-settings-configuring-basics-hiding-node/
 

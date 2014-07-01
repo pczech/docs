@@ -9,7 +9,7 @@ clutter                 zaśmiecać
 convey                  przekazywać wyrażać
 courtesy                uprzejmość, za zgodą kogoś
 cumbersome              nieporęczny, niewygodny, zawiły
-daunting                niewdzięczny, zniechęcający
+daunting                niewdzięczny, zniechęcający                     *
 decent                  przyzwoity, sensowny
 deliberately            celowo, umyślnie
 delve into              wglębiać się w coś
@@ -28,6 +28,7 @@ fancy                   fantazyjny, wyszukany
 feat                    wyczyn
 finicky                 wybredny
 for the sake of         ze względu na ...
+glean                   wyciągać (coś od kogoś)
 havoc                   spustoszenie
 hassle                  kłopot, zawracanie głowy
 hence                   stąd
@@ -48,6 +49,7 @@ outline                 zarys, nakreślać
 overwhelm               przytłaczać, zalewać
 pane                    płaszczyzna, szyba
 parlance                żargon
+perceived               zauważalny
 pertinent               trafny, mający związek z czymś
 pull apart              rozdzielać
 refine                  udoskonalać
