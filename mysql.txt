@@ -17,7 +17,7 @@ SELECT * FROM table WHERE columnA = valueX ORDER BY columnX, columnY [ASC | DESC
 JOINS
 
 
-Perofmance optimization
+Perfomance optimization
 
 phpmyadmin -> Status ->
     Monitor
@@ -29,3 +29,9 @@ slow query log:
 # Here you can see queries with especially long duration
 log_slow_queries   = /var/log/mysql/mysql-slow.log
 #long_query_time = 2
+
+/etc/mysql/my.cnf (example):
+table_open_cache    = 20K
+tmp_table_size      = 64M
+max_heap_table_size = 64M
+innodb_buffer_pool_size = 1G

@@ -59,3 +59,22 @@ uname -a
 pstree
 top
 ps
+
+
+*******************************************************************************
+scp
+---
+
+*******************************************************************************
+tar
+---
+
+extract from archive:
+tar -xvf file.tar [extract_here]
+tar -zxvf file.tar.gz [extract_here]      gzip
+tar -jxvf file.tar.bz2 [extract_here]     bzip2
+
+compress directory:
+tar -cvf file.tar directory_to_compress
+tar -zcvf file.tar.gz directory_to_compress
+tar -jcvf file.tar.bz2 directory_to_compress
