@@ -27,6 +27,7 @@ Restart xinetd service:
 
 service xinetd restart
 
+
 NFS Server
 ----------
 install nfs-kernel-server
@@ -54,11 +55,131 @@ config files:
 
 see man exports
 
+U-Boot commands
+---------------
 
-Commands (example board)
-------------------------
+You don't need to type full command name; instead it is sufficient to type
+a few characters: save = saveenv, tftp = tftpboot, set = seenv
 
-nand read 0x42000000 kernel
-nand read 0x43000000 devtree
+printenv        - print environment variable(s)
+saveenv         - save of copy of environment settings to persistent storage.
+setenv          - set (or delete) environment variables
+run             - run commands in environment variable. Environment variables
+                  can store commands or sequence of commands (separated by ;)
 
-run bootm
+tftpboot        - boot image via network using TFTP
+                  tftp [loadAddress] [hostIPaddr:]bootfilename]
+                  
+bootd (boot)    - boot default (synonym for 'run bootcmd') 
+bootm           - boot application image from memory.
+                  bootm ${kernel_addr] ${ramdisk_addr} ${fdt_addr}
+                  bootm ${kernel_addr] - ${fdt_addr}
+
+
+Environment variables
+---------------------
+baudrate        - console baudrate
+bootargs        - is passed to Linux kernel as boot arguments (command line)
+bootcmd         - defines command string that is automatically executed when
+                  the initial countdown is not interrupted
+bootfile        - name of default image to load with TFTP
+mtdparts        - define a Linux compatible MTD partition scheme for flash
+                  memory at boot time. Kernel shall be compiled with option
+                  CONFIG_MTD_CMDLINE_PARTS to recognize argument 'mtdparts'.
+
+ipaddr          - IP address of the device; needed for tftp
+loadaddr        - Default load address, e.g. for tftp
+serverip        - TFTP server IP address; needed for tftp
+
+Line parser
+-----------
+${...}          - variable substitution
+cmd1 && cmd2    - cmd2 is executed if, and only if, cmd1 returns an  exit status
+                  of zero.
+cmd1 || cmd2    - cmd2 is executed if, and only if, cmd1 returns a non-zero exit
+                  status.
+cmd1; cmd2      - commands are executed sequentially; the shell  waits for each
+                  command to terminate in turn. The return status is the exit
+                  status of the last command executed. 
+                  
+
+Example board environment variables
+-----------------------------------
+bootcmd=if mmc rescan 0; then if run loadbootscript; then echo "Boot script found on SD card. Do 'run bootscript' to execute"; else run linux_boot; fi; else run linux_boot; fi
+
+if mmc rescan 0; then 
+    if run loadbootscript; then 
+        echo "Boot script found on SD card. Do 'run bootscript' to execute"; 
+    else 
+        run linux_boot; 
+    fi; 
+else 
+    run linux_boot; 
+fi
+
+bootfile=NQT/uImage.bin
+baudrate=115200
+ipaddr=172.29.1.186
+loadaddr=0x42000000
+
+
+Board specific variables
+-----------------------
+devtree_addr=0x43000000
+
+Configurations
+--------------
+linux_bootargs_nfs=console=ttyS0 root=/dev/nfs ip=dhcp nfsroot=172.29.1.68:/home/XXXXX/embedded/nfs
+linux_bootargs_ubi=console=ttyS0 ubi.mtd=rootfs root=ubi0:rootfs rootfstype=ubifs
+
+linux_boot_nfs=tftp ${loadaddr} uImage && tftp ${devtree_addr} XXXXX-evb.dtb && run bootm
+linux_boot_ubi=run chk_parts; nand read ${loadaddr} kernel && nand read ${devtree_addr} devtree && run bootm
+
+Boot variable
+-------------
+bootm=set bootargs ${linux_bootargs} ${mtdparts} && bootm ${loadaddr} - ${devtree_addr}
+
+Set boot type
+-------------
+setnfsmode
+setubimode
+
+
+NFS mode
+--------
+setnfsmode=setenv linux_boot ${linux_boot_nfs} && set linux_bootargs ${linux_bootargs_nfs} && save
+
+Result:
+  linux_boot=tftp ${loadaddr} uImage && tftp ${devtree_addr} XXXXX-evb.dtb && run bootm
+  linux_bootargs=console=ttyS0 root=/dev/nfs ip=dhcp nfsroot=172.29.1.68:/home/piotr/embedded/nfs
+
+run linux_boot (boot command - load image and run it):
+  tftp 0x42000000 uImage
+  tftp 0x43000000 XXXXX-evb.dtb
+  run bootm
+
+run bootm (boot application image from memory)
+  Image and the device tree shall be already present in memory. This in fact
+  sets bootargs depending on the config
+
+  bootargs=console=ttyS0 root=/dev/nfs ip=dhcp nfsroot=172.29.1.68:/home/piotr/embedded/nfs mtdparts=dmw_nand:2m(u-boot),1m(u-boot-env),1m(devtree),5m(kernel),-(rootfs)
+  bootm 0x42000000 - 0x43000000
+
+
+UBI Mode
+--------
+setubimode=setenv linux_boot ${linux_boot_ubi} && set linux_bootargs ${linux_bootargs_ubi} && save
+
+Result:
+  linux_boot=run chk_parts; nand read ${loadaddr} kernel && nand read ${devtree_addr} devtree && run bootm
+  linux_bootargs=console=ttyS0 ubi.mtd=rootfs root=ubi0:rootfs rootfstype=ubifs
+
+run linux_boot:
+  run chk_parts
+  nand read 0x42000000 kernel
+  nand read 0x43000000 devtree
+  run bootm
+
+run bootm:
+  bootargs=console=ttyS0 ubi.mtd=rootfs root=ubi0:rootfs rootfstype=ubifs mtdparts=dmw_nand:2m(u-boot),1m(u-boot-env),1m(devtree),5m(kernel),-(rootfs)
+  bootm 0x42000000 - 0x43000000

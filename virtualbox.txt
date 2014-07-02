@@ -3,15 +3,33 @@ https://www.virtualbox.org/manual
 VBoxManage
 https://www.virtualbox.org/manual/ch08.html
 
-Installation
-------------
-Download .deb package from oracle
-sudo dpkg - i virtualbox.deb
+Uninstalling VirtualBox
+-----------------------
+sudo apt-get purge virtualbox-/*
+
+
+Installing VirtualBox
+---------------------
+Install dkms package, otherwise kernel modules will need to be recreated
+manually whenever the kernel is updated using the command
+/etc/init.d/vboxadd setup as root.
+ 
+Download .deb package from http://download.virtualbox.org/virtualbox/4.3.12/
+sudo dpkg - i virtualbox.deb or double click .deb file and it shall be opened
+by Ubuntu Software Center.
 
 A guest system installation ISO image can be mounted directly to CD/DVD drive:
 Settings -> Storage -> IDE -> Empty -> [CD Menu icon] -> 
   Choose a virtual CD/DVD disk file.
+
   
+Installing Guest Additions
+--------------------------
+.iso file should be installed by above .deb package in /usr/share/virtualbox
+G: Install dkms package (see above).
+G: select Menu->Devices->Insert Guest Addition CD...
+
+
 USB
 ---
 Install VirtualBox Extension Pack to enable USB 2.0
@@ -23,27 +41,27 @@ Add a filter for the given USB device in Virtual Machine settings to
 automatically mount the USB device and then run the virtual machine or run the
 virtual machine and then select the device from Menu Devices -> USB Devices.
 
+
 Shared folders
 --------------
-HOST: Create a folder <FOLDER> to be used as the shared folder
-VB: Add the folder to Shared Folders (e.g. with options Read-only, Auto-mount)
-HOST: Install virtualbox-guest-additions-iso
-VB: Select Menu->Devices->Insert Guest Additions CD image...
-VB: Restart the system
-VB: Now the shared folder should be mounted automatically as /media/sf_<FOLDER>,
-    but it is not accessible by default. See the note: "Access to auto-mounted
-    shared folders is only granted to the user group vboxsf, which is created
-    by the VirtualBox Guest Additions installer. Hence guest users have to be
-    member of that group to have read/write access or to have read-only access
-    in case the folder is not mapped writable."
-VB: add user to vboxsf group: sudo adduser <USER> vboxsf
-VB: Logout and login (see USB issue above)
+Required: Guest Additions
+H: Create a folder <FOLDER> to be used as the shared folder
+G: Add the folder to Shared Folders (e.g. with options Read-only, Auto-mount)
+G: Restart the system
+G: Now the shared folder should be mounted automatically as /media/sf_<FOLDER>,
+   but it is not accessible by default. See the note: "Access to auto-mounted
+   shared folders is only granted to the user group vboxsf, which is created
+   by the VirtualBox Guest Additions installer. Hence guest users have to be
+   member of that group to have read/write access or to have read-only access
+   in case the folder is not mapped writable."
+G: add user to vboxsf group: sudo adduser <USER> vboxsf
+G: Logout and login (see USB issue above)
 
 http://askubuntu.com/questions/22743/how-do-i-install-guest-additions-in-a-virtualbox-vm
 
+
 Resize virtual disk
 -------------------
-
 If resizing doesn't work for your disk format (e.g. fixed size disks), clone the
 disk to the proper format first:
 
@@ -66,3 +84,9 @@ How to migrate the unallocated space to precede the swap partition:
 http://blog.mwpreston.net/2012/06/22/expanding-a-linux-disk-with-gparted-and-getting-swap-out-of-the-way/
 
 https://forums.virtualbox.org/viewtopic.php?f=35&t=50661
+
+
+Flexible screen resolution
+--------------------------
+Install Guest Additions
+

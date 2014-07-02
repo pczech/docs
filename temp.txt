@@ -1,1 +1,20 @@
-https://www.virtualbox.org/manual/ch04.html#idp52733088
+libTomCrypt, libTomMath
+
+Install library with LibTomMath (LTM) descriptor
+cd libtomcrypt-1.17
+CFLAGS="-DLTM_DESC" make DESTDIR=out INSTALL_USER=piotr INSTALL_GROUP=piotr NODOCS=1 install
+
+cd libtommath-0.42.0
+make DESTDIR=out INSTALL_USER=piotr INSTALL_GROUP=piotr NODOCS=1 install 
+
+mkdir rsa
+cd rsa
+cp ../libtomcrypt-1.17/out/usr/include/* include/*
+cp ../libtomcrypt-1.17/out/usr/lib lib/*
+
+
+cp ../libtommath-0.42.0/out/usr/include/* include/*
+cp ../libtommath-0.42.0/out/usr/lib lib/*
+
+test.c
+gcc -I include -DLTM_DESC test.c -Llib -ltomcrypt -ltommath -o test
