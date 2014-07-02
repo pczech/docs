@@ -1,0 +1,64 @@
+TFTP server
+-----------
+install xinetd, tftpd
+
+Create /etc/xinetd.d/tftp file:
+
+service tftp
+{
+  protocol    = udp
+  port        = 69
+  socket_type = dgram
+  wait        = yes
+  user        = nobody
+  server      = /usr/sbin/in.tftpd
+  server_args = /home/piotr/embedded/tftpboot
+  disable     = no
+}
+
+Create tftpboot:
+
+cd ~/embedded
+sudo mkdir tftpboot
+sudo chmod -R 777 tftpboot
+sudo chown -R nobody tftpboot
+
+Restart xinetd service:
+
+service xinetd restart
+
+NFS Server
+----------
+install nfs-kernel-server
+
+Add config to /etc/exports file:
+<EXPORT_DIR> <CLIENTS> (parameters)
+/home/piotr/embedded/nfs 172.29.1.186 (rw,sync)
+
+Restart NFS server:
+
+service nfs-kernel-server restart
+
+Examples:
+/export       192.168.1.0/24(rw,fsid=0,insecure,no_subtree_check,async)
+  /export is exported to a local network with mask 192.168.1.0/24
+/images 192.168.0.2(rw,sync,subtree_check)
+  /images is exported for NFS Client with given IP with Read Write access
+/mp3 192.168.0.1/24(ro,sync)
+  /mp3 is exported for NFS Client with IP 192.168.0.1 to 192.168.0.254 with Read Only access
+
+
+config files:
+/etc/default/nfs-kernel-server
+/etc/default/nfs-common
+
+see man exports
+
+
+Commands (example board)
+------------------------
+
+nand read 0x42000000 kernel
+nand read 0x43000000 devtree
+
+run bootm

@@ -44,6 +44,18 @@ Benchmarking
 http://www.cyberciti.biz/tips/howto-performance-benchmarks-a-web-server.html
 
 
+Virtual Host Issues When Upgrading from Apache 2.2 to 2.4
+---------------------------------------------------------
+After upgrade from Ubuntu 12.04 to 14.04, apache uses default web root directory
+/var/www, so it doesn't load virtual-host config from /etc/apache2/sites-enabled/<SITE_CONFIG>
+
+In the old Apache 2.2 file the /etc/apache2/apache2.conf file had a Include sites-enabled/
+whereas the new .conf file has: IncludeOptional sites-enabled/*.conf
+
+Add .conf to <SITE_CONFIG> name. 
+
+http://lyemium.com/content/virtual-host-issues-when-upgrading-apache-22-24
+
 *******************************************************************************
 PHP
 ---

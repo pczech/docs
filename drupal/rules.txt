@@ -1,0 +1,59 @@
+*******************************************************************************
+Documentation
+------------- 
+Rules documentation             https://drupal.org/documentation/modules/rules
+Drupal 7 - All About Rules      https://drupal.org/node/1866108
+
+Daily dose of drupal
+--------------------
+http://codekarate.com/daily-dose-of-drupal/drupal-7-rules-module-basics-part-1
+http://codekarate.com/daily-dose-of-drupal/drupal-7-rules-module-components-part-2
+http://codekarate.com/daily-dose-of-drupal/drupal-7-rules-scheduler-part-3
+
+nodeone.se
+----------
+I Basic Rules concepts
+1   http://nodeone.se/en/introduction-to-rules
+2   http://nodeone.se/en/data-types-and-data-selection
+3   http://nodeone.se/en/lists-and-loops
+4   http://nodeone.se/en/overview-of-actions-conditions-and-events
+5   http://nodeone.se/en/combining-conditions
+6   http://nodeone.se/en/components
+
+II Basic examples
+7   http://nodeone.se/en/login-redirects
+8   http://nodeone.se/en/notify-author-of-comments
+9   http://nodeone.se/en/notify-of-comment-replies
+10  http://nodeone.se/en/sync-article-promotions-with-articles
+11  http://nodeone.se/en/automatically-create-promotions
+
+III Developer tips
+12  http://nodeone.se/en/importing-and-exporting-rules
+13  http://nodeone.se/en/debugging-rules-configuration
+
+IV Rules Scheduler
+14  http://nodeone.se/en/introducing-rules-scheduler
+15  http://nodeone.se/en/using-fields-for-setting-evaluation-time
+16  http://nodeone.se/en/repeating-scheduled-events
+
+V Views Bulk Operations
+17  http://nodeone.se/en/introducing-views-bulk-operations
+18  http://nodeone.se/en/more-details-about-vbo-settings
+19  http://nodeone.se/en/using-rules-components-with-vbo
+20  http://nodeone.se/en/using-rules-componens-with-more-than-one-parameter
+21  http://nodeone.se/en/using-vbo-to-load-list-of-objects-into-rules
+
+VI Rules and other modules
+22  http://nodeone.se/en/flag-and-rules-overview
+23  http://nodeone.se/en/rules-link-basics
+24  http://nodeone.se/en/more-rules-link
+25  http://nodeone.se/en/rules-bonus-pack-views-and-ctools-integration
+26  http://nodeone.se/en/rules-bonus-pack-using-rules-for-presentation-altering
+
+VII Rules exercises
+27  http://nodeone.se/en/additional-automated-url-aliases
+28  http://nodeone.se/en/delete-orphan-tags
+29  http://nodeone.se/en/creating-simple-back-links
+30  http://nodeone.se/en/creating-multiple-back-links
+31  http://nodeone.se/en/schedule-front-page-publishing
+32  http://nodeone.se/en/non-linear-workflow

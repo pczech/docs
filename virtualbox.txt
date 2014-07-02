@@ -1,0 +1,68 @@
+https://www.virtualbox.org/manual
+
+VBoxManage
+https://www.virtualbox.org/manual/ch08.html
+
+Installation
+------------
+Download .deb package from oracle
+sudo dpkg - i virtualbox.deb
+
+A guest system installation ISO image can be mounted directly to CD/DVD drive:
+Settings -> Storage -> IDE -> Empty -> [CD Menu icon] -> 
+  Choose a virtual CD/DVD disk file.
+  
+USB
+---
+Install VirtualBox Extension Pack to enable USB 2.0
+(USB 2.0 may be required for some devices).
+Add your user to vboxusers group: sudo adduser <USER> vboxusers
+(to remove: sudo deluser <USER> vboxusers).
+Logout and login to get the groups permissions from /etc/group
+Add a filter for the given USB device in Virtual Machine settings to
+automatically mount the USB device and then run the virtual machine or run the
+virtual machine and then select the device from Menu Devices -> USB Devices.
+
+Shared folders
+--------------
+HOST: Create a folder <FOLDER> to be used as the shared folder
+VB: Add the folder to Shared Folders (e.g. with options Read-only, Auto-mount)
+HOST: Install virtualbox-guest-additions-iso
+VB: Select Menu->Devices->Insert Guest Additions CD image...
+VB: Restart the system
+VB: Now the shared folder should be mounted automatically as /media/sf_<FOLDER>,
+    but it is not accessible by default. See the note: "Access to auto-mounted
+    shared folders is only granted to the user group vboxsf, which is created
+    by the VirtualBox Guest Additions installer. Hence guest users have to be
+    member of that group to have read/write access or to have read-only access
+    in case the folder is not mapped writable."
+VB: add user to vboxsf group: sudo adduser <USER> vboxsf
+VB: Logout and login (see USB issue above)
+
+http://askubuntu.com/questions/22743/how-do-i-install-guest-additions-in-a-virtualbox-vm
+
+Resize virtual disk
+-------------------
+
+If resizing doesn't work for your disk format (e.g. fixed size disks), clone the
+disk to the proper format first:
+
+VBoxManage clonehd <INFILENAME> <OUTFILENAME> --format vdi --variant standard 
+
+Resize the disk:
+
+VBoxManage modifyhd <FILENAME> --resize <SIZE MB> e.g. 65536 for 64GB
+
+If you cloned the drive, replace the drive file for the guest
+
+Use a partition management tool inside the guest to adjust the main partition
+to fill the drive.
+
+Download Gparted Live CD:
+http://sourceforge.net/projects/gparted/files/gparted-live-stable/
+Mount the iso to Guest system CD drive and run the system from CD
+
+How to migrate the unallocated space to precede the swap partition:
+http://blog.mwpreston.net/2012/06/22/expanding-a-linux-disk-with-gparted-and-getting-swap-out-of-the-way/
+
+https://forums.virtualbox.org/viewtopic.php?f=35&t=50661

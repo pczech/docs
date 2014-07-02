@@ -47,25 +47,13 @@ http://en.wikipedia.org/wiki/LightDM
 unix domain sockets
 http://lists.freebsd.org/pipermail/freebsd-performance/2005-February/001143.html
 
-virtualbox
-----------
-Download .deb package from oracle
-sudo dpkg - i virtualbox.deb
-https://www.virtualbox.org/manual
 
-A guest system installation ISO image can be mounted directly to CD/DVD drive:
-Settings -> Storage -> IDE -> Empty -> [CD Menu icon] -> 
-  Choose a virtual CD/DVD disk file.
-  
-USB
-Install VirtualBox Extension Pack to enable USB 2.0
-(USB 2.0 may be required for some devices).
-Add your user to vboxusers group: sudo adduser <USER> vboxusers
-(to remove: sudo deluser <USER> vboxusers).
-Logout and login to get the groups permissions from /etc/group
-Add a filter for the given USB device in Virtual Machine settings to
-automatically mount the USB device and then run the virtual machine or run the
-virtual machine and then select the device from Menu Devices -> USB Devices.
+
+strace
+
+fdd
+
+uname -a
 
 
 pstree

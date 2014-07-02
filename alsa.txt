@@ -1,0 +1,46 @@
+/proc/asound/cards
+
+
+config file
+/etc/asound.conf
+
+http://www.alsa-project.org/alsa-doc/alsa-lib/pcm_plugins.html
+http://www.alsa-project.org/main/index.php/Asoundrc
+http://www.volkerschatz.com/noise/alsa.html
+
+aplay
+-l        List all soundcards and digital audio devices
+-L        List all PCMs defined
+-D        Select PCM by name
+-c        Number of channels (default is 1)
+-r        Sampling  rate in Hertz
+
+
+arecord
+
+PCM audio formats
+
+S8                          PCM signed 8-bit
+U8                          PCM unsigned 8-bit
+S16_LE                      PCM signed 16-bit little-endian
+S16_BE                      PCM signed 16-bit big-endian
+U16_LE                      ...
+U16_BE
+S24_LE
+S24_BE
+U24_LE
+U24_BE
+S32_LE
+S32_BE
+U32_LE
+U32_BE
+FLOAT_LE                    PCM floating-point little-endian
+FLOAT_BE
+FLOAT64_LE
+FLOAT64_BE
+MU_LAW                      PCM mu-Law
+A_LAW                       PCM mu-Law
+IMA_ADPCM
+MPEG
+GSM
+...
