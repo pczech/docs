@@ -1,34 +1,154 @@
 *******************************************************************************
-MPM
----
+Basics
 
-MPM prefork
-MPM worker
-
-/etc/apache2/mods-available/mpm_prefork.conf
-/etc/apache2/mods-available/mpm_worker.conf
-
-apache2
--l - list of modules compiled into the server.
--V - Print the version and build parameters of apache2.
-
-a2dismod
-a2enmod
 service apache2 restart
 
-PHP cgi
-/etc/apache2/mods-available/mpm_worker.conf
+apache2ctl
+----------
+-l - list modules compiled into the server
+-M - list loaded modules
+-S - dump settings parsed from config files
+-V - print the version and build parameters of apache2
 
-sites configuration
+a2enmod - enable module. Creates link in mods-enabled to corresponding config
+          file in mods-available.
+          
+a2dismod - disable module. Deletes link in mods-enabled.
+
+
+*******************************************************************************
+Configuration structure
+-----------------------
+
+   /etc/apache2/
+   |-- apache2.conf
+   |   `--  ports.conf
+   |-- mods-enabled
+   |   |-- *.load
+   |   `-- *.conf
+   |-- conf-enabled
+   |   `-- *.conf
+   `-- sites-enabled
+       `-- *.conf
+       
+Apache 2.4:
+by default apache2.conf does not allow access to the root filesystem:
+
+<Directory />
+    Options FollowSymLinks
+    AllowOverride None
+    Require all denied
+</Directory>
+
+If your system is serving content from a sub-directory you must allow
+access in apache2.conf or in any related virtual host. In Apache 2.4
+mod-access-compat is required to process legacy Order, Allow. It seems
+that the legacy commands cannot override 'Require' set in apache2.conf,
+so it is necessary to use Require in virtual server configuration.
+
+Config parameters
+-----------------
+Module: core
+
+Options - controls which server features are available in a particular
+          directory.
+          http://httpd.apache.org/docs/current/mod/core.html#options
+          
+Options FollowSymLinks 
+  The server will follow symbolic links in this directory.
+  
+Options ExecCGI
+  Execution of CGI scripts using mod_cgi is permitted.
+   
+AllowOverride None
+  .htaccess files are completely ignored.
+AllowOverride All
+  all directives are allowed in .htaccess files
+  http://httpd.apache.org/docs/2.4/mod/core.html#allowoverride
+
+Module: mime
+
+AddHandler handler-name extension
+  Maps the filename extensions to the specified handler. Files having the
+  extension will be served by the specified handler-name. Handlers can either
+  be built into the server or included in a module (e.g. fcgid-script).
+  http://httpd.apache.org/docs/2.4/handler.html
+
+Module: mod_authz_core
+
+Require all denied
+  Access is denied unconditionally.
+Require all granted
+  Access is allowed unconditionally.
+Require local
+  http://httpd.apache.org/docs/2.4/mod/mod_authz_core.html#require
+
+
+*******************************************************************************
+Virtual host configuration
+--------------------------
+Apache comes with a default virtual host file sites-available/000-default.conf
+that can be used as a jumping off point. Copy it over to create a virtual host
+file for each of your domains.
+
+http://httpd.apache.org/docs/2.4/vhosts/
+
+
+*******************************************************************************
+Upgrading from Apache 2.2 to 2.4
+--------------------------------
+Issue: After upgrade from Ubuntu 12.04 to 14.04, apache uses default web root
+directory /var/www, so it doesn't load virtual-host config from
+/etc/apache2/sites-enabled/<SITE_CONFIG>
+
+In the old Apache 2.2 file the /etc/apache2/apache2.conf file had a 
+Include sites-enabled/ whereas the new .conf file has:
+IncludeOptional sites-enabled/*.conf
+
+Add .conf to <SITE_CONFIG> name. 
+
+http://lyemium.com/content/virtual-host-issues-when-upgrading-apache-22-24
+
+
+*******************************************************************************
+Benchmarking
+------------
 
 ApacheBench
 ab -n 1000 -c 300 localhost/01
 
-MPM pre-fork, worker, event
+http://www.cyberciti.biz/tips/howto-performance-benchmarks-a-web-server.html
+
+
+*******************************************************************************
+MPM Modules
+-----------
 http://serverfault.com/questions/383526/how-do-i-select-which-apache-mpm-to-use/383634#383634
 http://stackoverflow.com/questions/1623914/what-is-thread-safe-or-non-thread-safe-in-php
 http://kb.parallels.com/en/113007
 
+
+*******************************************************************************
+MPM Modules: MPM Prefork (mpm_prefork)
+--------------------------------------
+A non-threaded, pre-forking web server. It is appropriate for sites that need
+to avoid threading for compatibility with non-thread-safe libraries (PHP).
+
+Config:
+/etc/apache2/mods-available/mpm_worker.conf
+
+http://httpd.apache.org/docs/current/mod/prefork.html
+
+
+*******************************************************************************
+MPM Modules: MPM Worker (mpm_???)
+---------------------------------
+TODO
+
+
+*******************************************************************************
+PHP modes
+---------
 mod-php / cgi, fcgi, php-fpm
 http://blog.layershift.com/which-php-mode-apache-vs-cgi-vs-fastcgi/
 http://coolpandaca.wordpress.com/2012/03/20/apache-mpm-worker-prefork-mod_php-mod_fcgid-mod_fastcgi-php-fpm-and-nginx/
@@ -40,37 +160,49 @@ http://www.php.net/manual/en/install.fpm.php
 http://kb.parallels.com/en/113007
 apache mod_fastcgi
 
-Benchmarking
-http://www.cyberciti.biz/tips/howto-performance-benchmarks-a-web-server.html
-
-
-Virtual Host Issues When Upgrading from Apache 2.2 to 2.4
----------------------------------------------------------
-After upgrade from Ubuntu 12.04 to 14.04, apache uses default web root directory
-/var/www, so it doesn't load virtual-host config from /etc/apache2/sites-enabled/<SITE_CONFIG>
-
-In the old Apache 2.2 file the /etc/apache2/apache2.conf file had a Include sites-enabled/
-whereas the new .conf file has: IncludeOptional sites-enabled/*.conf
-
-Add .conf to <SITE_CONFIG> name. 
-
-http://lyemium.com/content/virtual-host-issues-when-upgrading-apache-22-24
 
 *******************************************************************************
-PHP
----
-localhost/tools/whoami should return <user>. It returns www-data if apache module
-mod-php is enabled.
-Check phpinfo():
-  Server API: Apache 2.0 Handler - php5 module is enabled and active,
-  then suexec doesn't work.
-Disable mod-php: a2dismod php5
-Restart apache: service apache2 restart
-Check phpinfo():
-  Server API:  CGI/FastCGI
+PHP mode: Apache module
+-----------------------
+php5 (mod_php)
+PHP interpreter is embedded in each Apache process that’s spawned on the
+server. This way every Apache worker is able to handle and execute PHP scripts
+itself removing the need to deal with any external processes.
+
+Config:
+/etc/apache2/mods-available/php5.conf
+http://blog.layershift.com/which-php-mode-apache-vs-cgi-vs-fastcgi/
+
+phpinfo(): Server API: Apache 2.0 Handler
+
+*******************************************************************************
+PHP mode: FastCGI (fcgid)
+-------------------------
+PHP scripts are by an interpreter outside of the web server. When executing PHP
+scripts with FastCGI each request is passed from the web server to FastCGI via
+a communication socket.
+
+phpinfo(): Server API:  CGI/FastCGI
+
+Config:
+/etc/apache2/mods-available/fcgid.conf
+
+AddHandler fcgid-script .php
+  Files having the extension .php will be served by the fcgid-script.
+  See AddHandler in config options.
   
+FCGIWrapper /home/<user>/web/fcgi/php5-fcgi .php
+  PHP applications are usually configured using the FcgidWrapper directive and
+  a corresponding wrapper script. The wrapper script can be an appropriate
+  place to define any environment variables required by the application, such
+  as PHP_FCGI_MAX_REQUESTS or anything else.
+  http://httpd.apache.org/mod_fcgid/mod/mod_fcgid.html
+  
+
+*******************************************************************************
 suexec
 ------
+TODO
 /usr/lib/apache2/suexec -V
  -D SUEXEC_CONFIG_DIR=/etc/apache2/suexec/
  -D AP_GID_MIN=100
@@ -80,48 +212,6 @@ suexec
 
 man suexec-custom
 man suexec-pristine
-
-
-Config files
-------------
-See phpinfo() for active configuration.
-
-/etc/php5/apache2/php.ini   - mod-php
-/etc/php5/cgi/php.ini       - cgi/fcgi
-
-/usr/bin/php/php.ini
-
-/etc/apache2/modes-available/fcgid.conf
-Spec: /usr/share/doc/libapache2-mod-fcgid/mod_fcgid.html.en
-
-
-*******************************************************************************
-XDEBUG
-------
-Ubuntu 14.04
-Enable remote debug mode in /etc/php5/mods-available/xdebug.ini:
-  xdebug.remote_enable=1
-Enable xdebug module: php5enmod xdebug
-  Then a symbolic link 20-xdebug.ini is created in /etc/php5/<CNF>/conf.d/
-Restart apache: service apache2 restart
-Check phpinfo()
-
-<CNF>: apache2 (php-mod), cgi (cgi/fcgi) cli (cli)
-
-For details see:
-http://duraturk.wordpress.com/2014/04/27/php5enmod/
-/etc/php5/mods-available/xdebug.ini
-/etc/php5/cgi/conf.d
-/etc/php5/apache2/conf.d
-
-
-Timeout during waiting on breakpoint (for fcgid)
-------------------------------------------------
-See /var/log/apache2/error.log:
-  mod_fcgid: read data timeout in 600 seconds.
-Solution:
-Increase FcgidIOTimeout in /etc/apache2/mods-available/fcgid.conf:
-FcgidIOTimeout 1800 (30 minutes)
 
 
 *******************************************************************************
@@ -144,10 +234,63 @@ Don't increase the values on production server!
 
 Don't increase the values on production server!
 
-Increase file size for database import
---------------------------------------
-check which php.ini is in use by calling phpinfo() (localhost/tools/info.php),
-it can be for example /etc/php5/cgi/php.ini
 
-find and change 'upload_max_filesize' parameter (default is 2M)
-restart apache.
+
+
+*******************************************************************************
+Issues
+------
+
+permissions
+-----------
+suExec work only with fcgid.
+localhost/tools/whoami should return <user>. It returns www-data if apache module
+mod-php is enabled.
+Check phpinfo():
+  Server API: Apache 2.0 Handler - php5 module is enabled and active,
+  then suexec doesn't work.
+Disable mod-php and enabled mod-fcgid: a2dismod php5, a2enmod fcgid
+Restart apache: service apache2 restart
+Check phpinfo():
+  Server API:  CGI/FastCGI
+
+
+Timeout during waiting on breakpoint (for fcgid)
+------------------------------------------------
+See /var/log/apache2/error.log:
+  mod_fcgid: read data timeout in 600 seconds.
+Solution:
+Increase FcgidIOTimeout in /etc/apache2/mods-available/fcgid.conf:
+FcgidIOTimeout 1800 (30 minutes)
+
+fcgid doesn't work
+------------------
+Empty PHP pages are served
+NOT SOLVED YET!!!
+
+TRY: check conf-enabled and disable php5-cgi
+
+Check this:
+FCGIWrapper content:
+#!/bin/sh
+exec DUPA
+#/usr/bin/php5-cgi
+
+Expected results:
+php5-fcgi: 2: exec: DUPA: not found
+[Tue Jul 08 17:39:51.890244 2014] [fcgid:warn] [pid 5344] (104)Connection reset by peer: [client 127.0.0.1:60230] mod_fcgid: error reading data from FastCGI server, referer: http://localhost/tools/
+[Tue Jul 08 17:39:51.890300 2014] [core:error] [pid 5344] [client 127.0.0.1:60230] End of script output before headers: info.php, referer: http://localhost/tools/
+
+Disk IO monitoring
+------------------
+Install sysstat
+
+/proc/diskstats
+per process
+pidstat
+-d  - Report I/O statistics
+-l  - Display the process command name and all its arguments.
+
+http://serverfault.com/questions/169676/howto-check-disk-i-o-utilisation-per-process
+
+Set test config for mpm_prefork and limit servers to 1.

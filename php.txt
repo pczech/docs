@@ -1,0 +1,68 @@
+See apache2.txt for Apache-PHP issues
+
+php
+-m      - show active modules
+
+php5enmod
+php5dismod
+
+https://bugs.launchpad.net/ubuntu/+source/php5/+bug/1273225
+
+*******************************************************************************
+Configuration structure
+-----------------------
+
+/etc/php5/
+   |-- apache2              Apache2 mod-php
+   |   |--  php.ini
+   |   `--  conf.d
+   |-- cgi                  CGI/FastCGI
+   |   |-- php.ini
+   |   `-- conf.d
+   |-- cli                  CLI (not for WWW)
+       |-- php.ini
+       `-- conf.d
+       
+See phpinfo() for active configuration:
+Server API: Apache 2.0 Handler  - mod-php
+Server API: CGI/FastCGI         - fcgid
+
+
+*******************************************************************************
+XDEBUG
+------
+Ubuntu 14.04
+Enable remote debug mode in /etc/php5/mods-available/xdebug.ini:
+  xdebug.remote_enable=1
+Enable xdebug module: php5enmod xdebug
+  Then a symbolic link 20-xdebug.ini is created in /etc/php5/<CNF>/conf.d/
+Restart apache: service apache2 restart
+Check phpinfo()
+
+<CNF>: apache2 (mod-php), cgi (cgi/fcgi) cli (cli)
+
+
+*******************************************************************************
+Issues
+------
+
+Increase file size for database import via phpmyadmin
+-----------------------------------------------------
+check which php.ini is in use by calling phpinfo() (localhost/tools/info.php),
+it can be for example /etc/php5/cgi/php.ini
+
+find and change 'upload_max_filesize' parameter (default is 2M)
+restart apache.
+
+
+Remove obsolete /etc/php5/conf.d
+--------------------------------
+Every mode has their own conf.d directory
+
+Rename /etc/php5/conf.d: mv conf.d _conf.d
+Disable mcrypt: php5dismod mcrypt
+Check if module is disabled: php -m
+Enable mcrypt: php5enmod mcrypt - a link 20-mcrypt should be created in conf.d
+folders for all PHP modes.
+Check if module if enabled: php -m
+https://bugs.launchpad.net/ubuntu/+source/php-mcrypt/+bug/1236035

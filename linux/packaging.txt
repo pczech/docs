@@ -1,0 +1,11 @@
+*******************************************************************************
+apt-get
+-------
+ install <PACKAGE>
+ update
+ purge 
+
+sudo apt-get purge virtualbox-\*
+dpkg -l | grep apache2
+
+http://askubuntu.com/questions/18804/what-do-the-various-dpkg-flags-like-ii-rc-mean

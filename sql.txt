@@ -1,0 +1,17 @@
+*******************************************************************************
+SQL
+---
+
+SELECT columnA, columnB FROM table
+SELECT * FROM table
+
+SELECT * FROM table WHERE columnA = valueX
+
+OPERATORS: =, <>, >, <, >=, <=, BETWEEN, LIKE, IN
+
+SELECT * FROM TABLE WHERE columnA = valueX AND columnB = valueY
+SELECT * FROM TABLE WHERE columnA = valueX OR columnB = valueY
+
+SELECT * FROM table WHERE columnA = valueX ORDER BY columnX, columnY [ASC | DESC]
+
+JOINS

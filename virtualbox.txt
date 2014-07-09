@@ -5,7 +5,7 @@ https://www.virtualbox.org/manual/ch08.html
 
 Uninstalling VirtualBox
 -----------------------
-sudo apt-get purge virtualbox-/*
+sudo apt-get purge virtualbox-\*
 
 
 Installing VirtualBox

@@ -1,0 +1,221 @@
+*******************************************************************************
+dd
+--
+BE CAREFUL - DATA DESTROYER
+
+dd if=/dev/sda of=sda.img bs=1M conv=noerror
+dd if=sda.img of=/dev/sdb bs=1M
+
+
+*******************************************************************************
+Image backup
+------------
+
+Drive naming convention
+-----------------------
+XXYZ
+
+XX - the device type (IDE, SATA, ...), 
+Y -  the device order (a the first, b the second, etc)
+Z -  numbers refer to the partitions the device has, starting by zero.
+
+hd - IDE-type drive. IDE drives will be given device names /dev/hda to /dev/hdd.
+      A typical PC has two IDE controllers, each of which can have two drives
+      connected to it. For example, /dev/hda is the first drive (master) on
+      the first IDE controller and /dev/hdd is the second (slave) drive on the
+      second controller (the fourth IDE drive in the computer).
+       
+sd - SCSI drive in general, but is mostly popular for SATA drives and CD/DVD
+
+fd - floppy disk
+
+sudo fdisk -l
+  List the partition tables for the specified devices and then exit. If no
+  devices are given, those mentioned in /proc/partitions (if that exists) are
+  used.
+
+Examples:
+Internal HDD:
+
+Disk /dev/sda: 500.1 GB
+/dev/sda1   Dell Utility
+/dev/sda2   HPFS/NTFS/exFAT
+/dev/sda3   HPFS/NTFS/exFAT
+/dev/sda4   Extended
+/dev/sda5   Linux swap / Solaris
+/dev/sda6   Linux
+
+USB HDD
+Disk /dev/sdb: 1500.3 GB
+/dev/sdb1   HPFS/NTFS/exFAT
+
+USB Pendrive
+Disk /dev/sdc: 8065 MB
+/dev/sdc1   HPFS/NTFS/exFAT
+
+                            PENDRIVE1               PENDRIVE                6146-C8B4
+1k-blocks (df)              7876588                 7854440                 4097988
+/dev/sdc:
+MB                          8065                    8065                    4204
+bytes                       8065646080              8065646080              4204789760
+heads                       8                       255                     53
+sectors/track               32                      63                      52
+cylinders                   61535                   980                     2979
+total                       15753215                15753215                8212480
+/dev/sdc1:
+Start sector                32                      2048                    464
+End                         15753214                15743699                8212479
+Blocks                      7876591+                7870826                 4106008
+System                      HPFS/NTFS/exFAT         FAT32                   FAT32
+unallocated
+Start                       -                       15743700                -
+End                         -                       15753214                -
+Total sectors               -                       9515                    -
+
+Make backup image of PENDRIVE1
+dd if=/dev/hdc of=/home/<user>/ddbackup/pendrive1_sdc.img
+dd if=/dev/hdc of=/home/<user>/ddbackup/pendrive1_sdc1.img
+
+Format PENDRIVE1 to FAT32 in Windows
+No change in above values
+
+Make backup image of PENDRIVE
+dd if=/dev/hdc of=/home/<user>/ddbackup/pendrive_sdc.img
+dd if=/dev/hdc of=/home/<user>/ddbackup/pendrive_sdc1.img
+
+Use Gparted to create a new NTFS partition in PENDRIVE1:
+                            PENDRIVE1               PENDRIVE                6146-C8B4
+1k-blocks (df)              7855104                 7854440                 4097988
+/dev/sdc:
+MB                          8065                    8065                    4204
+bytes                       8065646080              8065646080              4204789760
+heads                       244                     255                     53
+sectors/track               32                      63                      52
+cylinders                   2017                    980                     2979
+total                       15753215                15753215                8212480
+/dev/sdc1:
+Start sector                2048                    2048                    464
+End                         15742975                15743699                8212479
+Blocks                      7870464                 7870826                 4106008
+System                      HPFS/NTFS/exFAT         FAT32                   FAT32
+unallocated
+Start                       15742976                15743700                -
+End                         15753214                15753214                -
+Total sectors               10239                   9515                    -
+
+Copy some files and check in Windows 7, other devices
+OK
+
+Restore partition backup
+dd if=/home/piotr/ddbackup/PENDRIVE1_sdc1.img of=/dev/sdc1
+3000,00 s, 2,8 MB/s
+
+dd if=/home/piotr/ddbackup/PENDRIVE1_sdc1.img of=/dev/sdc1 bs=4k
+2009,56 s, 4,0 MB/s
+
+dd if=/home/piotr/ddbackup/PENDRIVE1_sdc1.img of=/dev/sdc1 bs=16k
+8059355136 bytes (8,1 GB) copied, 2009,56 s, 4,0 MB/s
+
+dd if=/home/piotr/ddbackup/PENDRIVE1_sdc1.img of=/dev/sdc1 bs=16M
+8059355136 bytes (8,1 GB) copied, 2008,97 s, 4,0 MB/s
+
+dd: error writing ‘/dev/sdc1’: No space left on device
+
+Per above tables:
+dev/sdc1: 7870464 blocks
+PENDRIVE1_sdc1.img: 7876591+ blocks
+
+Restore PENDRIVE1_sdc (whole disk)
+dd if=/home/piotr/ddbackup/PENDRIVE1_sdc.img of=/dev/sdc bs=16M
+8065646080 bytes (8,1 GB) copied, 2026,58 s, 4,0 MB/s
+
+OK
+
+Copy PENDRIVE_sdc1 to PENDRIVE1 (partition)
+dd if=/home/piotr/ddbackup/PENDRIVE_sdc1.img of=/dev/sdc1 bs=16M
+8059725824 bytes (8,1 GB) copied, 2010,36 s, 4,0 MB/s
+
+Files and folders are copied, partition structure is not changed.
+
+
+*******************************************************************************
+Make a copy of Linux partition
+------------------------------
+Make a Ubuntu Live CD or USB:
+Launch Startup Disk Creator
+USB Stick must be formated in FAT32
+Restart computer from USB
+http://www.ubuntu.com/download/desktop/create-a-usb-stick-on-ubuntu
+
+Find your drive/partition to backup:
+  sudo fdisk -l
+  mount
+
+sudo dd if=/dev/sda6 of=/media/ubuntu/Elements/Backup/ubuntu.img bs=16M
+dd: error reading ‘/dev/sda6’: Input/output error
+3615+1 records in
+3615+1 records out
+60665282560 bytes (61 GB) copied, 2343.4 s, 25.9 MB/s
+
+Check for bad blocks:
+
+sudo badblocks -v /dev/sda6
+
+Checking blocks 0 to 96205823
+Checking for bad blocks (read-only test): 59243440
+59243441
+59243442
+59243443
+done                                                 
+Pass completed, 4 bad blocks found. (4/0/0 errors)
+
+Mark the blocks as bad blocks
+
+Use e2fsck:
+sudo badblocks -v /dev/sda6 > bad-sectors.txt
+sudo e2fsck -l bad-sectors.txt  /dev/sda6
+
+or
+sudo e2fsck -c  /dev/sda6
+
+/dev/sda6 must be unmounted
+
+-c causes e2fsck to use badblocks(8) program  to  do  a
+read-only  scan  of  the device in order to find any bad blocks.
+If any bad blocks are found, they are added  to  the  bad  block
+inode  to  prevent them from being allocated to a file or direc‐
+tory.  If this option is specified twice,  then  the  bad  block
+scan will be done using a non-destructive read-write test.
+
+Didn't help:
+
+dd: error reading ‘/dev/sda6’: Input/output error
+3615+1 records in
+3615+1 records out
+60665282560 bytes (61 GB) copied, 2333.42 s, 26.0 MB/s
+
+Try this:
+sudo dd if=/dev/sda6 of=/media/ubuntu/Elements/Backup/sda6.img bs=16M conv=noerror
+dd: error reading ‘/dev/sda6’: Input/output error
+3615+1 records in
+3615+1 records out
+60665282560 bytes (61 GB) copied, 2330.51 s, 26.0 MB/s
+5870+2 records in
+5870+2 records out
+98513633280 bytes (99 GB) copied, 3732.5 s, 26.4 MB/s
+
+
+TODO: mount it via loop. Solve the problems
+
+
+Drive utilization statistics
+----------------------------
+Install
+
+iostat
+-d  - display the device utilization report
+-x  - extended statistics
+
+iostat -xd /dev/sda6 1 100 - 100 reports of 1s intervals
+
+pidstat TODO

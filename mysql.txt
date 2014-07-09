@@ -1,27 +1,37 @@
 *******************************************************************************
-SQL
----
+Configuration structure
+-----------------------
+/etc/mysql/my.cnf
 
-SELECT columnA, columnB FROM table
-SELECT * FROM table
-
-SELECT * FROM table WHERE columnA = valueX
-
-OPERATORS: =, <>, >, <, >=, <=, BETWEEN, LIKE, IN
-
-SELECT * FROM TABLE WHERE columnA = valueX AND columnB = valueY
-SELECT * FROM TABLE WHERE columnA = valueX OR columnB = valueY
-
-SELECT * FROM table WHERE columnA = valueX ORDER BY columnX, columnY [ASC | DESC]
-
-JOINS
+service mysql restart
 
 
-Perfomance optimization
+*******************************************************************************
+Performance optimization
+------------------------
 
 phpmyadmin -> Status ->
     Monitor
     Advisor
+    
+InnoDB status variables:
+information_schema -> GLOBAL_STATUS
+phpmyadmin- > Status -> All status variables -> Check Innodb buffer pool ...
+
+Innodb_buffer_pool_reads
+    The number of logical reads that InnoDB could not satisfy from the buffer
+    pool, and had to read directly from the disk.
+    
+Innodb_buffer_pool_read_requests
+    The number of logical read requests.
+    
+
+InnoDB Buffer Pool Hit Rate
+---------------------------
+Innodb_buffer_pool_reads/Innodb_buffer_pool_read_requests * 100%
+    
+These variables are not cleared by FLUSH STATUS, so use dalta values before and
+after test. 
     
 slow query log:
 /etc/mysql/my.cnf
@@ -35,3 +45,23 @@ table_open_cache    = 20K
 tmp_table_size      = 64M
 max_heap_table_size = 64M
 innodb_buffer_pool_size = 1G
+
+
+*******************************************************************************
+mysql cli
+---------
+
+*******************************************************************************
+database size
+-------------
+phpmyadmin - open database to get list of tables, check column size
+01: 61 MiB
+
+database dump
+TODO
+
+INNODB_BUFFER_POOL_READS            12255  12413
+INNODB_BUFFER_POOL_READ_REQUESTS    646156 672875 26719
+
+
+

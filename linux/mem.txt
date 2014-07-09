@@ -1,0 +1,31 @@
+*******************************************************************************
+free
+----
+Display amount of free and used memory in the system. Shows formated info from
+/proc/meminfo
+
+1st line: shared / buffers / cached are included in the value for used.
+2nd line: adjusted values:
+  used = used - (buffers+cached)
+  free = free + (buffers+cached)
+
+These new values are often more meaningful than those of first line.
+
+Just a short: Linux will always try to use free RAM for caching stuff, so free
+will almost always be very low. Therefore the line -/+ buffers/cache: is shown,
+because it shows how much memory is free when ignoring caches; caches will be
+freed automatically if memory gets scarce, so they do not really matter.
+
+/proc/meminfo
+/proc/<PID>status
+/proc/<PID>statm
+/proc/<PID>smem
+
+
+*******************************************************************************
+drop cache
+----------
+echo X > /proc/sys/vm/drop_caches
+X=1 - free pagecache
+X=2 - free dentries and inodes
+X=3 - free pagecache, dentries and inodes
