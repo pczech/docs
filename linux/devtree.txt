@@ -1,0 +1,11 @@
+Device Tree
+
+Before
+The kernel contains the entire description of the hardware. The bootloader
+loads a single binary, the kernel image, and executes it.
+
+With Device Tree
+The kernel no longer contains the description of the hardware, it is located
+in a separate binary: the Device Tree Blob. The bootloader loads two binaries:
+the kernel image and the DTB. DTB is located in kernel's arch/arm/boot/dts
+folder, one per board.

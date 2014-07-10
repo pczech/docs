@@ -1,3 +1,5 @@
+https://www.yoctoproject.org/docs/current/yocto-project-qs/yocto-project-qs.html
+
 cd poky
 source oe-init-build-env
         Environment setup script defines OpenEmbedded build environment
@@ -20,6 +22,8 @@ source oe-init-build-env
         or oe-init-build-env-memres).
         
 build/conf/local.conf
+See desrciption in the file.
+
 BB_NUMBER_THREADS
     number of tasks bitbake should run in parallel
 
@@ -28,3 +32,11 @@ PARALLEL_MAKE
     
 MACHINE
     machine selection (qemuarm, qemux86, ...)
+    
+
+Build Directory structure
+/build
+/build/downloads        DL_DIR          downloaded tarballs storage
+/build/sstate-cache     SSTATE_DIR      shared-state files storage
+/build/tmp              TMPDIR          build output
+
