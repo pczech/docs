@@ -265,21 +265,12 @@ FcgidIOTimeout 1800 (30 minutes)
 
 fcgid doesn't work
 ------------------
-Empty PHP pages are served
-NOT SOLVED YET!!!
+Empty PHP pages are served, no error log, mod-fcgid active, mod-php5 disabled,
+fcgid setting in virtual host config file correct, it seems that FcgidWrapper
+script is not called (no error when it contains invalid code), php5-cgi from
+command line works fine. 
 
-TRY: check conf-enabled and disable php5-cgi
-
-Check this:
-FCGIWrapper content:
-#!/bin/sh
-exec DUPA
-#/usr/bin/php5-cgi
-
-Expected results:
-php5-fcgi: 2: exec: DUPA: not found
-[Tue Jul 08 17:39:51.890244 2014] [fcgid:warn] [pid 5344] (104)Connection reset by peer: [client 127.0.0.1:60230] mod_fcgid: error reading data from FastCGI server, referer: http://localhost/tools/
-[Tue Jul 08 17:39:51.890300 2014] [core:error] [pid 5344] [client 127.0.0.1:60230] End of script output before headers: info.php, referer: http://localhost/tools/
+Check enabled configs and disable php5-cgi: a2disconf php5-cgi.
 
 Disk IO monitoring
 ------------------
@@ -294,3 +285,5 @@ pidstat
 http://serverfault.com/questions/169676/howto-check-disk-i-o-utilisation-per-process
 
 Set test config for mpm_prefork and limit servers to 1.
+
+TODO...

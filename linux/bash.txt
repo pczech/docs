@@ -1,0 +1,10 @@
+source <filename>
+    Read and execute commands from filename in the current shell environment,
+    synonymous with ".": ./file = source file 
+
+    
+Conditional operators
+
+-n string is not null.
+
+if [ -n $a ] then
