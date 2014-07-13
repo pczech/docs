@@ -1,0 +1,56 @@
+*******************************************************************************
+Show line numbers
+-----------------
+Menu -> Window -> Preferences -> General -> Editors -> Text Editors -> 
+Select 'Show Line Numbers'
+
+
+*******************************************************************************
+Install and configure EGit (Eclipse 3.8 Indigo)
+--------------------------
+http://www.vogella.com/tutorials/EclipseGit/article.html
+http://wiki.eclipse.org/EGit/User_Guide
+
+Menu -> Help -> Install new software
+Work with: 'select Indigo Update Site - http://download.eclipse.org/releases/indigo/'
+Find and select Eclipse EGit (1.3.0.201202151440-r)
+
+Warning
+Latest versions of EGit are available at http://download.eclipse.org/egit/updates,
+however they do not support older Eclipse versions. Use Indigo compatible
+version. See also http://wiki.eclipse.org/EGit/FAQ#What_versions_of_Eclipse_does_EGit_target.3F
+
+Configuration
+-------------
+Menu -> Window -> Preferences -> Team -> Git:
+Default repository: /home/<user>/Dev/temp (always choose directory)
+
+Window -> Preferences -> Team -> Git -> Configuration
+Use git config if already present (User Settings: /home/<user>/.gitconfig).
+
+Enable EGit menus
+-----------------
+Menu -> Window -> Customize Perspective (e.g. default Resource)
+Select Tab 'Command Groups Availability' and select Git. Git options should be
+set automatically for 'Tool Bar Visibility', 'Menu Visibility'.
+
+Import local git repository
+---------------------------
+If local git repository is imported via:
+File -> Import -> Git -> Local -> ... 
+then Eclipse doesn't recognize that the project is in git version control.
+To solve the problem choose the option 'Team -> Share project...' in project
+context menu and select 'Use or create repository in parent folder'.
+
+Or just create a bare repository, clone it to Eclipse working directory, using
+URI and Local File method.
+
+
+*******************************************************************************
+Config PHP Debugger
+-------------------
+Menu Run -> Debug Configurations -> PHP Web Application -> New Configuration ->
+Server: XDebugger
+File: /dev01/index.php (example - shall be set for every devXX installation)
+URL: Auto generate
+
