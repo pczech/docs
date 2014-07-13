@@ -1,5 +1,7 @@
 BASIC
 
+git --version
+
 setup
 -----
 git config --system: /etc/gitconfig
@@ -12,12 +14,12 @@ git config --global user.name "John Dow"
 git config --global user.email johndow@example.commit
 git config --global core.editor gedit
 git config --global merge.tool kdiff3
-
-git config --global color.ui true
+git config --global color.ui true (default since 1.8.4)
+git config --global push.default simple (default since 2.0)
+git config --global credential.helper 'cache --timeout 3600'
 
 git config --list
 git config KEY		KEY: user.name, ...
-
 
 
 help
