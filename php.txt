@@ -1,4 +1,11 @@
-See apache2.txt for Apache-PHP issues
+*******************************************************************************
+Basics
+
+install php5
+It installs and activates apache2 modules: mpm-prefork and php5, and disables
+mpm-event. Although it is good configuration for PHP heavy sites, mod-php5
+doesn't support suExec, helpful for development. Restore previous config if
+you want to use fcgi. See 'Enabling FastCGI'.
 
 php
 -m      - show active modules
@@ -7,6 +14,7 @@ php5enmod
 php5dismod
 
 https://bugs.launchpad.net/ubuntu/+source/php5/+bug/1273225
+
 
 *******************************************************************************
 Configuration structure
@@ -29,6 +37,84 @@ Server API: CGI/FastCGI         - fcgid
 
 
 *******************************************************************************
+PHP modes
+---------
+mod-php / cgi, fcgi, php-fpm
+http://stackoverflow.com/questions/1623914/what-is-thread-safe-or-non-thread-safe-in-php
+http://blog.layershift.com/which-php-mode-apache-vs-cgi-vs-fastcgi/
+http://coolpandaca.wordpress.com/2012/03/20/apache-mpm-worker-prefork-mod_php-mod_fcgid-mod_fastcgi-php-fpm-and-nginx/
+http://www.brandonturner.net/blog/2009/07/fastcgi_php_opcode_cache_benchmarks/
+
+php-fpm
+http://www.php.net/manual/en/faq.installation.php#faq.installation.apache2
+http://www.php.net/manual/en/install.fpm.php
+http://kb.parallels.com/en/113007
+apache mod_fastcgi
+
+http://www.eschrade.com/page/why-is-fastcgi-w-nginx-so-much-faster-than-apache-w-mod_php/
+
+
+Apache module (php5)
+--------------------
+PHP interpreter is embedded in each Apache process that’s spawned on the
+server. This way every Apache worker is able to handle and execute PHP scripts
+itself removing the need to deal with any external processes. This makes it
+very useful for sites that are ‘PHP heavy’ where lots of requests are likely to
+contain PHP code because all the requests can be handled by Apache. use only with
+mpm-prefork due to PHP thread safety issue.
+
+Config:
+/etc/apache2/mods-available/php5.conf
+http://blog.layershift.com/which-php-mode-apache-vs-cgi-vs-fastcgi/
+
+phpinfo():
+Server API					: Apache 2.0 Handler
+Loaded Configuration File	: /etc/php5/apache2/php.ini
+
+
+FastCGI (fcgid)
+---------------
+PHP scripts are by an interpreter outside of the web server. When executing PHP
+scripts with FastCGI each request is passed from the web server to FastCGI via
+a communication socket. Thread safety issue doesn't matter as PHP is handled by
+external processes.
+
+Config:
+/etc/apache2/mods-available/fcgid.conf
+
+phpinfo():
+Server API					: CGI/FastCGI
+Loaded Configuration File	: /etc/php5/cgi/php.ini
+
+
+php-fpm
+-------
+TODO
+
+
+*******************************************************************************
+Enabling FastCGI
+----------------
+Install libapache2-mod-fcgi. It enables automatically mod-fcgid.
+Install php5-cgi. php-cgi, php5-cgi programs are available:
+
+/usr/bin/php-cgi -> /etc/alternatives/php-cgi
+/etc/alternatives/php-cgi -> /usr/bin/php5-cgi
+
+Configuration options:
+AddHandler fcgid-script .php
+  Files having the extension .php will be served by the fcgid-script.
+  See AddHandler in config options.
+  
+FCGIWrapper /home/<user>/Dev/web/fcgi/php5-fcgi .php
+  PHP applications are usually configured using the FcgidWrapper directive and
+  a corresponding wrapper script. The wrapper script can be an appropriate
+  place to define any environment variables required by the application, such
+  as PHP_FCGI_MAX_REQUESTS or anything else.
+  http://httpd.apache.org/mod_fcgid/mod/mod_fcgid.html
+
+
+*******************************************************************************
 XDEBUG
 ------
 Ubuntu 14.04
@@ -45,15 +131,6 @@ Check phpinfo()
 *******************************************************************************
 Issues
 ------
-
-Increase file size for database import via phpmyadmin
------------------------------------------------------
-check which php.ini is in use by calling phpinfo() (localhost/tools/info.php),
-it can be for example /etc/php5/cgi/php.ini
-
-find and change 'upload_max_filesize' parameter (default is 2M)
-restart apache.
-
 
 Remove obsolete /etc/php5/conf.d
 --------------------------------

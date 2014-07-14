@@ -45,6 +45,11 @@ context menu and select 'Use or create repository in parent folder'.
 Or just create a bare repository, clone it to Eclipse working directory, using
 URI and Local File method.
 
+Quickdiff
+---------
+Menu -> Window -> Preferences -> General -> Editors -> Text Editors ->
+Quick Diff
+
 
 *******************************************************************************
 Config PHP Debugger

@@ -1,6 +1,8 @@
 *******************************************************************************
 Basics
 
+install apache2
+
 service apache2 restart
 
 apache2ctl
@@ -14,6 +16,14 @@ a2enmod - enable module. Creates link in mods-enabled to corresponding config
           file in mods-available.
           
 a2dismod - disable module. Deletes link in mods-enabled.
+
+
+Ubuntu 14.04
+------------
+mod-status enabled. Open localhost/server-status to check server statistics.
+See also /etc/apach2/mods-available/status.conf.
+
+mpm-event enabled. See 'MPM Modules'.
 
 
 *******************************************************************************
@@ -30,21 +40,7 @@ Configuration structure
    |   `-- *.conf
    `-- sites-enabled
        `-- *.conf
-       
-Apache 2.4:
-by default apache2.conf does not allow access to the root filesystem:
 
-<Directory />
-    Options FollowSymLinks
-    AllowOverride None
-    Require all denied
-</Directory>
-
-If your system is serving content from a sub-directory you must allow
-access in apache2.conf or in any related virtual host. In Apache 2.4
-mod-access-compat is required to process legacy Order, Allow. It seems
-that the legacy commands cannot override 'Require' set in apache2.conf,
-so it is necessary to use Require in virtual server configuration.
 
 Config parameters
 -----------------
@@ -95,19 +91,93 @@ http://httpd.apache.org/docs/2.4/vhosts/
 
 
 *******************************************************************************
-Upgrading from Apache 2.2 to 2.4
---------------------------------
-Issue: After upgrade from Ubuntu 12.04 to 14.04, apache uses default web root
-directory /var/www, so it doesn't load virtual-host config from
-/etc/apache2/sites-enabled/<SITE_CONFIG>
+MPM Modules
+-----------
+http://serverfault.com/questions/383526/how-do-i-select-which-apache-mpm-to-use/383634#383634
+http://stackoverflow.com/questions/1623914/what-is-thread-safe-or-non-thread-safe-in-php
+http://kb.parallels.com/en/113007
+http://www.vps.net/blog/2013/04/08/apache-mpms-prefork-worker-and-event/
 
-In the old Apache 2.2 file the /etc/apache2/apache2.conf file had a 
-Include sites-enabled/ whereas the new .conf file has:
-IncludeOptional sites-enabled/*.conf
+MPM Prefork (mpm-prefork)
+-------------------------
+A non-threaded, pre-forking web server. It is appropriate for sites that need
+to avoid threading for compatibility with non-thread-safe libraries (PHP).
 
-Add .conf to <SITE_CONFIG> name. 
+A single control process is responsible for launching child processes which
+listen for connections and serve them when they arrive. Apache httpd always
+tries to maintain several spare or idle server processes, which stand ready to
+serve incoming requests. In this way, clients do not need to wait for a new
+child processes to be forked before their requests can be served.
 
-http://lyemium.com/content/virtual-host-issues-when-upgrading-apache-22-24
+Config:
+/etc/apache2/mods-available/mpm_worker.conf
+
+http://httpd.apache.org/docs/current/mod/prefork.html
+
+
+MPM Worker (mpm-worker)
+-----------------------
+TODO
+
+
+MPM Event (mpm-event)
+---------------------
+This MPM tries to fix the 'keep alive problem' in HTTP. After a client
+completes the first request, the client can keep the connection open, and send
+further requests using the same socket. This can save significant overhead in
+creating TCP connections. However, Apache HTTP Server traditionally keeps an
+entire child process/thread waiting for data from the client, which brings its
+own disadvantages. To solve this problem, this MPM uses a dedicated thread to
+handle both the Listening sockets, all sockets that are in a Keep Alive state,
+and sockets where the handler and protocol filters have done their work and the
+only remaining thing to do is send the data to the client.
+
+Config:
+/etc/apache2/mods-available/mpm_event.conf
+
+http://httpd.apache.org/docs/current/mod/event.html
+
+
+*******************************************************************************
+suexec
+------
+Apache module suExec his module, in combination with the suexec support program
+allows CGI scripts to run as a specified user and Group. The "wrapper" support
+program for the suexec behaviour for the Apache HTTP server is run from within
+the server automatically to switch the user when an external program has to be
+run under a different user.
+
+http://httpd.apache.org/docs/current/mod/mod_suexec.html
+http://httpd.apache.org/docs/current/programs/suexec.html
+
+Install suExec support program apache2-suexec-custom, that can be configured
+(apache2-suexec-pristine is preconfigured and compiled e.g. with document root
+/var/www/html). This version of suexec reads a config file on every execution.
+Therefore it is a bit slower than the standard suexec version.
+
+sudo /usr/lib/apache2/suexec -V
+ -D SUEXEC_CONFIG_DIR=/etc/apache2/suexec/
+ -D AP_GID_MIN=100
+ -D AP_LOG_EXEC="/var/log/apache2/suexec.log"
+ -D AP_SAFE_PATH="/usr/local/bin:/usr/bin:/bin"
+ -D AP_UID_MIN=100
+  
+man suexec-custom
+man suexec-pristine
+
+If suexec is called by a user with name <username>, it will look into
+/etc/apache2/suexec/<username> for configuration. If the file does not
+exist, suexec will abort.
+
+Edit /etc/apache2/suexec/www-data:
+The first line in the file is used as the document root and the second
+line in the file is used as the suffix that is appended to users' home 
+directories.
+Document root shall contain fgci wrapper.
+
+Enable apache module suexec
+Add suExec configuration to virtual host config file.
+Restart apache
 
 
 *******************************************************************************
@@ -121,128 +191,46 @@ http://www.cyberciti.biz/tips/howto-performance-benchmarks-a-web-server.html
 
 
 *******************************************************************************
-MPM Modules
------------
-http://serverfault.com/questions/383526/how-do-i-select-which-apache-mpm-to-use/383634#383634
-http://stackoverflow.com/questions/1623914/what-is-thread-safe-or-non-thread-safe-in-php
-http://kb.parallels.com/en/113007
-
-
-*******************************************************************************
-MPM Modules: MPM Prefork (mpm_prefork)
---------------------------------------
-A non-threaded, pre-forking web server. It is appropriate for sites that need
-to avoid threading for compatibility with non-thread-safe libraries (PHP).
-
-Config:
-/etc/apache2/mods-available/mpm_worker.conf
-
-http://httpd.apache.org/docs/current/mod/prefork.html
-
-
-*******************************************************************************
-MPM Modules: MPM Worker (mpm_???)
----------------------------------
-TODO
-
-
-*******************************************************************************
-PHP modes
----------
-mod-php / cgi, fcgi, php-fpm
-http://blog.layershift.com/which-php-mode-apache-vs-cgi-vs-fastcgi/
-http://coolpandaca.wordpress.com/2012/03/20/apache-mpm-worker-prefork-mod_php-mod_fcgid-mod_fastcgi-php-fpm-and-nginx/
-http://www.brandonturner.net/blog/2009/07/fastcgi_php_opcode_cache_benchmarks/
-http://coolpandaca.wordpress.com/2012/03/20/apache-mpm-worker-prefork-mod_php-mod_fcgid-mod_fastcgi-php-fpm-and-nginx/
-php-fpm
-http://www.php.net/manual/en/faq.installation.php#faq.installation.apache2
-http://www.php.net/manual/en/install.fpm.php
-http://kb.parallels.com/en/113007
-apache mod_fastcgi
-
-
-*******************************************************************************
-PHP mode: Apache module
------------------------
-php5 (mod_php)
-PHP interpreter is embedded in each Apache process that’s spawned on the
-server. This way every Apache worker is able to handle and execute PHP scripts
-itself removing the need to deal with any external processes.
-
-Config:
-/etc/apache2/mods-available/php5.conf
-http://blog.layershift.com/which-php-mode-apache-vs-cgi-vs-fastcgi/
-
-phpinfo(): Server API: Apache 2.0 Handler
-
-*******************************************************************************
-PHP mode: FastCGI (fcgid)
--------------------------
-PHP scripts are by an interpreter outside of the web server. When executing PHP
-scripts with FastCGI each request is passed from the web server to FastCGI via
-a communication socket.
-
-phpinfo(): Server API:  CGI/FastCGI
-
-Config:
-/etc/apache2/mods-available/fcgid.conf
-
-AddHandler fcgid-script .php
-  Files having the extension .php will be served by the fcgid-script.
-  See AddHandler in config options.
-  
-FCGIWrapper /home/<user>/web/fcgi/php5-fcgi .php
-  PHP applications are usually configured using the FcgidWrapper directive and
-  a corresponding wrapper script. The wrapper script can be an appropriate
-  place to define any environment variables required by the application, such
-  as PHP_FCGI_MAX_REQUESTS or anything else.
-  http://httpd.apache.org/mod_fcgid/mod/mod_fcgid.html
-  
-
-*******************************************************************************
-suexec
-------
-TODO
-/usr/lib/apache2/suexec -V
- -D SUEXEC_CONFIG_DIR=/etc/apache2/suexec/
- -D AP_GID_MIN=100
- -D AP_LOG_EXEC="/var/log/apache2/suexec.log"
- -D AP_SAFE_PATH="/usr/local/bin:/usr/bin:/bin"
- -D AP_UID_MIN=100
-
-man suexec-custom
-man suexec-pristine
-
-
-*******************************************************************************
-phpmyadmin
-----------
-
-increase login timeout
-----------------------
-/etc/phpmyadmin/config.inc.php:
-
-$cfg['LoginCookieValidity'] = <your_new_timeout>;
-
-Result:
-Your PHP parameter session.gc_maxlifetime is lower that cookie validity
-configured in phpMyAdmin, because of this, your login will expire sooner
-than configured in phpMyAdmin.
-
-Update php.ini (e.g. /etc/php5/cgi/php.ini) and restart apache.
-Don't increase the values on production server!
-
-Don't increase the values on production server!
-
-
-
-
-*******************************************************************************
 Issues
 ------
 
-permissions
------------
+Default web root directory /var/www/html is used
+------------------------------------------------
+It seems that it doesn't load virtual-host config from
+/etc/apache2/sites-enabled/<SITE_CONFIG>
+
+1. Upgrading from Ubuntu 12.04 to 14.04. In the old Apache 2.2 the file
+/etc/apache2/apache2.conf had a Include sites-enabled/ whereas the new .conf
+file has: IncludeOptional sites-enabled/*.conf
+Add .conf to <SITE_CONFIG> name. 
+
+2. New installation. Enable the new site config, disable 000-default and then
+restart the server.
+
+
+Forbidden is shown
+------------------
+1. Upgrading from Ubuntu 12.04 to 14.04 (Apache 2.2 - 2.4)
+2. New installation
+
+By default Apache 2.4 does not allow access to the root filesystem in
+apache2.conf and introduces 'Require' command of hostz_... modules:
+
+<Directory />
+    Options FollowSymLinks
+    AllowOverride None
+    Require all denied
+</Directory>
+
+If your system is serving content from a sub-directory you must allow
+access in apache2.conf or in any related virtual host. In Apache 2.4
+mod-access-compat is required to process legacy Order, Allow. It seems
+that the legacy commands cannot override 'Require' set in apache2.conf,
+so it is necessary to use Require in virtual server configuration.
+
+
+Drupal file permissions
+-----------------------
 suExec work only with fcgid.
 localhost/tools/whoami should return <user>. It returns www-data if apache module
 mod-php is enabled.
@@ -263,6 +251,7 @@ Solution:
 Increase FcgidIOTimeout in /etc/apache2/mods-available/fcgid.conf:
 FcgidIOTimeout 1800 (30 minutes)
 
+
 fcgid doesn't work
 ------------------
 Empty PHP pages are served, no error log, mod-fcgid active, mod-php5 disabled,
@@ -271,6 +260,15 @@ script is not called (no error when it contains invalid code), php5-cgi from
 command line works fine. 
 
 Check enabled configs and disable php5-cgi: a2disconf php5-cgi.
+
+
+Internal Server Error after activating suExec
+---------------------------------------------
+check /var/log/apache2/error.log
+check /var/log/apache2/suexec.log
+
+Correct document root - it should contain fcgi wrapper script. 
+
 
 Disk IO monitoring
 ------------------
