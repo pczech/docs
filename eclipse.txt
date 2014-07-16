@@ -52,10 +52,95 @@ Quick Diff
 
 
 *******************************************************************************
-Config PHP Debugger
+Install and configure PDT (Indigo 3.8)
+--------------------------------------
+Menu -> Help -> Install New Software -> Select 'Select the Indigo update site'
+Find and select PDT
+
+*******************************************************************************
+Configure PDT for Drupal
+------------------------
+
+Eclipse Hook Templates
+----------------------
+Download the templates https://www.drupal.org/project/eclipse
+Menu -> Window -> Preferences -> PHP -> Editor -> Templates
+Import the downloaded XML file.
+
+PDT Config (Indigo 3.8)
+-----------------------
+Make sure Drupal file types are recognized as PHP files:
+Menu -> Window -> Preferences -> General -> Content Types
+Select Text -> PHP Content Type. Add the *.engine, *.theme, *.install, *.inc,
+*.make, *.module, *.profile, *.test file types so that these files will be 
+recognized as PHP.
+
+This procedure doesn't work for Indigo 3.8:
+Menu -> Window -> Preferences -> General -> Editors -> File Associations
+Add the *.engine, *.theme, *.install, *.inc, *.make, *.module, *.profile,
+*.test file types and for each add PHP Editor so that these files will be
+recognized as PHP.
+
+Make sure the file encoding and characters are Unix friendly so that any code
+can be committed back in to the Drupal repositories:
+Menu -> Window -> Preferences -> General -> Workspace
+Check Text file encoding and select:
+  Text file encoding: UTF-8
+  New text file line delimiter: UNIX
+    
+Menu -> Window -> Preferences -> PHP -> Editor -> Typing
+Uncheck 'When pasting' - 'Adjust indentation'. Otherwise Eclipse will convert
+Unix newline characters to Windows when pasting into an empty line.
+
+Ensure that spaces are used instead of tabs:
+Menu -> Window -> Preferences -> General -> Editors -> Text Editors:
+Check 'Insert spaces for tabs'
+
+Menu -> Window -> Preferences -> PHP -> Code Style -> Formatter:
+  Set Tab policy: Spaces
+  Intendation size: 2
+
+Remove trailing whitespaces
+Menu -> Window -> Preferences -> PHP -> Editor -> Save Actions:
+  Check 'Remove trailing whitespace'
+  Select 'All lines'
+
+https://www.drupal.org/node/75242
+
+
+*******************************************************************************
+Install and configure WPT (Indigo 3.8)
+--------------------------------------
+TODO
+https://www.drupal.org/node/75242
+
+
+
+*******************************************************************************
+Configure XDebug
+----------------
+Install XDebug module for php (see php.txt)
+
+XDebug and Zend debuggers are already predefined, see:
+Menu -> Window -> Preferences -> PHP -> Debug -> Installed Debuggers
+
+Set XDebug as default Eclipse debugger:
+Menu -> Window -> Preferences -> PHP -> Debug
+PHP Debugger: XDebug
+
+PHP Web Application
 -------------------
-Menu Run -> Debug Configurations -> PHP Web Application -> New Configuration ->
-Server: XDebugger
-File: /dev01/index.php (example - shall be set for every devXX installation)
+Menu -> Run -> Debug Configurations -> PHP Web Application ->New Configuration
+Add new configuration, give a name e.g. dev01
+Add /dev01/index.php to 'File' field.
 URL: Auto generate
+
+PHP CLI Application
+-------------------
+TODO
+
+Debug config shall be defined for every project like ./web/devXX
+
+https://www.drupal.org/node/75242#XDebug
+http://wiki.eclipse.org/Debugging_using_XDebug
 

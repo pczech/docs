@@ -55,8 +55,18 @@ than configured in phpMyAdmin.
 Update php.ini (e.g. /etc/php5/cgi/php.ini) and restart apache.
 Don't increase the values on production server!
 
-Database file size too big
---------------------------
+
+Import database: Internal Server Error
+--------------------------------------
+Check /var/log/apache2/error.log
+
+1. HTTP request length 137578 (so far) exceeds MaxRequestLen (131072)
+Probably fcgid is used. By default FcgidMaxRequestLen = 131072
+Edit /etc/apache2/mids-available/fcgid.conf and add e.g.
+FcgidMaxRequestLen 5242880
+Restart apache
+
+2. TODO
 Check which php.ini is in use by calling phpinfo() (localhost/tools/info.php),
 it can be for example /etc/php5/cgi/php.ini
 

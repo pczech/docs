@@ -81,6 +81,7 @@ external processes.
 
 Config:
 /etc/apache2/mods-available/fcgid.conf
+http://httpd.apache.org/mod_fcgid/mod/mod_fcgid.html
 
 phpinfo():
 Server API					: CGI/FastCGI
@@ -115,17 +116,24 @@ FCGIWrapper /home/<user>/Dev/web/fcgi/php5-fcgi .php
 
 
 *******************************************************************************
-XDEBUG
+XDebug
 ------
-Ubuntu 14.04
+Install php5-xdebug
+
+The module is automatically enabled for all modes:
+/etc/php5/apache2/conf.d/20-xdebug.ini
+/etc/php5/cgi/conf.d/20-xdebug.ini
+/etc/php5/cli/conf.d/20-xdebug.ini
+
+/etc/php5/mods-available/xdebug.ini
+
 Enable remote debug mode in /etc/php5/mods-available/xdebug.ini:
-  xdebug.remote_enable=1
-Enable xdebug module: php5enmod xdebug
-  Then a symbolic link 20-xdebug.ini is created in /etc/php5/<CNF>/conf.d/
-Restart apache: service apache2 restart
+xdebug.remote_enable=1
+
+Restart apache
 Check phpinfo()
 
-<CNF>: apache2 (mod-php), cgi (cgi/fcgi) cli (cli)
+See eclipse.txt for configuration for eclipse
 
 
 *******************************************************************************

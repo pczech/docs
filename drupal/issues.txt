@@ -1,3 +1,10 @@
+The requested URL /<site>/node was not found on this server
+-----------------------------------------------------------
+enable apache mod-rewrite
+
+https://www.drupal.org/requirements
+
+
 Clean URL bug
 -------------
 Scenario:
@@ -10,6 +17,7 @@ Backup and migrate a site
 -------------------------
 https://drupal.org/node/679054
 gzip -c db.sql > db.sql.gz
+
 
 Update core
 -----------
