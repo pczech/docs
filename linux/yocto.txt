@@ -1,28 +1,37 @@
 https://www.yoctoproject.org/docs/current/yocto-project-qs/yocto-project-qs.html
 
+Configuration
+-------------
+http://www.yoctoproject.org/docs/current/ref-manual/ref-manual.html#user-configuration
+
 cd poky
-source oe-init-build-env
+source oe-init-build-env [<build_dir>]
         Environment setup script defines OpenEmbedded build environment
-        settings needed to complete the build. The script also creates
-        the Build Directory, which is 'build' is located in the Source
-        Directory. After the script runs, your current working directory
-        is set to the Build Directory. Later, when the build completes,
-        the Build Directory contains all the files created during the build.
+        settings needed to complete the build. The script also creates the
+        Build Directory <build_dir>, which is 'build' by default and is located
+        in the Source Directory.
         
-        Source Directory: the directory structure created as a result of
-        creating a local copy of the poky Git or expanding a released poky
-        tarball. The Source Directory contains BitBake, Documentation, Metadata
-        and other files that all support the Yocto Project. Consequently, you 
-        must have the Source Directory in place on your development system in
-        order to do any development using the Yocto Project.
-        
-        Build Directory: the area used by the OpenEmbedded build system for
-        builds. The area is created when you source the setup environment
-        script that is found in the Source Directory (i.e. oe-init-build-env
-        or oe-init-build-env-memres).
-        
-build/conf/local.conf
-See desrciption in the file.
+Environment variables:
+PATH=./poky/scripts:./poky/bitbake/bin/
+BUILDDIR=./poky/build
+BB_ENV_EXTRAWHITE=(...)
+
+The 'meta-yocto' layer inside Poky contains a conf directory that has example
+configuration files. The script creates conf directory in the Build Directory
+that contains default versions of your local.conf and bblayers.conf
+configuration files. These default configuration files are created only if
+versions do not already exist in the Build Directory at the time you source the
+build environment setup script.
+
+The setup script calls the script scripts/oe-setup-builddir, that sets up the
+Build Directory and seeds the directory (if necessary) with configuration files
+appropriate for the development environment.
+
+The scripts/oe-setup-builddir script uses the $TEMPLATECONF variable to
+determine which sample configuration files to locate. 
+
+The ./poky/build/conf/local.conf file provides many basic variables that define
+a build environment: 
 
 BB_NUMBER_THREADS
     number of tasks bitbake should run in parallel
@@ -33,6 +42,8 @@ PARALLEL_MAKE
 MACHINE
     machine selection (qemuarm, qemux86, ...)
     
+For more details see .poky/build/conf/local.conf
+    
 
 Build Directory structure
 /build
@@ -40,3 +51,35 @@ Build Directory structure
 /build/sstate-cache     SSTATE_DIR      shared-state files storage
 /build/tmp              TMPDIR          build output
 
+User configuration
+------------------
+The 'meta-yocto' layer inside Poky contains a conf directory that has example
+configuration files.
+
+
+
+
+*******************************************************************************
+bitbake
+-------
+http://docs.openembedded.org/bitbake/html/
+http://www.yoctoproject.org/docs/current/bitbake-user-manual/bitbake-user-manual.html
+
+http://hambedded.org/blog/2012/11/24/from-bitbake-hello-world-to-an-image/
+
+Metadata
+--------
+.bb         Recipes
+.conf       Configuration. main configuration: poky/meta/conf/bitbake.conf 
+.bbclass    Classes
+.bbappend   Appended files
+
+bitbake -b <recipe>
+    Execute tasks from a specific .bb recipe directly. Does not handle any
+    dependencies from other recipes.
+    
+bitbake -b <recipe> -c <cmd>    
+    Specify the task to execute. The exact options available depend on the
+    metadata.    
+
+bitbake <target>

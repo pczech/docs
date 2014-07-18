@@ -1,0 +1,348 @@
+*******************************************************************************
+Metadata
+--------
+
+Configuration files
+Classes
+Layers
+Recipes
+
+
+*******************************************************************************
+Metadata parsing
+----------------
+
+Parsing configuration files, layers and classes
+-----------------------------------------------
+BitBake first searches the current working directory for an optional
+conf/bblayers.conf configuration file. This file is expected to contain a
+BBLAYERS variable that is a space delimited list of 'layer' directories.
+If BitBake cannot find a conf/bblayers.conf file then it is assumed the user
+has set the BBPATH and BBFILES directly in the environment.
+
+BBPATH is used to search for configuration and class files under conf/ and
+class/ directories, respectively. BBFILES is used to find recipe files (.bb and
+.bbappend).
+
+For each directory (layer) in this list, a <layer>/conf/layer.conf file is
+searched for and parsed with the LAYERDIR variable being set to the directory
+where the layer was found. The idea is these files automatically setup BBPATH
+and other variables correctly for a given build directory.
+
+BitBake then expects to find the conf/bitbake.conf file somewhere in the
+user-specified BBPATH. The bitbake.conf file may also include other
+configuration files using the include or require directives.
+
+After parsing configuration files, BitBake uses its inheritance mechanism,
+which is through class files, to inherit some standard classes. BitBake parses
+a class when the inherit directive responsible for getting that class is
+encountered.
+
+Class files, which are denoted by the .bbclass extension, contain information
+that is useful to share between metadata files. The BitBake source tree
+currently comes with one class metadata file classes/base.bbclass. The
+base.bbclass is special since it is always included automatically for all
+recipes and classes. This class contains definitions for standard basic tasks
+such as fetching, unpacking, configuring (empty by default), compiling (runs
+any Makefile present), installing (empty by default) and packaging (empty by
+default). These tasks are often overridden or extended by other classes added
+during the project development process. 
+
+BitBake searches for class files in a "classes" subdirectory under the paths in
+BBPATH in the same way as configuration files. 
+
+Parsing recipes
+---------------
+During the configuration phase, BitBake set BBFILES. BitBake now uses it to 
+construct a list of recipes to parse, along with any append files (.bbappend)
+to apply. BBFILES is a space-separated list of available files and supports
+wildcards.
+            
+BitBake parses each recipe and append file located with BBFILES and stores the
+values of various variables into the datastore.
+
+Tasks
+-----
+FIXME
+If you do not specify a task, BitBake executes the default task, which is
+"build”. The default task to use when none is specified (e.g. with the -c
+command line option). The default task can be redefined by BB_DEFAULT_TASK. 
+
+*******************************************************************************
+Setup 1
+-------
+Very basic setup.
+
+Add location of bitbake binary to PATH
+export PATH=/home/<user>/bitbake/bin:$PATH
+
+Create project directory
+mkdir ~/hello
+cd hello
+
+Run bitbake:
+The BBPATH variable is not set
+
+Set BBPATH directly in environment
+export BBPATH=/home/<user>/hello
+
+Run bitbake:
+ERROR: Unable to parse conf/bitbake.conf: file conf/bitbake.conf not found in..
+
+Create (empty) conf/bitbake.conf
+
+Run bitbake:
+ERROR: Unable to parse base: ParseError in configuration INHERITs: Could not 
+inherit file classes/base.bbclass
+
+Create (empty) classes/base.blass
+
+Run bitbake:
+ERROR: Please set the 'PERSISTENT_DIR' or 'CACHE' variable
+
+Check bitbake/conf/bitbake.conf and add to hello/conf/bitbake.conf the
+following lines:
+PERSISTENT_DIR = "${TOPDIR}/tmp/cache"
+
+Run bitbake:
+ERROR: Timeout while attempting to communicate with bitbake server
+
+Run bitbake my_recipe
+ERROR: no recipe files to build, check your BBPATH and BBFILES?
+
+Create (empty) recipe:
+touch hello.bb
+
+Run bitbake hello
+ERROR: Unable to parse ./hello/hello.bb
+
+There should be at least one task defined (?). Add task to conf/base.bbclass
+addtask do_task
+
+Run bitbake hello
+ERROR: Nothing PROVIDES 'hello'
+
+Here the recipce has to have a name set by PN parameter. Add the following
+line to hello.bb:
+PN = 'hello_recipe'
+
+Run bitbake hello_recipe
+ERROR: Task do_build does not exist for target hello_recipe
+
+Run bitbake hello_recipe -c task
+TODO
+
+*******************************************************************************
+Basic setup 2
+-------------
+Files:
+conf/bitbake.conf
+conf/base.bbclass
+BBPATH defined directly in environment
+
+*******************************************************************************
+Basic setup 3
+-------------
+Files:
+conf/bitbake.conf
+conf/base.bbclass
+...
+BBPATH defined directly in environment
+
+
+
+Add location of bitbake binary to PATH
+export PATH=(...)/bitbake/bin:$PATH
+
+Create a directory for the project
+mkdir hello
+cd hello
+
+Check if you can run bitbake
+bitbake --version
+
+
+
+*******************************************************************************
+Syntax and Operators
+--------------------
+http://www.yoctoproject.org/docs/1.6/bitbake-user-manual/bitbake-user-manual.html#bitbake-user-manual-metadata
+
+=       Set variable to value ("hard" assignment) 
+?=      Set default value. Define a variable if it is undefined when the
+        statement is parsed, but leave the value alone if the variable has a
+        value. 
+:=      Expand variable immediate. Variable's contents is being expanded
+        immediately, rather than when the variable is actually used.
+.=      Appending without spaces
++=      Appending with spaces
+
+
+*******************************************************************************
+Hello world tutorial
+--------------------
+
+Download and unpack bitbake: http://cgit.openembedded.org/cgit.cgi/bitbake/
+cd bitbake-1.17.0
+
+Build bitbake:
+python setup.py build
+export PYTHONPATH=`pwd`/build/lib
+
+Check version
+./bin/bitbake --version
+
+
+When bitbake is run to build a recipe, classes/base.bbclass file gets inherited
+by any recipe by default. It defines 3 basic tasks: showdata, listtasks, build.
+
+Building programs:
+- fetching the source
+- unpacking
+- patching
+- configuring
+- compiling (making)
+- installing
+
+Define the tasks in classes/base.bbclass, classes/logging.bbclass:
+addtask <task name> <dependency>
+
+The name of the task and the actual definition of the task is different. The
+code defining the task is prepended with do_. Tasks can be defined as python
+executables or shell. Examples:
+
+addtask fetch
+addtask unpack after do_fetch
+addtask patch after do_unpack 
+...
+
+
+Add a layer (meta-test folder) and inform bitbake about the layer:
+conf/bblayer.conf:
+BBPATH := "${TOPDIR}"
+BBFILES ?= ""
+
+BBLAYERS = " \
+  ${TOPDIR}/meta-test \
+    "
+
+TOPDIR - Points to the build directory. BitBake automatically sets this\
+         variable.
+
+Add the layer configuration
+Create meta-test/conf/layer.conf file
+
+BBPATH .= ":${LAYERDIR}"
+BBFILES += "${LAYERDIR}/recipes-*/*/*.bb \
+            ${LAYERDIR}/recipes-*/*/*.bbappend"
+            
+
+LAYERDIR - When used inside the layer.conf configuration file, this variable
+           provides the path of the current layer. This variable is not 
+           available outside of layer.conf and references are expanded 
+           immediately when parsing of the file completes.
+
+Layer directory is appended to BBPATH so that the layer directory is also
+searched when bitbake looks for a configuration file which is relatively
+included.
+
+BBFILES variable is appended with the recipes. We tell bitbake that we have
+recipes in our layer directory. All the recipes we create in recipes-XXX/YYY/
+directories within our LAYERDIR will get appended to BBFILES.
+
+TODO:
+For each directory (layer) in BBLAYERS list, a conf/layer.conf file is searched
+for and parsed with the LAYERDIR variable being set to the directory where the
+layer was found. The idea is these files automatically setup BBPATH and other 
+variables correctly for a given build directory.
+
+BitBake then expects to find the conf/bitbake.conf file somewhere in the 
+user-specified BBPATH. That configuration file generally has include directives
+to pull in any other metadata such as files specific to the architecture,
+the machine, the local environment, and so forth.
+
+After parsing configuration files, BitBake uses its rudimentary inheritance
+mechanism, which is through class files, to inherit some standard classes.
+BitBake parses a class when the inherit directive responsible for getting that
+class is encountered.
+
+The base.bbclass file is always included. Other classes that are specified in
+the configuration using the INHERIT variable are also included. BitBake
+searches for class files in a "classes" subdirectory under the paths in BBPATH
+in the same way as configuration files. 
+
+Create recipes:
+meta-test/recipes-example/firstrecipe/firstrecipe_0.0.bb
+
+DESCRIPTION = "Our first recipe for bitbake hello world"
+
+
+DESCRIPTION - A long description for the recipe. 
+
+Resulting structure:
+.
+|-- classes
+|   |-- base.bbclass
+|   `-- logging.bbclass
+|-- conf
+|   |-- bblayers.conf
+|   `-- bitbake.conf
+|-- meta-test
+|   |-- conf
+|   |   `-- layer.conf
+|   `-- recipes-example
+|       `-- firstrecipe
+|           `-- firstrecipe_0.0.bb
+
+
+Run bitbake:
+./bin/bitbake firstrecipe -vDD
+
+See results in tmp/work/firstrecipe-0.0-r0/temp:
+
+run_TASK.PID    - the code run in each task
+log.TASK        - symbolic link to task log
+log.TASK.PID    - log of each task
+log.task_order  - task order defined in base
+
+Examples:
+run_do_fetch.29582:
+
+def do_fetch(d):
+    bb.build.exec_func('base_do_fetch', d)
+
+
+do_fetch(d)
+--
+
+log.do_fetch.29582:
+DEBUG: Executing python function do_fetch
+DEBUG: Executing python function base_do_fetch
+NOTE: BASE_DO_UNPACK
+DEBUG: Python function base_do_fetch finished
+DEBUG: Python function do_fetch finished
+--
+
+log.task_order:
+do_fetch (29582): log.do_fetch.29582
+do_unpack (29583): log.do_unpack.29583
+do_patch (29584): log.do_patch.29584
+do_configure (29586): log.do_configure.29586
+do_make (29588): log.do_make.29588
+do_install (29590): log.do_install.29590
+do_build (29592): log.do_build.29592
+--
+
+Overriding tasks
+----------------
+See meta-test/classes/autotools.bbclass.
+EXPORT_FUNCTIONS keyword maps each task in its argument to the functions in the
+bbclass prefixed with the name of that bbclass. So, when EXPORT_FUNCTIONS is
+used in autotools.bbclass, do_configure is mapped to autotools_do_configure.
+The same is done in base.bbclass file. We used EXPORT_FUNCTIONS, it mapped each
+task to base_do_TASKNAME.
+
+
+-s  show all recipes
+-g  create dependency graph
+-u  The user interface to use (e.g. knotty, hob, depexp)
