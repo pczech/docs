@@ -1,6 +1,6 @@
 source <filename>
-    Read and execute commands from filename in the current shell environment,
-    synonymous with ".": ./file = source file 
+    Read and execute commands from filename in the current shell environment.
+    Useful if you e.g. want to set multiple environment variables from a file.
 
     
 Conditional operators

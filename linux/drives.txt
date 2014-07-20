@@ -219,3 +219,45 @@ iostat
 iostat -xd /dev/sda6 1 100 - 100 reports of 1s intervals
 
 pidstat TODO
+
+
+*******************************************************************************
+SSD
+---
+V Set AHCI in BIOS
+- Update SSD firmware
+- Reserve 7% unused space for Over-Provisioning (internal OP handled by SSD)
+V Use EXT4
+- Set noatime (relatime is used in Ubuntu 14.04)
+V Enable TRIM (enabled by default, works for Samsung, Intel SSD). Check 
+  /etc/cron.weekly/fstrim
+- Limit swapping:
+  cat /proc/sys/vm/swappiness
+  /etc/sysctl.conf:
+        vm.swappiness=1
+        vm.vfs_cache_pressure=50
+
+V Limit the write action by Firefox:
+  Menu -> Preferences -> Advanced -> Web Cache Content: Set 0 MB
+
+
+noatime
+-------
+state <file>
+cat /proc/mounts to see what mount options are used. relatime is used.
+
+atime - causes Linux to record the last (or latest) time when a particular file
+was accessed. Every time when a file is accessed (say read) a write to disk is
+made to update it’s last accessed time which indeed is a very expensive
+operation.
+
+noatime – This option stops recording the last file access time when the file
+is just read. The noatime option eliminates all the writes to the disk each
+time a file was just read which previously used to happen with atime.
+Unfortunately, turning off atime  may break software.
+
+relatime – A filesystem mount with this option causes the access time to 
+be updated if they are (before the update has occurred) earlier than the
+modification time. This significantly cuts down the writes caused by atime
+updates.
+

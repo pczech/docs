@@ -1,3 +1,17 @@
+http://www.yoctoproject.org/docs/1.6/bitbake-user-manual/bitbake-user-manual.html
+
+Download and unpack bitbake: http://cgit.openembedded.org/cgit.cgi/bitbake/
+Used version: bitbake-1.17.0
+
+Parameters
+----------
+--version
+-s  show all recipes
+-g  create dependency graph
+-u  the user interface to use (e.g. knotty, hob, depexp)
+-c  run given task (build is the default task and run if no task is given)
+
+
 *******************************************************************************
 Metadata
 --------
@@ -61,30 +75,138 @@ wildcards.
 BitBake parses each recipe and append file located with BBFILES and stores the
 values of various variables into the datastore.
 
-Tasks
------
-FIXME
-If you do not specify a task, BitBake executes the default task, which is
-"build”. The default task to use when none is specified (e.g. with the -c
-command line option). The default task can be redefined by BB_DEFAULT_TASK. 
+Parsing tasks
+-------------
+Tasks are BitBake execution units that originate as functions and make up the
+steps that BitBake needs to run for given recipe. Tasks are only supported in
+recipe (.bb or .inc) and class (.bbclass) files. By convention, task names
+begin with the string "do_". 
+
+Now BitBake can calculate exactly what tasks it needs to run and in what order
+it needs to run them. As each task completes, a timestamp is written to the
+directory specified by the STAMP variable. On subsequent runs, BitBake looks in
+the build directory within tmp/stamps and does not rerun tasks that are already
+completed unless a timestamp is found to be invalid.
+
+Shell tasks
+BitBake writes a shell script to ${T}/run.do_taskname.pid and then executes the
+script. The generated shell script contains all the exported variables, and the
+shell functions with all variables expanded. Output from the shell script goes
+to the file ${T}/log.do_taskname.pid. Looking at the expanded shell functions
+in the run file and the output in the log files is a useful debugging technique.
+
+Python tasks
+BitBake executes the task internally and logs information to the controlling
+terminal. Future versions of BitBake will write the functions to files similar
+to the way shell tasks are handled. Logging will be handled in a way similar to
+shell tasks as well.
+
+The order in which BitBake runs the tasks is controlled by its task scheduler.
+
+If you do not specify a task (e.g. with the -c command line option), BitBake
+executes the default task, which is "build”. The default task can be redefined
+by BB_DEFAULT_TASK.
+
+Overriding tasks
+----------------
+The class needs to define the function as follows:
+<classname>_<functionname>
+                            
+The class needs to contain the EXPORT_FUNCTIONS statement as follows:
+EXPORT_FUNCTIONS <functionname>
+                            
+You need to call the function appropriately from within your recipe. If your
+recipe needs to call the class version of the function, it should call
+<class-name>_do_<task>.
+
+To call your modified version of the function as defined in your recipe, call
+it as do_<task>. 
+
+With these conditions met, your single recipe can freely choose between the
+original function as defined in the class file and the modified function in
+your recipe. If you do not set up these conditions, you are limited to using
+one function or the other.
+See Setup 3 (./hello)
+
+Functions
+---------
+Shell Functions
+Functions written in shell script and executed either directly as functions,
+tasks, or both. They can also be called by other shell functions:
+some_function () {
+    echo "Hello World"
+}
+
+BitBake Style Python Functions
+Functions written in Python and executed by BitBake or other Python functions
+using bb.build.exec_func(). Because the Python "bb" and "os" modules are
+already imported, you do not need to import these modules. Also in these types
+of functions, the datastore ("d") is a global variable and is always
+automatically available:
+python some_python_function () {
+    d.setVar("TEXT", "Hello World")
+    print d.getVar("TEXT", True)
+} 
+
+Python Functions
+Functions written in Python and executed by other Python code:
+def get_depends(d):
+    if d.getVar('SOMECONDITION', True):
+        return "dependencywithcond"
+    else:
+        return "dependency"
+
+Anonymous Python Functions
+Python functions executed automatically during parsing. 
+python () {
+    if d.getVar('SOMEVAR', True) == 'value':
+        d.setVar('ANOTHERVAR', 'value2')
+}
+
+Any function can be promoted to a task by applying the addtask command. The
+addtask command also describes inter-task dependencies.
+
 
 *******************************************************************************
-Setup 1
--------
+Syntax and Operators
+--------------------
+=       Set variable to value ("hard" assignment) 
+?=      Set default value. Define a variable if it is undefined when the
+        statement is parsed, but leave the value alone if the variable has a
+        value. 
+:=      Expand variable immediate. Variable's contents is being expanded
+        immediately, rather than when the variable is actually used.
+.=      Appending without spaces
++=      Appending with spaces
+
+
+*******************************************************************************
+Accessing Datastore Variables Using Python
+------------------------------------------
+d       - the global variable datastore 
+${@...} - inline Python Variable Expansion
+
+d.getVar("X", expand=False)
+d.setVar("X", "value")
+
+
+*******************************************************************************
+Setup 1 (./simple)
+------------------
 Very basic setup.
 
 Add location of bitbake binary to PATH
 export PATH=/home/<user>/bitbake/bin:$PATH
 
 Create project directory
-mkdir ~/hello
-cd hello
+mkdir ./simple
+cd simple
 
 Run bitbake:
 The BBPATH variable is not set
 
 Set BBPATH directly in environment
-export BBPATH=/home/<user>/hello
+export BBPATH=/home/<user>/simple
 
 Run bitbake:
 ERROR: Unable to parse conf/bitbake.conf: file conf/bitbake.conf not found in..
@@ -100,249 +222,466 @@ Create (empty) classes/base.blass
 Run bitbake:
 ERROR: Please set the 'PERSISTENT_DIR' or 'CACHE' variable
 
-Check bitbake/conf/bitbake.conf and add to hello/conf/bitbake.conf the
+Check bitbake/conf/bitbake.conf and add to simple/conf/bitbake.conf the
 following lines:
-PERSISTENT_DIR = "${TOPDIR}/tmp/cache"
+CACHE = "${TOPDIR}/tmp/cache"
 
 Run bitbake:
 ERROR: Timeout while attempting to communicate with bitbake server
 
-Run bitbake my_recipe
+Run bitbake hello
 ERROR: no recipe files to build, check your BBPATH and BBFILES?
+ERROR: Nothing PROVIDES 'hello'
 
 Create (empty) recipe:
 touch hello.bb
 
 Run bitbake hello
-ERROR: Unable to parse ./hello/hello.bb
+ERROR: Unable to parse ./simple/hello.bb
 
-There should be at least one task defined (?). Add task to conf/base.bbclass
+At least one task is required (?). Add task to conf/base.bbclass
 addtask do_task
 
-Run bitbake hello
+Run bitbake simple
 ERROR: Nothing PROVIDES 'hello'
 
-Here the recipce has to have a name set by PN parameter. Add the following
-line to hello.bb:
+The recipe has to be named by PN parameter. Add the following line to hello.bb:
 PN = 'hello_recipe'
 
 Run bitbake hello_recipe
-ERROR: Task do_build does not exist for target hello_recipe
+ERROR: Task do_build does not exist for target simple_recipe
 
 Run bitbake hello_recipe -c task
-TODO
+ERROR: Running idle function
+
+Add to simple/conf/bitbake.conf
+STAMP   = "${TOPDIR}/tmp/stamps"
+
+Run bitbake hello_recipe -c task
+ERROR: T variable not set, unable to build
+
+Add to simple/conf/bitbake.conf:
+T       = "${TOPDIR}/tmp/work"
+
+Run bitbake hello_recipe -c task
+WARNING: Function do_task doesn't exist
+
+Add a shell function to simple/hello.bb:
+do_task {
+    echo "DO_TASK"
+}
+
+IMPORTANT: Be aware of how BitBake parses curly braces. If a recipe uses a 
+closing curly brace within the function and the character has no leading
+spaces, BitBake produces a parsing error. If you use a pair of curly brace in a
+shell function, the closing curly brace must not be located at the start of the
+line without leading spaces. 
+
+The following function (space before closing brace) generates
+'WARNING: Function do_task doesn't exist':
+
+do_task () {
+ echo "DO_TASK"
+ }
+ 
+Run bitbake hello_recipe -c task
+ERROR: Build of do_task failed
+
+Add to simple/conf/bitbake.conf:
+B       = "${TOPDIR}/tmp"
+
+Run bitbake hello_recipe -c task
+Success! Check simple/tmp/work: run.do_task.PID, log.do_task.PID
+
+--
+Add dependent tasks to base.bbclas:
+addtask task2 after do_task
+addtask build after do_task2
+
+Add the tasks as python functions to hello.bb:
+
+python do_task2() {
+  bb.note("DO_TASK2")
+}
+
+python do_build() {
+  bb.note("DO_BUILD")
+}
+
+Run bitbake hello_recipe
+Done
+
+Run bitbake hello_recipe -vDDD to see program flow:
+
+DEBUG: LOAD ./simple/conf/bitbake.conf
+DEBUG: BB configuration INHERITs:0: inheriting classes/base.bbclass
+DEBUG: BB ./simple/classes/base.bbclass: handle(data, include)
+DEBUG: LOAD ./simple/classes/base.bbclass
+DEBUG: collecting .bb files
+DEBUG: BB ./simple/hello.bb: handle(data)--:--
+DEBUG: LOAD ./simple/hello.bb
+Parsing recipes: 100% |#########################################| Time: 00:00:00
+Parsing of 1 .bb files complete (0 cached, 1 parsed). 1 targets, 0 skipped, 0 masked, 0 errors.
+DEBUG: parsing complete
+DEBUG: providers for hello_recipe are: ['hello_recipe']
+DEBUG: sorted providers for hello_recipe are: ['./simple/hello.bb']
+DEBUG: adding ./simple/hello.bb to satisfy hello_recipe
+NOTE: Resolving any missing task queue dependencies
+DEBUG: Resolved 0 extra dependencies
+NOTE: Preparing runqueue
+DEBUG: Processing ./simple/hello.bb:do_task
+DEBUG: Processing ./simple/hello.bb:do_task2
+DEBUG: Processing ./simple/hello.bb:do_build
+NOTE: Marking Active Tasks
+NOTE: Pruned 0 inactive tasks, 3 left
+NOTE: Assign Weightings
+NOTE: Compute totals (have 1 endpoint(s))
+NOTE: Executing RunQueue Tasks
+DEBUG: Considering 0 (./simple/hello.bb, do_task): set([1])
+DEBUG: Considering 1 (./simple/hello.bb, do_task2): set([2])
+DEBUG: Considering 2 (./simple/hello.bb, do_build): set([])
+DEBUG: Using runqueue scheduler 'speed'
+DEBUG: Stampfile ./simple/tmp/stamps.do_task not available
++ cd ./simple/tmp
++ do_task
++ echo DO_TASK
+DO_TASK
+
+DEBUG: Marking task 1 (./hello.bb, do_task2) as buildable
+DEBUG: Stampfile ./simple/tmp/stamps.do_task2 not available
+DEBUG: Marking task 2 (./simple/hello.bb, do_build) as buildable
+DEBUG: Stampfile ./simple/tmp/stamps.do_build not available
+NOTE: Tasks Summary: Attempted 3 tasks of which 0 didn't need to be rerun and all succeeded.
+
 
 *******************************************************************************
-Basic setup 2
--------------
-Files:
-conf/bitbake.conf
-conf/base.bbclass
-BBPATH defined directly in environment
+Setup 2 (./layers)
+------------------
+Using layers/conf/bblayers.conf
 
-*******************************************************************************
-Basic setup 3
--------------
-Files:
-conf/bitbake.conf
-conf/base.bbclass
-...
-BBPATH defined directly in environment
+Add location of bitbake binary to PATH:
+export PATH=/home/<user>/bitbake/bin:$PATH
 
+Create project directory:
+mkdir ~/layers
+cd layers
 
+Create conf/bblayers.conf
 
-Add location of bitbake binary to PATH
-export PATH=(...)/bitbake/bin:$PATH
+Run bitbake
+The BBPATH variable is not set
 
-Create a directory for the project
-mkdir hello
-cd hello
+Add layer to conf/bblayers.conf:
+BBLAYERS = "./layers/layer_ex"
 
-Check if you can run bitbake
-bitbake --version
+Run bitbake
+ERROR: Unable to parse ./layers/layer_ex/conf/layer.conf: [Errno 2] No
+such file or directory: './layers/layer_ex/conf/layer.conf'
 
+Create (empty) layer_ex/conf/layer.conf
 
+Run bitbake
+The BBPATH variable is not set
 
-*******************************************************************************
-Syntax and Operators
---------------------
-http://www.yoctoproject.org/docs/1.6/bitbake-user-manual/bitbake-user-manual.html#bitbake-user-manual-metadata
+Set BBPATH directly in environment:
+export BBPATH=/home/<user>/layers 
 
-=       Set variable to value ("hard" assignment) 
-?=      Set default value. Define a variable if it is undefined when the
-        statement is parsed, but leave the value alone if the variable has a
-        value. 
-:=      Expand variable immediate. Variable's contents is being expanded
-        immediately, rather than when the variable is actually used.
-.=      Appending without spaces
-+=      Appending with spaces
+ERROR: Unable to parse conf/bitbake.conf: file conf/bitbake.conf not found in
+./layers
 
-
-*******************************************************************************
-Hello world tutorial
---------------------
-
-Download and unpack bitbake: http://cgit.openembedded.org/cgit.cgi/bitbake/
-cd bitbake-1.17.0
-
-Build bitbake:
-python setup.py build
-export PYTHONPATH=`pwd`/build/lib
-
-Check version
-./bin/bitbake --version
-
-
-When bitbake is run to build a recipe, classes/base.bbclass file gets inherited
-by any recipe by default. It defines 3 basic tasks: showdata, listtasks, build.
-
-Building programs:
-- fetching the source
-- unpacking
-- patching
-- configuring
-- compiling (making)
-- installing
-
-Define the tasks in classes/base.bbclass, classes/logging.bbclass:
-addtask <task name> <dependency>
-
-The name of the task and the actual definition of the task is different. The
-code defining the task is prepended with do_. Tasks can be defined as python
-executables or shell. Examples:
-
-addtask fetch
-addtask unpack after do_fetch
-addtask patch after do_unpack 
-...
-
-
-Add a layer (meta-test folder) and inform bitbake about the layer:
-conf/bblayer.conf:
-BBPATH := "${TOPDIR}"
-BBFILES ?= ""
-
-BBLAYERS = " \
-  ${TOPDIR}/meta-test \
-    "
-
-TOPDIR - Points to the build directory. BitBake automatically sets this\
-         variable.
-
-Add the layer configuration
-Create meta-test/conf/layer.conf file
-
-BBPATH .= ":${LAYERDIR}"
-BBFILES += "${LAYERDIR}/recipes-*/*/*.bb \
-            ${LAYERDIR}/recipes-*/*/*.bbappend"
-            
-
-LAYERDIR - When used inside the layer.conf configuration file, this variable
-           provides the path of the current layer. This variable is not 
-           available outside of layer.conf and references are expanded 
-           immediately when parsing of the file completes.
-
-Layer directory is appended to BBPATH so that the layer directory is also
-searched when bitbake looks for a configuration file which is relatively
-included.
-
-BBFILES variable is appended with the recipes. We tell bitbake that we have
-recipes in our layer directory. All the recipes we create in recipes-XXX/YYY/
-directories within our LAYERDIR will get appended to BBFILES.
-
-TODO:
-For each directory (layer) in BBLAYERS list, a conf/layer.conf file is searched
-for and parsed with the LAYERDIR variable being set to the directory where the
-layer was found. The idea is these files automatically setup BBPATH and other 
-variables correctly for a given build directory.
-
-BitBake then expects to find the conf/bitbake.conf file somewhere in the 
-user-specified BBPATH. That configuration file generally has include directives
-to pull in any other metadata such as files specific to the architecture,
-the machine, the local environment, and so forth.
-
-After parsing configuration files, BitBake uses its rudimentary inheritance
-mechanism, which is through class files, to inherit some standard classes.
-BitBake parses a class when the inherit directive responsible for getting that
-class is encountered.
-
-The base.bbclass file is always included. Other classes that are specified in
-the configuration using the INHERIT variable are also included. BitBake
-searches for class files in a "classes" subdirectory under the paths in BBPATH
-in the same way as configuration files. 
-
-Create recipes:
-meta-test/recipes-example/firstrecipe/firstrecipe_0.0.bb
-
-DESCRIPTION = "Our first recipe for bitbake hello world"
-
-
-DESCRIPTION - A long description for the recipe. 
-
-Resulting structure:
-.
-|-- classes
-|   |-- base.bbclass
-|   `-- logging.bbclass
-|-- conf
-|   |-- bblayers.conf
-|   `-- bitbake.conf
-|-- meta-test
-|   |-- conf
-|   |   `-- layer.conf
-|   `-- recipes-example
-|       `-- firstrecipe
-|           `-- firstrecipe_0.0.bb
-
+Create (empty) ./layers/conf/bitbake.conf
 
 Run bitbake:
-./bin/bitbake firstrecipe -vDD
+ERROR: Unable to parse base: ParseError in configuration INHERITs: Could not 
+inherit file classes/base.bbclass
 
-See results in tmp/work/firstrecipe-0.0-r0/temp:
+Create (empty) classes/base.blass
 
-run_TASK.PID    - the code run in each task
-log.TASK        - symbolic link to task log
-log.TASK.PID    - log of each task
-log.task_order  - task order defined in base
+Run bitbake
+ERROR: Please set the 'PERSISTENT_DIR' or 'CACHE' variable
 
-Examples:
-run_do_fetch.29582:
+Add to layer/conf/bitbake.conf:
+CACHE = "${TOPDIR}/tmp/cache"
 
-def do_fetch(d):
-    bb.build.exec_func('base_do_fetch', d)
+Run bitbake hello_recipe
+ERROR: no recipe files to build, check your BBPATH and BBFILES?
+
+Create the layer_ex/hello.bb recipe and add the following:
+PN = 'hello_recipe'
+
+Run bitbake hello_recipe
+ERROR: no recipe files to build, check your BBPATH and BBFILES?
+
+Set BBFILES directly in environment:
+export BBFILES=/home/<user>/layers/layer_ex/*.bb
+
+Run bitbake hello_recipe
+ERROR: no recipe files to build, check your BBPATH and BBFILES?
+
+Set BBPATH directly in environment:
+export BBPATH=/home/<user>/layers/layer_ex:$BBPATH
+
+Run bitbake hello_recipe
+ERROR: no recipe files to build, check your BBPATH and BBFILES?
+
+It seems that if <layer>/conf/layer.conf is used, then BBPATH and BBFILES
+shall be defined there. Add to layer_ex/conf/layer.conf the line:
+BBFILES = "${LAYERDIR}/*.bb"
+
+Run bitbake hello_recipe
+ERROR: Unable to parse ./layers/layer_ex/hello.bb
+
+Add a task to layers/class/base.bbclass
+addtask task
+
+Run bitbake hello_recipe -c task
+ERROR: Running idle function
+
+Add to simple/conf/bitbake.conf
+STAMP   = "${TOPDIR}/tmp/stamps"
+T       = "${TOPDIR}/tmp/work"
+
+Run bitbake hello_recipe -c task
+WARNING: Function do_task doesn't exist
+
+Add python function to layer_ex/hello.bb:
+python do_task() {
+    bb.note("DO_TASK")
+}
+
+Run bitbake hello_recipe -c task
+ERROR: Build of do_task failed
+
+Add to simple/conf/bitbake.conf:
+B       = "${TOPDIR}/tmp"
+
+Run bitbake hello_recipe -c task
+Success! Check layers/tmp/work
+
+--
+Add dependent tasks to base.bbclas:
+addtask task2 after do_task
+addtask build after do_task2
+
+Add the tasks as shell functions to hello.bb:
+do_task2() {
+  echo "DO_TASK2"
+}
+
+do_build() {
+  echo "DO_BUILD"
+}
+
+Run bitbake hello_recipe
+Done
+
+Run bitbake hello_recipe -vDDD to see program flow:
+
+DEBUG: Found bblayers.conf (./layers/conf/bblayers.conf)
+DEBUG: LOAD ./layers/conf/bblayers.conf
+DEBUG: Adding layer ./layers/layer_ex
+DEBUG: LOAD ./layer_ex/conf/layer.conf
+DEBUG: LOAD ./layers/conf/bitbake.conf
+DEBUG: BB configuration INHERITs:0: inheriting classes/base.bbclass
+DEBUG: BB ./layers/classes/base.bbclass: handle(data, include)
+DEBUG: LOAD ./layers/classes/base.bbclass
+DEBUG: collecting .bb files
+DEBUG: BB ./layers/layer_ex/hello.bb: handle(data)
+DEBUG: LOAD ./layers/layer_ex/hello.bb
+Parsing recipes: 100% |#########################################| Time: 00:00:00
+Parsing of 1 .bb files complete (0 cached, 1 parsed). 1 targets, 0 skipped, 0 masked, 0 errors.
+DEBUG: parsing complete
+DEBUG: providers for hello_recipe are: ['hello_recipe']
+DEBUG: sorted providers for hello_recipe are: ['./layers/layer_ex/hello.bb']
+DEBUG: adding ./layers/layer_ex/hello.bb to satisfy hello_recipe
+NOTE: Resolving any missing task queue dependencies
+DEBUG: Resolved 0 extra dependencies
+NOTE: Preparing runqueue
+DEBUG: Processing ./layers/layer_ex/hello.bb:do_task
+DEBUG: Processing ./layers/layer_ex/hello.bb:do_task2
+DEBUG: Processing ./layers/layer_ex/hello.bb:do_build
+NOTE: Marking Active Tasks
+NOTE: Pruned 0 inactive tasks, 3 left
+NOTE: Assign Weightings
+NOTE: Compute totals (have 1 endpoint(s))
+NOTE: Executing RunQueue Tasks
+DEBUG: Considering 0 (./layers/layer_ex/hello.bb, do_task): set([1])
+DEBUG: Considering 1 (./layers/layer_ex/hello.bb, do_task2): set([2])
+DEBUG: Considering 2 (./layers/layer_ex/hello.bb, do_build): set([])
+DEBUG: Skip list (pre setsceneverify) []
+DEBUG: Full skip list set([])
+DEBUG: Using runqueue scheduler 'speed'
+DEBUG: Stampfile ./layers/tmp/stamps.do_task not available
+DEBUG: Marking task 1 (./layers/layer_ex/hello.bb, do_task2) as buildable
+DEBUG: Stampfile ./layers/tmp/stamps.do_task2 not available
++ cd ./layers/tmp
++ do_task2
++ echo DO_TASK2
+DO_TASK2
+
+DEBUG: Marking task 2 (./layers/layer_ex/hello.bb, do_build) as buildable
+DEBUG: Stampfile ./layers/tmp/stamps.do_build not available
++ cd ./layers/tmp
++ do_build
++ echo DO_BUILD
+DO_BUILD
+
+NOTE: Tasks Summary: Attempted 3 tasks of which 0 didn't need to be rerun and all succeeded.
+
+*******************************************************************************
+Setup 3 (./hello)
+-----------------
+http://hambedded.org/blog/2012/11/24/from-bitbake-hello-world-to-an-image/
+
+Add location of bitbake binary to PATH:
+export PATH=/home/<user>/bitbake/bin:$PATH
+
+Create project directory:
+mkdir ~/hello
+cd hello
+
+Create classes/base.bbclass and the following dependent tasks:
+addtask fetch
+addtask unpack after do_fetch
+addtask patch after do_unpack
+addtask configure after do_patch
+addtask make after do_configure
+addtask install after do_make
+addtask build after do_install
+
+Create hello/conf/bblayers.conf, define BBPATH and the layer:
+BBPATH   = "${TOPDIR}"
+BBLAYERS = "${TOPDIR}/meta-test"
+
+(BBPATH is needed to find conf/bitbake.conf)
+
+Add example layer
+mkdir meta-test
+
+Create meta-test/conf/layer.conf and add the recipe(s) to BBFILES:
+BBFILES = "${LAYERDIR}/*.bb"
+
+Create hello/conf/bitbake.conf and add:
+TMPDIR  = "${TOPDIR}/tmp"
+CACHE   = "${TMPDIR}/cache"
+STAMP   = "${TMPDIR}/stamps"
+T       = "${TMPDIR}/work"
+B       = "${TMPDIR}"
+
+Create meta-test/hello.bb and add the following:
+DESCRIPTION = "Hello recipe"
+PN = "hello"
+
+python do_fetch() {
+    bb.note("DO_FETCH")
+}
+
+python do_unpack() {
+    bb.note("DO_UNPACK")
+}
+
+do_patch() {
+    echo "DO_PATCH"
+}
+
+do_configure() {
+    echo "DO_CONFIGURE"
+}
+
+do_make() {
+    echo "DO_MAKE"
+}
+
+do_install() {
+    echo "DO_INSTALL"
+}
 
 
-do_fetch(d)
+do_build() {
+    echo "DO_BUILD"
+}
+
+Run bitbake hello
+OK
+
+Task overriding
+---------------
+Move functions from hello.bb to base.bbclass
+
+Create meta-test/classes/hello.bbclass and add the following:
+do_configure() {
+    echo "HELLO_DO_CONFIGURE"
+}
+
+python do_make() {
+    bb.note("HELLO_DO_MAKE")
+}
+
+do_install() {
+    echo "HELLO_DO_INSTALL"
+}
+
+Add to hello.bb:
+inherit hello
+
+Run bitbake hello
+The functions from hello.bbclass override base functions with the same names,
+(check tmp/work/run.do_<task>.PID, however there is no way to call original
+functions then.
+
+run.do_configure.PID:
+do_configure() {
+    echo "HELLO_DO_CONFIGURE"
+
+}
+
+cd /home/piotr/Dev/trainings/bitbake/1/hello/tmp
+do_configure
 --
 
-log.do_fetch.29582:
-DEBUG: Executing python function do_fetch
-DEBUG: Executing python function base_do_fetch
-NOTE: BASE_DO_UNPACK
-DEBUG: Python function base_do_fetch finished
-DEBUG: Python function do_fetch finished
+Solution
+Define all the functions like <class-name>_<function-name>, ie:
+base_do_<task> in hello/classes/base.bbclass
+hello_do_<task> in hello/meta-test/classes/hello.class
+
+Add EXPORT_FUNCTIONS <function-name> ... to the bbclass files.
+
+If your recipe needs to call the base class version of the function, it should
+call base_do_<task>. To call your modified version of the function as defined
+in your recipe, call it as do_<task>. 
+
+Run bitbake hello
+
+run.do_configure.PID:
+do_configure() {
+    hello_do_configure
+}
+
+hello_do_configure() {
+    echo "HELLO_DO_CONFIGURE"
+}
+
+cd /home/piotr/Dev/trainings/bitbake/1/hello/tmp
+do_configure
 --
 
-log.task_order:
-do_fetch (29582): log.do_fetch.29582
-do_unpack (29583): log.do_unpack.29583
-do_patch (29584): log.do_patch.29584
-do_configure (29586): log.do_configure.29586
-do_make (29588): log.do_make.29588
-do_install (29590): log.do_install.29590
-do_build (29592): log.do_build.29592
---
+Move and rename hello.bb to meta-test/recipes/hellorecipe/hello.bb
+Update meta-test/conf/layer.conf:
+BBPATH  .= ":${LAYERDIR}"
+BBFILES = "${LAYERDIR}/*/*/*.bb"
 
-Overriding tasks
-----------------
-See meta-test/classes/autotools.bbclass.
-EXPORT_FUNCTIONS keyword maps each task in its argument to the functions in the
-bbclass prefixed with the name of that bbclass. So, when EXPORT_FUNCTIONS is
-used in autotools.bbclass, do_configure is mapped to autotools_do_configure.
-The same is done in base.bbclass file. We used EXPORT_FUNCTIONS, it mapped each
-task to base_do_TASKNAME.
+BBPATH is needed, as classes/hello.bbclass is in other directory than hello.bb
+recipe. If classs directory is and the recipe are in the same directory, BBPATH
+is not required in cont/layer.conf.
 
+Rename hello.bb to hello_0.0_1.1.bb
 
--s  show all recipes
--g  create dependency graph
--u  The user interface to use (e.g. knotty, hob, depexp)
+Add to conf/bitbake.conf:
+PN = "${@bb.parse.BBHandler.vars_from_file(d.getVar('FILE'),d)[0] or 'defaultpkgname'}"
+
+To see how it works, add the following code to one of your recipe and check the
+results in tmp/work/log.do_<task>:
+
+print(d.getVar('FILE'))
+print(bb.parse.BBHandler.vars_from_file(d.getVar('FILE'), d))
+print(bb.parse.BBHandler.vars_from_file('meta-test/recipes/hellorecipe/hello_1.2.3_2.0.bb',d))
