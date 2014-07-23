@@ -12,7 +12,7 @@ service tftp
   wait        = yes
   user        = nobody
   server      = /usr/sbin/in.tftpd
-  server_args = /home/piotr/embedded/tftpboot
+  server_args = /home/<user>/Dev/embed/tftpboot
   disable     = no
 }
 
@@ -34,7 +34,7 @@ install nfs-kernel-server
 
 Add config to /etc/exports file:
 <EXPORT_DIR> <CLIENTS> (parameters)
-/home/piotr/embedded/nfs 172.29.1.186 (rw,sync)
+/home/<user>/Dev/embed/nfs 172.29.1.186 (rw,sync)
 
 Restart NFS server:
 
@@ -129,7 +129,7 @@ devtree_addr=0x43000000
 
 Configurations
 --------------
-linux_bootargs_nfs=console=ttyS0 root=/dev/nfs ip=dhcp nfsroot=172.29.1.68:/home/XXXXX/embedded/nfs
+linux_bootargs_nfs=console=ttyS0 root=/dev/nfs ip=dhcp nfsroot=172.29.1.68:/home/<user>/Dev/embed/nfs
 linux_bootargs_ubi=console=ttyS0 ubi.mtd=rootfs root=ubi0:rootfs rootfstype=ubifs
 
 linux_boot_nfs=tftp ${loadaddr} uImage && tftp ${devtree_addr} XXXXX-evb.dtb && run bootm
@@ -151,7 +151,7 @@ setnfsmode=setenv linux_boot ${linux_boot_nfs} && set linux_bootargs ${linux_boo
 
 Result:
   linux_boot=tftp ${loadaddr} uImage && tftp ${devtree_addr} XXXXX-evb.dtb && run bootm
-  linux_bootargs=console=ttyS0 root=/dev/nfs ip=dhcp nfsroot=172.29.1.68:/home/piotr/embedded/nfs
+  linux_bootargs=console=ttyS0 root=/dev/nfs ip=dhcp nfsroot=172.29.1.68:/home/<user>/Dev/embed/nfs
 
 run linux_boot (boot command - load image and run it):
   tftp 0x42000000 uImage
@@ -162,7 +162,7 @@ run bootm (boot application image from memory)
   Image and the device tree shall be already present in memory. This in fact
   sets bootargs depending on the config
 
-  bootargs=console=ttyS0 root=/dev/nfs ip=dhcp nfsroot=172.29.1.68:/home/piotr/embedded/nfs mtdparts=dmw_nand:2m(u-boot),1m(u-boot-env),1m(devtree),5m(kernel),-(rootfs)
+  bootargs=console=ttyS0 root=/dev/nfs ip=dhcp nfsroot=172.29.1.68:/home/<user>/Dev/embed/nfs mtdparts=dmw_nand:2m(u-boot),1m(u-boot-env),1m(devtree),5m(kernel),-(rootfs)
   bootm 0x42000000 - 0x43000000
 
 
