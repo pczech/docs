@@ -1,49 +1,76 @@
 https://www.yoctoproject.org/docs/current/yocto-project-qs/yocto-project-qs.html
 
-Configuration
--------------
+
+*******************************************************************************
+User Configuration
+------------------
 http://www.yoctoproject.org/docs/current/ref-manual/ref-manual.html#user-configuration
 
 cd poky
 source oe-init-build-env [<build_dir>]
-        Environment setup script defines OpenEmbedded build environment
-        settings needed to complete the build. The script also creates the
-        Build Directory <build_dir>, which is 'build' by default and is located
-        in the Source Directory.
-        
-Environment variables:
+
+Environment setup script defines OpenEmbedded build environment settings needed
+to complete the build:
+
 PATH=./poky/scripts:./poky/bitbake/bin/
 BUILDDIR=./poky/build
 BB_ENV_EXTRAWHITE=(...)
 
-The 'meta-yocto' layer inside Poky contains a conf directory that has example
-configuration files. The script creates conf directory in the Build Directory
-that contains default versions of your local.conf and bblayers.conf
-configuration files. These default configuration files are created only if
-versions do not already exist in the Build Directory at the time you source the
-build environment setup script.
+The script also creates the Build Directory <build_dir>, which is 'build' by
+default and is located in the Source Directory, and creates the configuration
+files:
+        
+<build_dir>/conf:
+  bblayers.conf
+  local.conf
+  template.conf
+  
+The ./poky/meta-yocto layer contains a conf directory that has example
+configuration files. These example files are used as a basis for creating
+actual configuration files when you source the build environment script.
 
-The setup script calls the script scripts/oe-setup-builddir, that sets up the
-Build Directory and seeds the directory (if necessary) with configuration files
-appropriate for the development environment.
-
-The scripts/oe-setup-builddir script uses the $TEMPLATECONF variable to
-determine which sample configuration files to locate. 
-
-The ./poky/build/conf/local.conf file provides many basic variables that define
-a build environment: 
-
-BB_NUMBER_THREADS
-    number of tasks bitbake should run in parallel
-
-PARALLEL_MAKE
-    how many processes make should run in parallel when running compile tasks
+bblayers.conf
+    Defines layers (see bitbase.txt for more details). It uses the 
+    BBLAYERS_NON_REMOVABLE variable to list layers that must not be removed.
+    If bblayers.conf is not present when you start the build, the OpenEmbedded
+    build system creates it from ./poky/meta-yocto/conf/bblayers.conf.sample
+    when you source the build environment setup script.
+     
+local.conf
+    Contains user-defined variables that affect every build, like 
+    BB_NUMBER_THREADS, PARALLEL_MAKE, MACHINE. For more details see
+    ./poky/build/conf/local.conf. If local.conf is not present when you start
+    the build, the OpenEmbedded build system creates it from
+    ./poky/meta-yocto/local.conf.sample when you source the build environment
+    setup script.
     
-MACHINE
-    machine selection (qemuarm, qemux86, ...)
+template.conf
+    The scripts/oe-setup-builddir script uses the $TEMPLATECONF variable to
+    determine which sample configuration files to locate (local.conf.sample,
+    bblayers.conf.sample).
     
-For more details see .poky/build/conf/local.conf
+    The source bblayers.conf.sample, local.conf.sample files used depend on the
+    $TEMPLATECONF script variable, which defaults to meta-yocto/conf when you
+    are building from the Yocto Project development environment and defaults to
+    meta/conf when you are building from the OpenEmbedded Core environment. The
+    default value is set in poky/.templateconf file, that is used by
+    scripts/oe-setup-builddir to create ./poky/build/conf/template.conf
+     
+    Because the script variable points to the source of the *.conf.sample
+    files, this implies that you can base your build from any layer by setting
+    the variable in the build environment setup script as follows:
     
+    TEMPLATECONF=<your_layer>/conf source oe-init-build-env <build-dir>
+    
+    Once the build process gets the sample file, it uses sed to substitute
+    final ${OEROOT} values for all ##OEROOT## values. 
+    
+    You can see how the TEMPLATECONF variable is used by looking at the
+    scripts/oe-setup-builddir script in the Source Directory.
+
+Finally the environment setup script changes working directory to <build_dir>.
+
+
 
 Build Directory structure
 /build
@@ -51,35 +78,3 @@ Build Directory structure
 /build/sstate-cache     SSTATE_DIR      shared-state files storage
 /build/tmp              TMPDIR          build output
 
-User configuration
-------------------
-The 'meta-yocto' layer inside Poky contains a conf directory that has example
-configuration files.
-
-
-
-
-*******************************************************************************
-bitbake
--------
-http://docs.openembedded.org/bitbake/html/
-http://www.yoctoproject.org/docs/current/bitbake-user-manual/bitbake-user-manual.html
-
-http://hambedded.org/blog/2012/11/24/from-bitbake-hello-world-to-an-image/
-
-Metadata
---------
-.bb         Recipes
-.conf       Configuration. main configuration: poky/meta/conf/bitbake.conf 
-.bbclass    Classes
-.bbappend   Appended files
-
-bitbake -b <recipe>
-    Execute tasks from a specific .bb recipe directly. Does not handle any
-    dependencies from other recipes.
-    
-bitbake -b <recipe> -c <cmd>    
-    Specify the task to execute. The exact options available depend on the
-    metadata.    
-
-bitbake <target>

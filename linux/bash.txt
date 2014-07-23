@@ -1,24 +1,26 @@
 source <filename>
     Read and execute commands from filename in the current shell environment.
     Useful if you e.g. want to set multiple environment variables from a file.
+    . is synonymous with source.
+    
+    
+$BASH_SOURCE
+    The call stack of scripts with the top of the stack being the currently
+    executing sourced script, sourcing another script from the current one will
+    push it on top of the stack.     
 
     
+*******************************************************************************
 Conditional operators
+---------------------
+-n <string>   True if the length of <string> is non-zero.
+-z <string>   True if the length of <string> is zero.
+-f <file>     True if <file> exists and is a regular file.
 
--n  string is not null.
-
-if [ -n $a ] then
-
--z  string is null, that is, has zero length
-if [ -z "$String" ]
-then
-  echo "\$String is null."
-fi
 
 *******************************************************************************
 argument list
 -------------
-
 $0 - expands  to  the name of the shell or shell script
 $* - expands to the positional parameters, starting from  one,
      "$*" is equivalent to "$1 $2..."
@@ -27,6 +29,27 @@ $@ - expands to the positional parameters, starting from  one,
 $# - expands to the number of positional parameters in decimal
 
 
+*******************************************************************************
+Parameter expansion
+-------------------
+$   - parameter expansion, command substitution, or arithmetic expansion.
+
+${parameter}
+    The value of parameter is substituted.
+    
+${#parameter}
+    Parameter length (in characters). If  parameter is an array name
+    subscripted by * or @, the value substituted is the number of elements in
+    the array. See Arrays.
+
+
+
+
+*******************************************************************************
+Arrays
+------
+${array[@]}     expands each element of array to a separate  word
+${#array[@]}    number of elements
 
 *******************************************************************************
 functions

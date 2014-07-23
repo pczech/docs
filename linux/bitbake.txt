@@ -1,4 +1,4 @@
-http://www.yoctoproject.org/docs/1.6/bitbake-user-manual/bitbake-user-manual.html
+http://www.yoctoproject.org/docs/current/bitbake-user-manual/bitbake-user-manual.html
 
 Download and unpack bitbake: http://cgit.openembedded.org/cgit.cgi/bitbake/
 Used version: bitbake-1.17.0
@@ -6,10 +6,12 @@ Used version: bitbake-1.17.0
 Parameters
 ----------
 --version
--s  show all recipes
--g  create dependency graph
--u  the user interface to use (e.g. knotty, hob, depexp)
--c  run given task (build is the default task and run if no task is given)
+-s              Show all recipes
+-g              Create dependency graph
+-u  <UI>        The user interface to use (e.g. knotty, hob, depexp)
+-c  <task>      Run given task (build is the default task and run if no task is given)
+-b  <recipe>    Execute tasks from a specific .bb recipe directly. Does not handle any
+                dependencies from other recipes.
 
 
 *******************************************************************************
