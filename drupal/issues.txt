@@ -32,7 +32,17 @@ Update the core on the test site first to check if works correctly.
 Compare site to be upgraded with the same original core, to identify private
 patches. Currently they are:
 /.htaccess - patch to protect original original images
-/modules/node/node.module - TODO
+/modules/node/node.module
+
+Delete all the files & folders inside your original Drupal instance except for
+/sites folder and any custom files you added elsewhere.
+
+Copy all the folders and files except /sites from inside the extracted Drupal
+package into your original Drupal instance.
+
+Apply custom changes to core files.
+
+Login as user 1 and run update.php by navigating to http://<site>/update.php
 
 
 pde.zip (Programming Drupal 7 Entities)
