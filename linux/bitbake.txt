@@ -8,10 +8,23 @@ Parameters
 --version
 -s              Show all recipes
 -g              Create dependency graph
--u  <UI>        The user interface to use (e.g. knotty, hob, depexp)
--c  <task>      Run given task (build is the default task and run if no task is given)
--b  <recipe>    Execute tasks from a specific .bb recipe directly. Does not handle any
-                dependencies from other recipes.
+-u <UI>         The user interface to use (e.g.depexp, hob, goggle, ncurses)
+-c <task>       Run given task (build is the default task and run if no task is
+                given)
+-b <recipe>     Execute tasks from a specific .bb recipe directly. Does not
+                handle any dependencies from other recipes.
+-e <target>     Show the global or per-package environment complete with
+                information about where variables were set/changed.
+-p              Quit after parsing the BB recipes.
+-f              Force the specified targets/task to run (invalidating any
+                existing stamp file).
+                
+bitbake -g -u depexp - show dependencies
+bitbake -u hob
+bitbake <target> -u goggle
+bitbake <target> -c listtasks
+
+'listtasks' task is defined by bitbake-1.17.0/classes/base.bbclass
 
 
 *******************************************************************************
@@ -172,14 +185,80 @@ addtask command also describes inter-task dependencies.
 *******************************************************************************
 Syntax and Operators
 --------------------
-=       Set variable to value ("hard" assignment) 
-?=      Set default value. Define a variable if it is undefined when the
-        statement is parsed, but leave the value alone if the variable has a
-        value. 
-:=      Expand variable immediate. Variable's contents is being expanded
-        immediately, rather than when the variable is actually used.
-.=      Appending without spaces
-+=      Appending with spaces
+
+Basic syntax
+------------
+=           Set variable to value ("hard" assignment) 
+?=          Set default value. Define a variable if it is undefined when the
+            statement is parsed, but leave the value alone if the variable has
+            a value. 
+:=          Expand variable immediate. Variable's contents is being expanded
+            immediately, rather than when the variable is actually used.
+.=          Appending without spaces
++=          Appending with spaces
+_append     Appending without spaces (override style syntax)
+_prepend    Prepending (override style syntax)
+_remove     Removal (override style syntax)
+[<FLAG>]    Variable flag (see also "Variable flags")
+
+
+Conditional syntax (overrides)
+------------------------------
+BitBake can conditionally select a specific version of a variable and
+conditionally append or prepend the value of a variable. BitBake uses OVERRIDES
+to control what variables are overridden. The OVERRIDES variable is a colon-
+character-separated list that contains items for which you want to satisfy
+conditions.
+
+Selecting a specific version of a variable example:
+OVERRIDES = "architecture:os:machine"
+TEST = "default"
+TEST_os = "osspecific"
+TEST_nooverride = "othercondvalue"
+
+The variable TEST by itself has a default value of "default". You select the
+os-specific version of the TEST variable by appending the "os" override to the
+variable (i.e.TEST_os).
+
+Appending and prepending example:
+DEPENDS = "glibc ncurses"
+OVERRIDES = "machine:local"
+DEPENDS_append_machine = "libmad"
+DEPENDS_append_graphics = "qt4"
+
+DEPENDS becomes "glibc ncurses libmad".
+
+Variable flags
+--------------
+BitBake has a defined set of varflags available for recipes and classes. Tasks
+support a number of these flags which control various functionality of the
+task, e.g. nostamp, deptask, ...
+
+Dependencies
+------------
+Internal dependencies (between tasks in a recipe)
+    addtask
+    
+Build dependencies (between recipe files)
+    The "deptask" varflag for tasks signifies the task of each item listed in
+    DEPENDS that must complete before that task can be executed.
+    Example:
+    Two recipes named A and B.
+    Recipe "a":
+        DEPENDS = "B" 
+        do_configure[deptask] = "do_populate_staging"
+    
+    Here, the dependency is such that the do_populate_staging task for recipe
+    B must complete before the do_configure task of recipe A can execute.
+    
+Runtime dependencies
+PACKAGES, RDEPENDS, and RRECOMMENDS
+TODO
+
+package-depends.dot : dependencies between runtime targets.
+pn-depends.dot      : dependencies between build-time targets (i.e. recipes).
+task-depends.dot    : dependencies between tasks.
+pn-buildlist        : a simple list of targets that are to be built.
 
 
 *******************************************************************************
@@ -190,6 +269,69 @@ ${@...} - inline Python Variable Expansion
 
 d.getVar("X", expand=False)
 d.setVar("X", "value")
+
+
+*******************************************************************************
+File download
+-------------
+Phases:
+- obtaining the files from somewhere (remote or local)
+- unpacking those files into a specific location
+
+Download sequence:
+  - local download directory (DL_DIR)
+  - pre-mirror sites (PREMIRRORS)
+  - the upstream source (SRC_URI)
+  - mirror locations (MIRRORS)
+  
+Fetchers:
+URL prefix determines which fetcher submodule BitBake uses. Each submodule can
+support different URL parameters.
+  file://     
+  cvs://
+  ftp://
+  http://
+  https://
+  svn://
+  git://
+  other...
+                 
+DL_DIR   
+The central download directory used by BitBake to store downloads. By default,
+DL_DIR gets files suitable for mirroring for everything except Git
+repositories (see BB_GENERATE_MIRROR_TARBALLS). You can set this directory by
+defining the DL_DIR variable in the conf/local.conf file. This directory is
+self-maintaining and you should not have to touch it. By default, the directory
+is downloads in the Build Directory. During a first build, the system downloads
+many different source code tarballs from various upstream projects. Downloading
+can take a while, particularly if your network connection is slow. Tarballs are
+all stored in the directory defined by DL_DIR and the build system
+looks there first to find source tarballs.
+You can reuse the directory for multiple builds or move the directory to
+another location.
+
+PREMIRRORS
+Specifies additional paths from which BitBake gets source code. Assuming your
+distribution (DISTRO) is "poky", the default value for PREMIRRORS is defined in
+the meta-yocto/conf/distro/poky.conf file.
+
+MIRRORS
+Specifies additional paths from which BitBake gets source code. Assuming your
+distribution (DISTRO) is "poky", the default value for MIRRORS is defined in
+the meta-yocto/conf/distro/poky.conf file.
+
+BB_GENERATE_MIRROR_TARBALLS
+TODO
+
+BB_NO_NETWORK
+TODO
+
+*******************************************************************************
+Terms
+-----
+Package
+Packaged output from a project
+TODO
 
 
 *******************************************************************************

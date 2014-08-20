@@ -1,11 +1,46 @@
-https://www.yoctoproject.org/docs/current/yocto-project-qs/yocto-project-qs.html
+*******************************************************************************
+Debugging build failures
+------------------------
+bitbake -c <task> <target> 
+bitbake -c <task> -f <target> 
+bitbake -g -u depexp <target>
+bitbake -e [<recipe>]
+bitbake -s 
+
+Usefull tasks
+-------------
+bitbake -c listtasks <target>
+    List tasks for given target.
+
+bitbake -c fetchall <target>
+    Fetch all the necessary sources without starting the build. This guarantees
+    that you have all the sources for that BitBake target when you disconnect
+    from the net and want to do the build later offline.
+    
+Special targets
+---------------
+bitbake buildtools-tarball
+TODO
+    
+Build history
+-------------
+TODO
+
+*******************************************************************************
+Yocto Project Development Environment
+-------------------------------------
+User Configuration
+Metadata Layers
+Source Files
+Build System
+Package Feeds
+Images
+Application Development SDK
 
 
 *******************************************************************************
 User Configuration
 ------------------
-http://www.yoctoproject.org/docs/current/ref-manual/ref-manual.html#user-configuration
-
 cd poky
 source oe-init-build-env [<build_dir>]
 
@@ -17,8 +52,8 @@ BUILDDIR=./poky/build
 BB_ENV_EXTRAWHITE=(...)
 
 The script also creates the Build Directory <build_dir>, which is 'build' by
-default and is located in the Source Directory, and creates the configuration
-files:
+default and is located in the Source Directory. It creates the configuration
+files too:
         
 <build_dir>/conf:
   bblayers.conf
@@ -32,17 +67,16 @@ actual configuration files when you source the build environment script.
 bblayers.conf
     Defines layers (see bitbase.txt for more details). It uses the 
     BBLAYERS_NON_REMOVABLE variable to list layers that must not be removed.
-    If bblayers.conf is not present when you start the build, the OpenEmbedded
-    build system creates it from ./poky/meta-yocto/conf/bblayers.conf.sample
-    when you source the build environment setup script.
+    If bblayers.conf is not present when you start the build, BitBake creates
+    it from ./poky/meta-yocto/conf/bblayers.conf.sample when you source the
+    build environment setup script.
      
 local.conf
     Contains user-defined variables that affect every build, like 
     BB_NUMBER_THREADS, PARALLEL_MAKE, MACHINE. For more details see
     ./poky/build/conf/local.conf. If local.conf is not present when you start
-    the build, the OpenEmbedded build system creates it from
-    ./poky/meta-yocto/local.conf.sample when you source the build environment
-    setup script.
+    the build, BitBake creates it from ./poky/meta-yocto/local.conf.sample
+    when you source the build environment setup script.
     
 template.conf
     The scripts/oe-setup-builddir script uses the $TEMPLATECONF variable to
@@ -71,10 +105,512 @@ template.conf
 Finally the environment setup script changes working directory to <build_dir>.
 
 
+*******************************************************************************
+Metadata Layers
+---------------
+Distro layer (Policy Configuration)
+    Provide top-level or general policies for the image or SDK being built. For
+    example, this layer would dictate whether BitBake produces RPM or IPK
+    packages.
+    
+    Structure:
+    conf/
+        distro/<distro>.conf
+        layer.conf
+    classes/
+        *.bbclass
+    recipes-*/
+        *.bb
+        
+    The distro layer is selected by the variable DISTRO (usually set in
+    local.conf). The variable's argument is the root name of <distro>.conf
+    file. For example, the distribution configuration file for the Poky-Tiny
+    distribution is meta-yocto/conf/distro/poky-tiny.conf. In order to select
+    the Poky-Tiny distribution, the DISTRO variable in local.conf file is set
+    as follows: DISTRO = "poky".
+
+BSP layer (Machine Configuration)
+    Everything in this layer is specific to the machine for which you are
+    building the image or the SDK.
+    
+    Structure:
+    conf/
+        machine/<machine>.conf
+        layer.conf
+    recipes-bsp/
+    recipes-core/
+    recipes-graphics/
+    recipes-kernel/
+    
+    The target device for which the image is built is selected by the variable
+    MACHINE (defined in local.conf). The variable corresponds to a machine 
+    configuration file of the same name, thus, when MACHINE is set to "qemux86"
+    there exists the corresponding <layer>/conf/machine/qemux86.conf machine
+    configuration file.
+    
+Software layer (Metadata)
+    The software layer provides the Metadata for additional software packages
+    used during the build. This layer does not include Metadata that is
+    specific to the distribution or the machine, which are found in their
+    respective layers.
+
+
+*******************************************************************************
+Source Files
+------------
+Upstream Project Releases
+    Exist anywhere in the form of an archived file (e.g. tarball or zip file).
+    These files correspond to individual recipes.
+    
+Local Projects
+    Custom software the user provides, which reside somewhere local to a
+    project. The canonical method through which to include a local project is
+    to use the 'externalsrc' class to include that local project.
+    
+SCMs
+    Bitbake can get source files from an SCM such as Git or Subversion. In this
+    case, a repository is cloned or checked out.
+
+Mirrors
+    Pre-mirrors are appropriate when you have a shared directory that is not a
+    directory defined by the DL_DIR variable. A Pre-mirror typically points to
+    a shared directory that is local to your organization. Regular mirrors can
+    be any site across the Internet that is used as an alternative location for
+    source code when the primary site isn't functioning for some reason or
+    another.
+
+Download sequence:
+  - local download directory (DL_DIR)
+  - pre-mirror sites (PREMIRRORS)
+  - the upstream source (SRC_URI)
+  - mirror locations (MIRRORS)
+
+
+*******************************************************************************
+Build System (BitBake)
+----------------------
+The build system produces Images. This process consists of several functional
+areas:
+
+Build Directory structure
+------------------------- 
+<build>/tmp/                                            <- ${TMPDIR}
+    work/
+        ${PACKAGE_ARCH}-poky-${TARGET_OS}/
+            ${PN}/
+                ${PV}-${PR}/                            <- ${WORKDIR}
+                    ${PN}-${PV}/                        <- ${S} / ${B}
+                    image                               <- ${D}
+                    package                             <- ${PKGD}
+                    packages-split                      <- ${PKGDEST}
+                        ${PN}
+                    pkgdata                             <- ${PKGDESTWORK}
+    sysroots/
+        <machine>                                       <- ${STAGING_DIR_HOST}
+            pkgdata/                                    <- ${PKGDATA_DIR}
+    deploy/                                             <- ${DEPLOY_DIR}
+        <package_type>/                                 Package Feeds
+            <package_arch>/
+                *.<type>
+        images/                                         Images
+            <machine>                                   <- ${DEPLOY_DIR_IMAGE}
+                <kernel-image>                          <- ${KERNEL_IMAGETYPE}
+                <root-filesystem-image>                 <- ${IMAGE_FSTYPES}
+                <kernel-modules>                        <- ${MODULE_TARBALL_DEPLOY}
+                <bootloaders>
+                <symlinks>
+        sdk/                                            SDK
+            <buildtools-tarball>.sh
+
+Source Fetching
+---------------
+SRC_URI -> do_fetch -> DL_DIR -> do_unpack -> S
+
+The tasks fetch the source files and unpack them into the work directory.
+Unpacked source files are pointed to by the S variable. Each recipe has an area
+in the Build Directory where the unpacked source code resides.
+
+Examples:
+qemux86/tmp/
+    work/
+        all-poky-linux/encodings/1_1.0.4-r2.1/encodings-1.0.4/
+        i586-poky-linux/perl/5.14.3-r1/perl-5.14.3/
+        qemux86-poky-linux/init-ifupdown/1.0-r7/init-ifupdown-1.0/
+        x86_64-linux/alsa-lib-native/1.0.27.2-r0/alsa-lib-1.0.27.2/
+        
+qemuarm/tmp/
+    work/
+        all-poky-linux/encodings/1_1.0.4-r2.1/encodings-1.0.4/
+        armv5te-poky-linux-gnueabi/ofono/1.14-r0/ofono-1.14/
+        qemuarm-poky-linux-gnueabi/init-ifupdown/1.0-r7/init-ifupdown-1.0/
+        x86_64-linux/alsa-lib-native/1.0.27.2-r0/alsa-lib-1.0.27.2/
+
+Patching
+--------
+SRC_URI -> do_patch -> S
+
+The task processes recipes by using the SRC_URI variable to locate applicable
+patch files, which by default are *.patch or *.diff files, or any file if
+"apply=yes" is specified for the file in SRC_URI. BitBake finds and applies
+multiple patches for a single recipe in the order in which it finds the
+patches. Patches are applied to the recipe's source files located in the S
+directory.
+
+Configuration and Compilation
+-----------------------------
+S -> do_configure
+This task configures the source by enabling and disabling any build-time and
+configuration options for the software being built. Configurations can come
+from the recipe itself as well as from an inherited class. Additionally, the
+software itself might configure itself depending on the target for which it is
+being built.
+
+S -> do_compile -> B
+Once a configuration task has been satisfied, BitBake compiles the source.
+Compilation occurs in the directory pointed to by the B variable. B directory
+is, by default, the same as the S directory.
+
+B -> do_install -> D
+This task copies files from the B directory and places them in a holding area
+pointed to by the D variable.
+
+Examples:
+qemux86/tmp/work/i586-poky-linux/alsa-utils/1.0.27.2-r0/image
+
+Package Splitting
+-----------------
+D -> do_package -> PKGD
+PKGD -> do_packagedata -> PKGDESTWORK
+PKGD, PKGDESTWORK -> do_package -> PKGDEST
+PKGDESTWORK -> do_packagedata -> PKGDATA_DIR
+
+The tasks combine to analyze the files found in the D directory and split them
+into subsets based on available packages and files. The do_packagedata task
+creates package metadata based on the analysis such that BitBake can generate
+the final packages. The list of packages to be created from the recipe is
+defined by PACKAGES variable. The FILES variable defines the files that go into
+each package in PACKAGES. Working, staged, and intermediate results of the
+analysis and package splitting process use these directories:
+
+PKGD
+    Points to the destination directory for files to be packaged before they
+    are split into individual packages.
+
+PKGDEST
+    Points to the parent directory for files to be packaged after they have
+    been split into individual packages.
+
+PKGDESTWORK
+    Points to a temporary work area, where do_packagedata creates package
+    metadata. It is used by the do_package task to split packages. The
+    do_packagedata task then packages the meta data in the temporary work area
+    and installs it into a shared directory pointed to by global PKGDATA_DIR.
+    
+PKGDATA_DIR
+    Points to a shared, global-state directory that holds data generated during
+    the packaging process. During the packaging process, the do_packagedata
+    task packages data for each recipe and installs it into this temporary,
+    shared area.
+    
+Depending on the type of packages being created (RPM, DEB, or IPK), the
+do_package_write_* task creates the actual packages and places them in the
+Package Feeds area.
+
+Image Generation
+----------------
+do_rootfs
+
+The root filesystem image generation process uses packages from Package Feeds
+depends on many variables and consists of several stages:
+
+Package installation
+    It is under control of the package manager (e.g. smart/rpm, opkg, or
+    apt/dpkg) regardless of whether or not package management is enabled for
+    the target.
+
+Post Installation
+    During image generation, BitBake attempts to run all post-installation
+    scripts. Any that fail to run on the build host are run on the target when
+    the target system is first booted.
+    
+Optimization
+    Then optimizing processes are run across the image. These processes include
+    mklibs and prelink. The mklibs process optimizes the size of the libraries.
+    A prelink process optimizes the dynamic linking of shared libraries to
+    reduce start up time of executables.
+
+Manifest
+    Along with writing out the root filesystem image, the do_rootfs task
+    creates a manifest file (.manifest) in the same directory as the root
+    filesystem image that lists out, line-by-line, the installed packages.
+    
+Compression
+    Is accomplished through several optimization routines designed to reduce
+    the overall size of the image.
+
+SDK Generation
+--------------
+do_populate_sdk
+
+The task handles two parts: a target part and a host part. The target part is
+the part built for the target hardware and includes libraries and headers. The
+host part is the part of the SDK that runs on the SDKMACHINE (the architecture
+of SDK machine can be different than build hot machine). Once both parts are
+constructed, the do_populate_sdk task performs some cleanup on both parts.
+After the cleanup, the task creates a cross-development environment setup
+script and any configuration files that might be needed.
+
+The final output of the task is the Cross-development toolchain installation
+script (.sh file), which includes the environment setup script. The output is
+placed in <build>/tmp/deploy/sdk directory.
+
+
+*******************************************************************************
+Package Feeds
+-------------
+During the package splitting BitBake creates the packages and places them in
+the Package Feeds area, located in <build>/tmp/deploy/<package_arch>/ folders.
+When it generates images or SDK it gets the packages (.rpm, .deb, .ipk) from
+this area.
+
+Examples:
+qemux86/tmp/deploy/
+    rpm/
+        all/
+        i586/
+        qemux86/
+
+qemuarm/tmp/deploy/
+    rpm/
+        all/
+        armv5te/
+        qemuarm/
+        
+Package types <package_type> are defined by the PACKAGE_CLASSES variable,
+usually in local.conf. Package architecture <package_arch> is derived through
+the value of the PACKAGE_ARCH variable for each package. For example, packages
+can exist for the i586 or qemux86 architectures. The package files themselves
+reside within the appropriate architecture folder.
+
+
+*******************************************************************************
+Images
+------
+The images are compressed forms of the root filesystem that are ready to boot
+on target device.
+
+Images are written out tarmo <build>/tmp/deploy/images/<machine>/ folder. This
+folder contains any files expected to be loaded on the target device.
+
+Examples:
+DEPLOY_DIR = ./build/tmp/deploy
+DEPLOY_DIR_IMAGE = ./build/tmp/deploy/images/qemuarm
+KERNEL_IMAGETYPE = zImage
+IMAGE_FSTYPES = "tar.bz2 ext3"
+
+qemuarm/tmp/
+    deploy/
+        images/
+            qemuarm/
+                zImage--3.14+git0+09424cee64_d7a5330e50-r0-qemuarm-20140802104700.bin
+                core-image-sato-qemuarm-20140802104700.rootfs.ext3
+                core-image-sato-qemuarm-20140802104700.rootfs.tar.bz2
+                modules--3.14+git0+09424cee64_d7a5330e50-r0-qemuarm-20140802104700.tgz
+symlinks:       zImage
+                zImage-qemuarm.bin
+                core-image-sato-qemuarm.ext3
+                core-image-sato-qemuarm.tar.bz2
+                modules-qemuarm.tgz
+                
+qemux86/tmp/
+    deploy/
+        images/
+            qemux86/
+                bzImage--3.14+git0+09424cee64_f9048769cc-r0-qemux86-20140802052959.bin
+                core-image-sato-qemux86-20140802052959.rootfs.tar.bz2
+                core-image-sato-qemux86-20140802052959.rootfs.ext3
+                modules--3.14+git0+09424cee64_f9048769cc-r0-qemux86-20140802052959.tgz
+symlinks:       bzImage
+                bzImage-qemux86.bin
+                core-image-sato-qemux86.ext3
+                core-image-sato-qemux86.tar.bz2
+                modules-qemux86.tgz
+
+
+*******************************************************************************
+Application Development SDK
+---------------------------
+Application Development SDK generation produces a self-extracting SDK installer
+(*.sh) that, when run, installs the SDK, which consists of a cross-development
+toolchain, a set of libraries and headers, and an SDK environment setup script.
+Running this installer essentially sets up your cross-development environment.
+You can think of the cross-toolchain as the "host" part because it runs on the
+SDK machine. You can think of the libraries and headers as the "target" part
+because they are built for the target hardware. The setup script is added so
+that you can initialize the environment before using the tools.
+
+
+*******************************************************************************
+Reuse download directory in other build [offline build]
+---------------------------------------
+build/download directory containing tarballs can be moved and reused in other
+location (e.g. to build offline).
+
+Create a new poky location (unpack poky-daisy-11.0.1.tar.bz2)
+Initialize build environment
+Copy build/download directory from other location
+Start build
+If there is no Internet connection, bitbake returns the error:
+Sanity checker: Failed to fetch test data from the network
+
+Solution:
+Add to build/conf/local.conf the following line:
+BB_NO_NETWORK = "1"
+Run bitbake only to parse the recipes:
+bitbake <target> -p
+Discard the changes made in local.conf
+Restart the build.
+
+
+*******************************************************************************
+Merge different (x86, arm) installations [offline build]
+----------------------------------------
+A common practice is to use a different Build Directory for different targets.
+Create a new poky location (unpack poky-daisy-11.0.1.tar.bz2)
+Create poky-daisy-11.0.1/downloads directory
+Copy and merge if needed the content of poky-daisy-11.0.1-x86/build/downloads, 
+poky-daisy-11.0.1-arm/build/downloads to poky-daisy-11.0.1/downloads
+Initialize build environment for qemux86 target:
+source oe-init-build-env qemux86
+Initialize build environment for qemuarm target:
+source oe-init-build-env qemuarm
+Uncomment the line #MACHINE ?= "qemuarm" in qemuarm/conf/local.conf
+Uncomment and update the line #DL_DIR ?= "${TOPDIR}/downloads" in
+qemuarm/conf/local.conf and qemux86/conf/local.conf to:
+DL_DIR ?= "${TOPDIR}/../downloads
+Fix the issue 'Sanity checker: Failed to fetch test data from the network'
+
+
+*******************************************************************************
+Add a new layer to yocto [hob]
+------------------------
+cd ./poky-daisy-1.17.0
+mkdir -p meta-hello/conf
+touch meta-hello/conf/layer.conf
+
+Add the layer to BBLAYERS variable in ./build/conf/bblayers.conf
+
+
+*******************************************************************************
+Add a new machine support to a layer [hob]
+------------------------------------
+Do "Add a new layer to yocto"
+mkdir meta-hello/conf/machine
+touch meta-hello/conf/machine/helloarm.conf
+touch meta-hello/conf/machine/hellox86.conf
+
+hob does not recognize the added machines, because bitbake cannot see the
+files yet.
+
+Add to meta-hello/conf/layer.conf:
+BBPATH .= ":${LAYERDIR}"
+(see bitbake.txt for more details)
+
+
+*******************************************************************************
+Build buildtools tarball installer
+----------------------------------
+If your host development system does not meet Yocto requirements (git, tar,
+python in required versions), you can can resolve this by installing a
+buildtools tarball that contains these tools. You can get the tarball one of
+two ways: download a pre-built tarball or use BitBake to build the tarball.
+
+Install yocto
+Init build environment or use an existing one.
+Set SDKMACHINE variable in your local.conf file for a 32-bit (i686) or 64-bit 
+(x86_64) development system.
+Run bitbake buildtools-tarball
+Result: <build>/tmp/deploy/sdk/<builtools-tarball>.sh
+Transfer the .sh script to a development directory in your SDK machine
+Run the .sh script
+
+
+
+/////////////////////////////////////////////
+TODO
+Rename poky directory
+---------------------
+If you rename poky directory (e.g. with already done build), then you will get
+the following errors:
+ERROR: Unable to parse ./poky-daisy-11.0.1/meta/conf/layer.conf: 
+file ./poky-daisy-11.0.1/meta/conf/layer.conf not found
+
+Update bblayers.conf
+
+Sanity checker: Error, TMPDIR has changed location. You need to either move it
+back to ./poky-daisy-11.0.1/build/tmp or rebuild
+
+
+
+Solution:
+
+Reason:
+Poky directory has been renamed, network not available.
+Solution:
+Like above
+
+
+
+*******************************************************************************
+hob
+---
+
+*******************************************************************************
+Images
+------
+Images are just common recipes (targets). To list the supported images write:
+ls meta*/recipes*/images/*.bb
+
+
+targets
+The target is the name of the recipe you want to build. Common targets are the images in meta/
+recipes-core/images, meta/recipes-sato/images, etc. all found in the Source Directory [http://
+www.yoctoproject.org/docs/1.6.1/dev-manual/dev-manual.html#source-directory]. Or, the target can
+be the name of a recipe for a specific piece of software such as BusyBox. For more details about the
+images the OpenEmbedded build system supports, see the "Images" chapter.
+
+
+*******************************************************************************
+TODO
+----
+Install packages for documentation and IDE, ADT Installer Extras
+
+Install a buildtools tarball that contains required tools (on VirtualBox):
+- download a pre-built tarball
+- build the tarball.
+(doesn't work offline as it requires additional packages, which weren't downloaded)
+
+Install downloaded buildtools (on VB, missing Ubuntu iso!)
+
+Adding custom layers (details in dev-manual)
+
+Check site.conf, auto.conf
+
+Check distribution layer - do they really set package type (rpm, ipk, ...)
+
+Openembedded.org/layerindex/layers/
+
+
+Package Name Overrides
+The runtime package specific variables RDEPENDS, RRECOMMENDS,
+RSUGGESTS, RPROVIDES, RCONFLICTS, RREPLACES, FILES, ALLOW_EMPTY, and the pre, post, install,
+and uninstall script functions pkg_preinst, pkg_postinst, pkg_prerm, and pkg_postrm should
+always have a package name override. For example, use RDEPENDS_${PN} for the main package
+instead of RDEPENDS. BitBake uses more strict checks when it parses recipes.
+
 
 Build Directory structure
 /build
 /build/downloads        DL_DIR          downloaded tarballs storage
 /build/sstate-cache     SSTATE_DIR      shared-state files storage
 /build/tmp              TMPDIR          build output
-

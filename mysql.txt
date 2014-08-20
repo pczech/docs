@@ -66,12 +66,14 @@ Edit /etc/apache2/mids-available/fcgid.conf and add e.g.
 FcgidMaxRequestLen 5242880
 Restart apache
 
-2. TODO
-Check which php.ini is in use by calling phpinfo() (localhost/tools/info.php),
-it can be for example /etc/php5/cgi/php.ini
+2. File size exceeded the maximum size permitted by your PHP configuration
+Find and change 'upload_max_filesize' parameter (default is 2M) in php.ini
+(check which php.ini is in use by calling phpinfo())
+Restart apache
 
-Find and change 'upload_max_filesize' parameter (default is 2M)
-restart apache.
+3. mod_fcgid: read data timeout in 40 seconds
+Add FcgidIOTimeout 600 to /etc/apache2/mods-available/fcgid.conf
+Restart apache
 
 
 *******************************************************************************
