@@ -261,3 +261,12 @@ be updated if they are (before the update has occurred) earlier than the
 modification time. This significantly cuts down the writes caused by atime
 updates.
 
+*******************************************************************************
+mount
+-----
+
+bind mounts
+sudo mount --bind <olddir> <newdir>
+
+sudo mound --bind /media/<user>/WORK/<user>/Dev/embed/ /home/<user>/Dev/embed/
+

@@ -1,3 +1,5 @@
+Yocto 1.6.1 (Poky Daisy 11.0.1)
+
 *******************************************************************************
 Debugging build failures
 ------------------------
@@ -492,13 +494,36 @@ Fix the issue 'Sanity checker: Failed to fetch test data from the network'
 
 
 *******************************************************************************
-Add a new layer to yocto [hob]
+Add a new layer to yocto [hob][ypdd]
 ------------------------
 cd ./poky-daisy-1.17.0
+source oe-init-build-env
 mkdir -p meta-hello/conf
 touch meta-hello/conf/layer.conf
 
 Add the layer to BBLAYERS variable in ./build/conf/bblayers.conf
+
+Run bitbake core-image-minimal
+
+This empty layer is included and processed, however doesn't modifies the
+original layers
+
+Add a new recipe to the new layer [ypdd]
+---------------------------------
+Add the recipe ./meta-hello/recipes-hello/images/core-image-hello.bb
+Copy the content from ./meta/recipes-core/images/core-image-minimal.bb
+
+Run bitbake core-image-hello
+
+ERROR: Nothing PROVIDES 'core-image-hello'
+
+Add to meta-hello/conf/layer.conf:
+BBFILES += "${LAYERDIR}/recipes-*/*/*.bb"
+
+Add a package to the image [ypdd]
+--------------------------
+Just add the package (e.g. psplash to add support for a graphical boot logo) to
+IMAGE_INSTALL in core-image-hello
 
 
 *******************************************************************************
