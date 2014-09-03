@@ -128,15 +128,44 @@ innodb_buffer_pool_size = 1G
 *******************************************************************************
 mysql cli
 ---------
+mysql -h <host> -u <user> -p[<password>] [<database>]
+>show databases;
+>use <database>;
+
+mysql -e "<command>" [database]
+
+
+Remote access
+-------------
+Create user@<remote_host> (% for any host) and grant required permissions, e.g.:
+
+mysql -e "GRANT ALL ON *.* TO \"<user>\"@\"<host>\" IDENTIFIED BY \"<password\""
+
+
+Remote user can't access the database
+-------------------------------------
+Check if MySQL server port (3306) is open:
+telnet <host> 3306
+If not:
+  Check bind-address settings in etc/mysql/my.cnf
+  Comment out bind-address or set to 0.0.0.0
+  Restart mysql daemon
+
+
+database dump
+-------------
+mysqldump -h <host> -u <user> -p[<password>] <database>
+
+--[skip-]extended-insert
+    [Don't] use multiple-row INSERT syntax that include several VALUES lists.
+    This results in a smaller dump file and speeds up inserts when the file is
+    reloaded. 
 
 *******************************************************************************
 database size
 -------------
 phpmyadmin - open database to get list of tables, check column size
 01: 61 MiB
-
-database dump
-TODO
 
 INNODB_BUFFER_POOL_READS            12255  12413
 INNODB_BUFFER_POOL_READ_REQUESTS    646156 672875 26719

@@ -60,6 +60,11 @@ aux - Show all running processes
 *******************************************************************************
 scp
 ---
+Copying from local to remote
+scp <local_file> <user>@<host>:<directory>/<remote_file>
+
+Copying from remote to local
+scp <user>@<host>:<directory>/<remote_file> <local_file>
 
 *******************************************************************************
 tar

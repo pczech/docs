@@ -85,6 +85,20 @@ http://blog.mwpreston.net/2012/06/22/expanding-a-linux-disk-with-gparted-and-get
 
 https://forums.virtualbox.org/viewtopic.php?f=35&t=50661
 
+Rename virtual disk
+-------------------
+Release and remove the disk from a VM in Virtual Media Manger
+Rename the disk file name
+Attach the disk to the MV (MV -> Storage -> ...)
+
+Copy/Clone virtual disk
+-----------------------
+You cannot just copy the file as the disks will have the same UUID
+
+1. Copy disk using Virtual Media Manager
+2. Copy disk file and set a new UUID for it:
+    VBoxManage internalcommands sethduuid <path to disk>
+
 
 Flexible screen resolution
 --------------------------

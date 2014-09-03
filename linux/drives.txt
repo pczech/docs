@@ -261,3 +261,8 @@ be updated if they are (before the update has occurred) earlier than the
 modification time. This significantly cuts down the writes caused by atime
 updates.
 
+
+How to check SATA mode
+----------------------
+dmesg | grep -i sata | grep | link
+
