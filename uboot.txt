@@ -88,7 +88,7 @@ mtdparts        - define a Linux compatible MTD partition scheme for flash
                   CONFIG_MTD_CMDLINE_PARTS to recognize argument 'mtdparts'.
 
 ipaddr          - IP address of the device; needed for tftp
-loadaddr        - Default load address, e.g. for tftp
+loadaddr        - Default RAM load address, e.g. for tftp
 serverip        - TFTP server IP address; needed for tftp
 
 Line parser
@@ -141,8 +141,8 @@ bootm=set bootargs ${linux_bootargs} ${mtdparts} && bootm ${loadaddr} - ${devtre
 
 Set boot type
 -------------
-setnfsmode
-setubimode
+run setnfsmode
+run setubimode
 
 
 NFS mode
@@ -183,3 +183,21 @@ run linux_boot:
 run bootm:
   bootargs=console=ttyS0 ubi.mtd=rootfs root=ubi0:rootfs rootfstype=ubifs mtdparts=dmw_nand:2m(u-boot),1m(u-boot-env),1m(devtree),5m(kernel),-(rootfs)
   bootm 0x42000000 - 0x43000000
+  
+Examples
+--------
+Load kernel image and devtree
+  tftp 0x42000000 <tftp server ip>:uImage.bin
+  tftp 0x43000000 <tftp server ip>:dvf99-evb.dtb
+
+Write kernel image and devtree to flash 
+  nand write 0x42000000 kernel
+  nand write 0x43000000 devtree
+
+Load kernel image and devtree to RAM
+  run chk_parts
+  nand read 0x42000000 kernel
+  nand read 0x43000000 devtree 
+
+Run kernel
+  run bootm

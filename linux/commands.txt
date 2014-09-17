@@ -1,19 +1,68 @@
 *******************************************************************************
+diff
+----
+Compare files line by line
+
+Make a patch:
+cp -R dir.orig dir
+Make your changes in dir
+diff -rupN dir.orig dir > dir.patch
+
+
+*******************************************************************************
+dmesg
+-----
+Print kernel ring buffer
+
+-c  - clear after printing
+
+Older events are logged in the files /var/log/messages and /var/log/warn ?
+
+
+*******************************************************************************
+ln
+--
+Make links between files
+ln [<options>] <target> <linkname>
+
+-s  - symbolic link
+-f  - force (remove existing destination files)
+
+
+*******************************************************************************
+lsmod
+-----
+Show status of modules in kernel
+
+/proc/modules
+
+
+*******************************************************************************
+ps
+--
+
+aux - Show all running processes
+
+
+*******************************************************************************
+pstree
+
+
+*******************************************************************************
 top
 ---
 Display Linux processes
 
 
 *******************************************************************************
-lsmod
-/proc/modules
-Show loaded kernel modules
+scp
+---
+Copying from local to remote
+scp <local_file> <user>@<host>:<directory>/<remote_file>
 
-*******************************************************************************
-dmesg
------
--c clear after printing
-Older events are logged in the files /var/log/messages and /var/log/warn ?
+Copying from remote to local
+scp <user>@<host>:<directory>/<remote_file> <local_file>
+
 
 *******************************************************************************
 shutdown
@@ -21,20 +70,27 @@ shutdown
  -r reboot
  TIME (now, +m, hh:mm)
 
-sudo
-----
- -i - simulate initial login as root (changes the home directory to /root)
 
 *******************************************************************************
 strace
 
-fdd
+strace <program>
+strace -f <program>     - trace program with its childs
+strace -p <pid>         - trace running program
+
 
 *******************************************************************************
-uname - print system information
------ 
+sudo
+----
+ -i - simulate initial login as root (changes the home directory to /root)
 
--a  : print all information in the following order:      
+
+*******************************************************************************
+uname
+-----
+Print system information 
+
+-a  - print all information in the following order:      
       kernel name               : Linux
       network hostname          : Dell
       kernel release            : 3.13.0-30-generic
@@ -47,24 +103,6 @@ uname - print system information
 Linux Dell 3.13.0-30-generic #55-Ubuntu SMP Fri Jul 4 21:40:53 UTC 2014 x86_64
 x86_64 x86_64 GNU/Linux
 
-*******************************************************************************
-pstree
-
-
-*******************************************************************************
-ps
---
-aux - Show all running processes
-
-
-*******************************************************************************
-scp
----
-Copying from local to remote
-scp <local_file> <user>@<host>:<directory>/<remote_file>
-
-Copying from remote to local
-scp <user>@<host>:<directory>/<remote_file> <local_file>
 
 *******************************************************************************
 tar
@@ -79,3 +117,4 @@ compress directory:
 tar -cvf file.tar directory_to_compress
 tar -zcvf file.tar.gz directory_to_compress
 tar -jcvf file.tar.bz2 directory_to_compress
+

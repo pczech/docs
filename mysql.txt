@@ -126,21 +126,22 @@ innodb_buffer_pool_size = 1G
 
 
 *******************************************************************************
-mysql cli
+MySQL CLI
 ---------
+
+Connect to MySQL server
+-----------------------
 mysql -h <host> -u <user> -p[<password>] [<database>]
->show databases;
->use <database>;
 
+Execute a command
+-----------------
 mysql -e "<command>" [database]
-
 
 Remote access
 -------------
 Create user@<remote_host> (% for any host) and grant required permissions, e.g.:
 
 mysql -e "GRANT ALL ON *.* TO \"<user>\"@\"<host>\" IDENTIFIED BY \"<password\""
-
 
 Remote user can't access the database
 -------------------------------------
@@ -151,7 +152,6 @@ If not:
   Comment out bind-address or set to 0.0.0.0
   Restart mysql daemon
 
-
 database dump
 -------------
 mysqldump -h <host> -u <user> -p[<password>] <database>
@@ -160,7 +160,40 @@ mysqldump -h <host> -u <user> -p[<password>] <database>
     [Don't] use multiple-row INSERT syntax that include several VALUES lists.
     This results in a smaller dump file and speeds up inserts when the file is
     reloaded. 
+    
+--no-data
+    Do not dump table contents (dump database structure)
+    
+--no-create-info
+    Do not write CREATE TABLE statements that re-create each dumped table (dump database data)
+    
+Useful commands
+---------------
+Show databases:
+    SHOW DATABASES;
+    
+Select database:
+    USE <database>;
+    
+Delete database:
+    DROP DATABASE <database>;
 
+Show all tables of the current database:
+    SHOW TABLES;
+    
+Show all tables of given engine:
+    SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE engine = 'InnoDB';
+
+Show table definition:
+    DESC <table>;
+    SHOW CREATE TABLE <table>;
+    
+Show plugins:
+    SHOW PLUGINS;
+    
+Show engines:
+    SHOW ENGINES;
+    
 *******************************************************************************
 database size
 -------------

@@ -273,5 +273,5 @@ mount
 bind mounts
 sudo mount --bind <olddir> <newdir>
 
-sudo mound --bind /media/<user>/WORK/<user>/Dev/embed/ /home/<user>/Dev/embed/
+sudo mount --bind /media/<user>/WORK/<user>/Dev/embed/ /home/<user>/Dev/embed/
 

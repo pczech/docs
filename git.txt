@@ -32,6 +32,7 @@ cloning repo
 git clone URL_PATH
 git clone URL_PATH DIR
 git clone --bare URL_PATH DIR.git
+git clone file:///<absolute_path> DIR
 
 
 creating repo
@@ -191,12 +192,15 @@ git checkout -b BRANCH
 git checkout -b BRANCH BRANCH_REMOTE
 
 
-showing (local) branches
-------------------------
-git branch
-git branch -v 		show last commit on each branch
+showing branches
+----------------
+git branch          show local branches
+git branch -a       show all local and remote branches
+git branch -r       show remote branches
+git branch -v       show last commit on each branch
 git branch --merged
 git branch --no-merged
+
 
 deleting branch
 ---------------
