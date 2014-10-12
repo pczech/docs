@@ -520,6 +520,8 @@ ERROR: Nothing PROVIDES 'core-image-hello'
 Add to meta-hello/conf/layer.conf:
 BBFILES += "${LAYERDIR}/recipes-*/*/*.bb"
 
+
+*******************************************************************************
 Add a package to the image [ypdd]
 --------------------------
 Just add the package (e.g. psplash to add support for a graphical boot logo) to
@@ -540,6 +542,27 @@ files yet.
 Add to meta-hello/conf/layer.conf:
 BBPATH .= ":${LAYERDIR}"
 (see bitbake.txt for more details)
+
+Select the machine in local.conf
+
+*******************************************************************************
+Use other kernel in the image
+-----------------------------
+Do:
+- Add a new layer to yocto
+- Add a new recipe to the new layer
+- Add a new machine support to a layer
+
+to get:
+
+meta-hello/conf/layer.conf
+meta-hello/conf/machine/hellox86.conf
+meta-hello/recipes-kernel/linux/kernel-hello_X.X.XX.bb
+
+Add to hellox86.conf:
+PREFERRED_PROVIDER_virtual/kernel ?= "linux-hello"
+
+Add to kernel-hello_X.X.XX.bb required fields: LICENSE,
 
 
 *******************************************************************************

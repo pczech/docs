@@ -1,4 +1,8 @@
 *******************************************************************************
+Eclipse 3.8 Indigo (Ubuntu 14.04)
+==================
+
+*******************************************************************************
 Show line numbers
 -----------------
 Menu -> Window -> Preferences -> General -> Editors -> Text Editors -> 
@@ -6,7 +10,7 @@ Select 'Show Line Numbers'
 
 
 *******************************************************************************
-Install and configure EGit (Eclipse 3.8 Indigo)
+Install and configure EGit
 --------------------------
 http://www.vogella.com/tutorials/EclipseGit/article.html
 http://wiki.eclipse.org/EGit/User_Guide
@@ -52,8 +56,8 @@ Quick Diff
 
 
 *******************************************************************************
-Install and configure PDT (Indigo 3.8)
---------------------------------------
+Install and configure PDT
+-------------------------
 Menu -> Help -> Install New Software -> Select 'Select the Indigo update site'
 Find and select PDT
 
@@ -67,8 +71,8 @@ Download the templates https://www.drupal.org/project/eclipse
 Menu -> Window -> Preferences -> PHP -> Editor -> Templates
 Import the downloaded XML file.
 
-PDT Config (Indigo 3.8)
------------------------
+PDT Config
+----------
 Make sure Drupal file types are recognized as PHP files:
 Menu -> Window -> Preferences -> General -> Content Types
 Select Text -> PHP Content Type. Add the *.engine, *.theme, *.install, *.inc,
@@ -109,11 +113,10 @@ https://www.drupal.org/node/75242
 
 
 *******************************************************************************
-Install and configure WPT (Indigo 3.8)
---------------------------------------
+Install and configure WPT
+-------------------------
 TODO
 https://www.drupal.org/node/75242
-
 
 
 *******************************************************************************
@@ -144,3 +147,44 @@ Debug config shall be defined for every project like ./web/devXX
 https://www.drupal.org/node/75242#XDebug
 http://wiki.eclipse.org/Debugging_using_XDebug
 
+
+*******************************************************************************
+Workspaces
+----------
+Window -> Preferences -> General -> Startup and Shutdown -> Workspaces:
+Select workspace settings storage
+
+
+*******************************************************************************
+Eclipse 4.3.2 Kepler (coexisting with Indigo)
+====================
+
+Installation
+------------
+Download eclipse-standard-kepler-SR2-linux-gtk-x86_64.tar.gz
+
+Extract Eclipse to /opt/ for global use:
+cd /opt/ && sudo tar -zxvf ~/Downloads/eclipse-*.tar.gz
+
+Rename the directory:
+sudo mv eclipse eclipse-4.2
+
+Create a launcher shortcut:
+if an eclipse is alread installed, make its launcher copy for the new eclipse:
+cd /usr/share/applications
+sudo cp eclipse.desktop eclipse-4.2.desktop
+
+Edit the launcher shortcut:
+sudo gedit eclipse-4.2.desktop
+
+Example content:
+[Desktop Entry]
+Type=Application
+Name=Eclipse 4
+Comment=Eclipse Integrated Development Environment
+Icon=/opt/eclipse-4.2/icon.xpm
+Exec=/opt/eclipse-4.2/eclipse
+Terminal=false
+Categories=Development;IDE;
+
+Open Eclipse from Unity Dash search results
