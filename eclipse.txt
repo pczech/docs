@@ -27,7 +27,7 @@ version. See also http://wiki.eclipse.org/EGit/FAQ#What_versions_of_Eclipse_does
 Configuration
 -------------
 Menu -> Window -> Preferences -> Team -> Git:
-Default repository: /home/<user>/Dev/temp (always choose directory)
+Default repository: /home/<user>/Dev/tmp (always choose directory)
 
 Window -> Preferences -> Team -> Git -> Configuration
 Use git config if already present (User Settings: /home/<user>/.gitconfig).
@@ -151,40 +151,5 @@ http://wiki.eclipse.org/Debugging_using_XDebug
 *******************************************************************************
 Workspaces
 ----------
-Window -> Preferences -> General -> Startup and Shutdown -> Workspaces:
+Menu -> Window -> Preferences -> General -> Startup and Shutdown -> Workspaces:
 Select workspace settings storage
-
-
-*******************************************************************************
-Eclipse 4.3.2 Kepler (coexisting with Indigo)
-====================
-
-Installation
-------------
-Download eclipse-standard-kepler-SR2-linux-gtk-x86_64.tar.gz
-
-Extract Eclipse to /opt/ for global use:
-cd /opt/ && sudo tar -zxvf ~/Downloads/eclipse-*.tar.gz
-
-Rename the directory:
-sudo mv eclipse eclipse-4.2
-
-Create a launcher shortcut:
-if an eclipse is alread installed, make its launcher copy for the new eclipse:
-cd /usr/share/applications
-sudo cp eclipse.desktop eclipse-4.2.desktop
-
-Edit the launcher shortcut:
-sudo gedit eclipse-4.2.desktop
-
-Example content:
-[Desktop Entry]
-Type=Application
-Name=Eclipse 4
-Comment=Eclipse Integrated Development Environment
-Icon=/opt/eclipse-4.2/icon.xpm
-Exec=/opt/eclipse-4.2/eclipse
-Terminal=false
-Categories=Development;IDE;
-
-Open Eclipse from Unity Dash search results
