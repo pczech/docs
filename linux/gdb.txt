@@ -1,0 +1,76 @@
+*******************************************************************************
+gdb
+---
+
+Breakpoints
+-----------
+break <function>
+break <class:method(parameters)>
+break <linenumber>
+info breakpoints
+disable <breakpoint_nr>
+tbreak
+	Stop program once and then it is removed
+
+Execution
+---------
+run			r
+continue    c
+next        n
+step        s
+Ctrl-C
+	Stop execution
+
+set auto-solib-add off
+    Do not load shared libraries automatically
+
+Examine variables
+---------
+print <variable>
+set <variable> = <value>
+
+Modify variables
+----------------
+    
+Sources
+-------
+list
+	Print out the lines of code above and below the line the program is
+	stopped at.
+        
+
+sharedlibrary
+------------
+info sharedLibrary
+sharedlibrary <library>
+
+
+Registers
+---------
+info registers
+
+Stack
+-----
+backtrace   bt
+
+
+Source files
+------------
+info source
+info sources
+show directories
+dir <directory>
+symbol-file <file>
+
+
+Debug running program
+---------------------
+attach <pid>
+
+
+*******************************************************************************
+gdbserver
+---------
+
+gdbserver <ip:port> program args
+

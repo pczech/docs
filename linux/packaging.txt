@@ -1,11 +1,93 @@
 *******************************************************************************
 apt-get
 -------
- install <PACKAGE>
- update
- purge 
+APT was originally designed as a front-end for dpkg to work with Debian's .deb
+packages, but it has since been modified to also work with the RPM Package
+Manager system via APT-RPM.
 
+install <package>
+    Download <package> and all of its dependencies, and installs or upgrades
+    them.
+    
+update
+    Resynchronize the package index files from their sources to get information
+    on the newest versions of packages and their dependencies. The lists of
+    available packages are fetched from the location(s) specified in
+    /etc/apt/sources.list.   
+    
+remove <package>
+    TODO
+
+purge
+    Purge is identical to remove except that packages are removed and purged
+    (any configuration files are deleted too). 
+
+autoclean
+    Removes .deb files for packages that are no longer installed on your
+    system. Depending on your installation habits, removing these files from
+    /var/cache/apt/archives may regain a significant amount of diskspace.
+
+clean
+    The same as autoclean, except it removes all packages from the package
+    cache. This may not be desirable if you have a slow Internet connection,
+    since it will cause you to redownload any packages you need to install
+    a program.
+
+
+Examples:
 sudo apt-get purge virtualbox-\*
-dpkg -l | grep apache2
 
+
+Reserve dependencies (why is the package installed) 
+apt-cache rdepends [--reverse] <package>
+
+
+*******************************************************************************
+dpkg
+----
+Package manager for Debian based systems. It can install, remove, and build
+packages, but unlike other package management system's it can not automatically
+download and install packages and their dependencies.
+
+-i <package>
+     Install a Debian package file (only this Deb package, and will notify you 
+     of any dependencies that need to be installed, but it will not install
+     them).
+
+-l [<pattern>]
+    List all packages installed on the system, for example:
+    dpkg -l | grep apache2
+              
+-S <file>
+    Show package which installed a file
+              
+dpkg flags
+----------
+dpkg -l | head -3
+
+First letter -> expected package state:
+    u - unknown
+    i - install
+    r - remove/deinstall
+    p - purge (remove including config files)
+    h - hold
+
+Second letter -> current package state:
+    n - not-installed
+    i - installed
+    c - config-files (only the config files are installed)
+    u - unpacked
+    f - half-configured (configuration failed for some reason)
+    h - half-installed (installation failed for some reason)
+    w - triggers-awaited (package is waiting for a trigger from another package)
+    t - triggers-pending (package has been triggered)
+
+Third letter -> error state (you normally shouldn't see a thrid letter):
+    r - reinst-required (package broken, reinstallation required)
+
+Examples:    
+ii  - It should be installed and it is installed
+rc  - It's removed/uninstalled but it's configuration files are still there
+
+http://www.cyberciti.biz/ref/apt-dpkg-ref.html
 http://askubuntu.com/questions/18804/what-do-the-various-dpkg-flags-like-ii-rc-mean

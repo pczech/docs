@@ -73,7 +73,7 @@ shutdown
 
 *******************************************************************************
 strace
-
+------
 strace <program>
 strace -f <program>     - trace program with its childs
 strace -p <pid>         - trace running program
@@ -83,6 +83,30 @@ strace -p <pid>         - trace running program
 sudo
 ----
  -i - simulate initial login as root (changes the home directory to /root)
+
+
+*******************************************************************************
+sx
+--
+XMODEM file send
+
+sx -vv <file> < /dev/ttyS0 > /dev/ttyS0
+
+
+
+*******************************************************************************
+tar
+---
+
+extract from archive:
+tar -xvf file.tar [extract_here]
+tar -zxvf file.tar.gz [extract_here]      gzip
+tar -jxvf file.tar.bz2 [extract_here]     bzip2
+
+compress directory:
+tar -cvf file.tar directory_to_compress
+tar -zcvf file.tar.gz directory_to_compress
+tar -jcvf file.tar.bz2 directory_to_compress
 
 
 *******************************************************************************
@@ -102,19 +126,3 @@ Print system information
 
 Linux Dell 3.13.0-30-generic #55-Ubuntu SMP Fri Jul 4 21:40:53 UTC 2014 x86_64
 x86_64 x86_64 GNU/Linux
-
-
-*******************************************************************************
-tar
----
-
-extract from archive:
-tar -xvf file.tar [extract_here]
-tar -zxvf file.tar.gz [extract_here]      gzip
-tar -jxvf file.tar.bz2 [extract_here]     bzip2
-
-compress directory:
-tar -cvf file.tar directory_to_compress
-tar -zcvf file.tar.gz directory_to_compress
-tar -jcvf file.tar.bz2 directory_to_compress
-
