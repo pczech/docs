@@ -158,34 +158,34 @@ Select workspace settings storage
 
 
 *******************************************************************************
-Eclipse 4.3.2 Kepler (coexisting with Indigo)
-====================
+Eclipse 4.4 Luna (coexisting with Indigo)
+================
 
 Installation
 ------------
-Download eclipse-standard-kepler-SR2-linux-gtk-x86_64.tar.gz
+Download eclipse-standard-luna-R-linux-gtk-x86_64.tar.gz
 
 Extract Eclipse to /opt/ for global use:
 cd /opt/ && sudo tar -zxvf ~/Downloads/eclipse-*.tar.gz
 
 Rename the directory:
-sudo mv eclipse eclipse-4.2
+sudo mv eclipse eclipse-4.4
 
 Create a launcher shortcut:
-if an eclipse is alread installed, make its launcher copy for the new eclipse:
+if an eclipse is already installed, make a copy of its launcher for the new eclipse:
 cd /usr/share/applications
-sudo cp eclipse.desktop eclipse-4.2.desktop
+sudo cp eclipse.desktop eclipse-4.4.desktop
 
 Edit the launcher shortcut:
-sudo gedit eclipse-4.2.desktop
+sudo gedit eclipse-4.4.desktop
 
 Example content:
 [Desktop Entry]
 Type=Application
 Name=Eclipse 4
 Comment=Eclipse Integrated Development Environment
-Icon=/opt/eclipse-4.2/icon.xpm
-Exec=/opt/eclipse-4.2/eclipse
+Icon=/opt/eclipse-4.4/icon.xpm
+Exec=/opt/eclipse-4.4/eclipse
 Terminal=false
 Categories=Development;IDE;
 
@@ -214,3 +214,16 @@ Enable EGit menus
 Menu -> Window -> Customize Perspective (e.g. default Resource)
 Select Tab 'Command Groups Availability' and select Git. Git options should be
 set automatically for 'Tool Bar Visibility'.
+
+PDT
+---
+Menu -> Help -> Install New Software -> Work with: "Luna ..."
+Select "Programming Languages" -> PDT
+Enable EGit menus for PHP perspective
+
+
+CDT
+---
+Menu -> Help -> Install New Software -> Work with: "Luna ..."
+Select "Programming Languages" -> CDT
+Enable EGit menus for C/C++ perspective
