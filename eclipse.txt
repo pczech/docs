@@ -2,11 +2,20 @@
 Eclipse 3.8 Indigo (Ubuntu 14.04)
 ==================
 
+
 *******************************************************************************
+Editor
+------
+
 Show line numbers
 -----------------
 Menu -> Window -> Preferences -> General -> Editors -> Text Editors -> 
 Select 'Show Line Numbers'
+
+Quickdiff
+---------
+Menu -> Window -> Preferences -> General -> Editors -> Text Editors ->
+Quick Diff
 
 
 *******************************************************************************
@@ -48,11 +57,6 @@ context menu and select 'Use or create repository in parent folder'.
 
 Or just create a bare repository, clone it to Eclipse working directory, using
 URI and Local File method.
-
-Quickdiff
----------
-Menu -> Window -> Preferences -> General -> Editors -> Text Editors ->
-Quick Diff
 
 
 *******************************************************************************
@@ -193,10 +197,22 @@ Open Eclipse from Unity Dash search results
 
 
 *******************************************************************************
+Editor
+------
+
+Menu -> Window -> Preferences -> General -> Editors -> Text Editors -> ...
+
 Show line numbers
 -----------------
-Menu -> Window -> Preferences -> General -> Editors -> Text Editors -> 
-Select 'Show Line Numbers'
+... -> Select 'Show Line Numbers'
+
+Quickdiff
+---------
+... -> Quick Diff
+
+Use spaces instead of tabs
+--------------
+... -> Check 'Insert spaces for tabs'
 
 
 *******************************************************************************
@@ -215,6 +231,8 @@ Menu -> Window -> Customize Perspective (e.g. default Resource)
 Select Tab 'Command Groups Availability' and select Git. Git options should be
 set automatically for 'Tool Bar Visibility'.
 
+
+*******************************************************************************
 PDT
 ---
 Menu -> Help -> Install New Software -> Work with: "Luna ..."
@@ -222,8 +240,148 @@ Select "Programming Languages" -> PDT
 Enable EGit menus for PHP perspective
 
 
+*******************************************************************************
 CDT
 ---
 Menu -> Help -> Install New Software -> Work with: "Luna ..."
 Select "Programming Languages" -> CDT
 Enable EGit menus for C/C++ perspective
+
+
+*******************************************************************************
+C/C++ Code style
+----------------
+Menu -> Window -> Preferences -> C/C++ -> Code Style -> Formatter
+
+
+*******************************************************************************
+Cross-toolchain setup (C/C++, Yocto)
+---------------------
+Prepare and install Yocto cross-toolchain. See yocto.txt for more details.
+In a terminal source the toolchain environment script and then run eclipse from
+the terminal - this is necessary to make the environment variables visible for
+eclipse(*).
+Create C/C++ project in eclipse:
+Menu -> File -> New -> C Project
+Give a name and a location for the project -> Next
+Select Configurations Debug, Release -> Finish
+
+Build configuration
+-------------------
+Select the project in Project Explorer 
+Menu -> Project -> Properties -> C/C++ Build -> Manage Configurations...
+
+Oder paths to Build configuration page: 
+Context Menu -> Build Configurations -> Manage...
+Context Menu -> Properties -> Build Configurations -> Manage...
+
+... -> New -> Give name e.g. "Debug ARM" and select "Copy settings from
+Existing configuration"
+
+Menu -> Project -> Properties -> C/C++ Build -> Settings
+Select the new configuration in "Configuration: " field, then:
+
+Settings -> GCC C Compiler -> Command: arm-poky-linux-gnueabi-gcc
+Settings -> GCC C Linker -> Command: arm-poky-linux-gnueabi-gcc
+Settings -> GCC C Assembler -> Command: arm-poky-linux-gnueabi-gcc
+
+Add a simple source file to the project.
+
+Select the project in Project Explorer
+Context Menu -> Build Configurations -> Set Active -> "Debug ARM"
+Context Menu -> Build Project
+
+Check the results in <...>/hello/Debug-ARM/
+
+Context Menu -> Build Configurations -> Set Active -> "Debug"
+Context Menu -> Build Project
+
+Check the results in <...>/hello/Debug/
+
+(*) You have native and cross build. This is however not the proper approach,
+as different versions of gcc are used for the builds, and the environment
+variables are set for all builds, that may lead to unexpected results. The
+correct way is to build native gcc and cross gcc from the same source, and 
+environment variables specific for a build configuration shall be set only for
+the configuration.
+
+Set environment variables
+-------------------------
+If you need several build configurations with different environment variables,
+then you can import the environment to your eclipse projects in the following
+way:
+
+Open cross-toolchain environment script, e.g. in Krusader editor and sort the
+lines in alphabetic order for the convenience:
+  Menu -> Tools -> Scripts -> Editing -> Sort selected text
+
+In a terminal source the toolchain environment script and then run eclipse from
+the terminal
+Select the project in Project Explorer
+Context Menu -> Properties -> C/C++ Build -> Environment
+Select your configuration in "Configuration: " field, then:
+Press "Select..." button, and select the variables with help of sorted
+environment script.
+Apply the changes, close eclipse, close the terminal with the sourced
+environment
+Start eclipse (without any environment), now the required environment is set
+for the given build configuration.
+
+Build all configurations
+------------------------
+Menu -> Window -> Preferences -> C/C++ -> Preferences:
+  Select "Build all configurations in each project".
+  
+or:
+
+Select the project in Project Explorer
+Context Menu -> Build Configurations -> Build All
+  
+Clean all configurations
+------------------------
+Select the project in Project Explorer
+Context Menu -> Build Configurations -> Clean All
+
+
+Run configuration
+-----------------
+Create run configuration for every target (build), like: Release, Release-ARM,
+Debug, Debug-ARM:
+Select the project in Project Explorer
+Context Menu -> Run As -> Run configurations...
+Select Local C/C++ Application and then "New launch configuration" or select an
+existing configuration and then "Duplicate"
+Application: set <path>/<bin>, e.g. Debug ARM/hello
+
+If you select Run As -> Local C/C++ Aplication, and then a target, then
+a run configuration is created automatically.
+
+Debug configuration
+-------------------
+See remote debugging
+
+*******************************************************************************
+Remote debugging
+----------------
+
+
+
+
+
+
+ECLIPSE
+http://janaxelson.com/eclipse5.htm
+http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.faqs/ka16282.html
+http://www.freertos.org/Eclipse.html
+RSE: http://help.eclipse.org/luna/index.jsp
+
+
+ELF
+http://stackoverflow.com/questions/26113966/is-it-possible-to-read-result-from-readelf-command
+http://pl.wikipedia.org/wiki/Executable_and_Linkable_Format
+
+
+GDB
+https://sourceware.org/gdb/onlinedocs/gdb/index.html#SEC_Contents
+
+https://wiki.yoctoproject.org/wiki/Tracing_and_Profiling#Tracing_and_Profiling_in_Yocto

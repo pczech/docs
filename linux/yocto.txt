@@ -493,8 +493,8 @@ poky-eglibc-<host_system>-<image_type>-<arch>-toolchain-<release_version>.sh
 - <release_version> - release number of the Yocto Project: 1.6.1, 1.6.1+snapshot
 
 Examples:
-poky-eglibc-i686-core-image-sato-armv7a-vfp-neon-toolchain-1.6.1.sh  
-poky-eglibc-x86_64-core-image-minimal-armv5te-toolchain-1.6.1.sh  
+poky-eglibc-i686-core-image-minimal-armv7a-vfp-neon-toolchain-1.6.1.sh
+poky-eglibc-x86_64-meta-toolchain-armv5te-toolchain-1.6.1.sh  
 
 Build the toolchain installer tarball (method 1)
 ------------------------------------------------
@@ -506,7 +506,7 @@ extracting it separately.
 - Build toolchain installer:
   bitbake meta-toolchain
   The toolchain installer will be stored in tmp/deploy/sdk, e.g:
-  poky-eglibc-x86_64-core-image-sato-i586-toolchain-1.6.1.sh
+  poky-eglibc-x86_64-meta-toolchain-armv5te-toolchain-1.6.1.sh
 - Install the toolchain. The first thing the installer prompts you for is the
   directory into which you want to install the toolchain. The default directory
   used is /opt/poky/1.6.1. When the script finishes, the cross-toolchain is
@@ -515,6 +515,7 @@ extracting it separately.
 - Extract the Root Filesystem (see later)
 - Set up the cross-development environment:
   source environment-setup-<...>
+  WARNING. Install it in the default location.
 
 
 Build the toolchain installer tarball (method 2)
@@ -527,6 +528,8 @@ target root filesystem.
 - Check conf/local.conf, especially MACHINE, SDKMACHINE
 - Build toolchain installer:
   bitbake <image> -c populate_sdk
+  The toolchain installer will be stored in tmp/deploy/sdk, e.g:
+  poky-eglibc-x86_64-core-image-minimal-armv5te-toolchain-1.6.1.sh
   TODO
 
 
@@ -704,3 +707,9 @@ List images
 -----------
 Images are just common recipes (targets). To list the supported images write:
 ls meta*/recipes*/images/*.bb
+
+
+*******************************************************************************
+Debug support
+------------- 
+See also gdb.txt

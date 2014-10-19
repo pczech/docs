@@ -1,6 +1,6 @@
 *******************************************************************************
-gdb
----
+Commands
+--------
 
 Breakpoints
 -----------
@@ -25,25 +25,24 @@ set auto-solib-add off
     Do not load shared libraries automatically
 
 Examine variables
----------
+-----------------
 print <variable>
-set <variable> = <value>
 
 Modify variables
 ----------------
-    
+set <variable> = <value>
+
 Sources
 -------
 list
 	Print out the lines of code above and below the line the program is
 	stopped at.
+list -
         
-
 sharedlibrary
 ------------
 info sharedLibrary
 sharedlibrary <library>
-
 
 Registers
 ---------
@@ -53,7 +52,6 @@ Stack
 -----
 backtrace   bt
 
-
 Source files
 ------------
 info source
@@ -62,15 +60,100 @@ show directories
 dir <directory>
 symbol-file <file>
 
-
 Debug running program
 ---------------------
 attach <pid>
 
 
 *******************************************************************************
-gdbserver
----------
+Local debugging (Yocto)
+----------------
+Make sure gdb is installed on the target. If it is not, install the
+package gdb.
 
-gdbserver <ip:port> program args
+Scenario 1.
+Stand-alone cross-toolchain is installed on the host. The application is built
+by the stand-alone cross-toolchain, out of the yocto build system, and not
+present in the target image.
 
+Scenario 2.
+The application is included to the sysroot image. Install -gdb package of the
+application, which includes debug symbols and references to source files.
+TODO
+
+
+*******************************************************************************
+Remote debugging (Yocto)
+----------------
+Due to memory or disk space constraints, it is not possible to use GDB directly
+on the remote target to debug applications. These constraints arise because GDB
+needs to load the debugging information and the binaries of the process being
+debugged. Additionally, GDB needs to perform many computations to locate
+information such as function names, variable names and values, stack traces and
+so forth - even before starting the debugging process. These extra computations
+place more load on the target system and can alter the characteristics of the
+program being debugged.
+
+To help get past the previously mentioned constraints, you can use Gdbserver.
+Gdbserver runs on the remote target and does not load any debugging information
+from the debugged process. Instead, a GDB instance processes the debugging
+information that is run on a remote computer - the host GDB. The host GDB then
+sends control commands to Gdbserver to make it stop or start the debugged
+program, as well as read or write memory regions of that debugged program. All
+the debugging information loaded and processed as well as all the heavy
+debugging is done by the host GDB. Offloading these processes gives the
+Gdbserver running on the target a chance to remain small and fast.
+
+Because the host GDB is responsible for loading the debugging information and
+for doing the necessary processing to make actual debugging happen, the user
+has to make sure the host can access the unstripped binaries complete with
+their debugging information and also be sure the target is compiled with no
+optimizations. The host GDB must also have local access to all the libraries
+used by the debugged program. Because Gdbserver does not need any local
+debugging information, the binaries on the remote target can remain stripped.
+However, the binaries must also be compiled without optimization so they match
+the host's binaries.
+
+As the host GDB, cross-gdb must be used, that is part of the cross-toolchain
+for the specific target. The cross-gdb understands the target specific EABI
+(data size, stack frame organization, registers usage, function parameter
+passing, data alignment, etc). 
+
+Make sure gdbserver is installed on the target. If it is not, install the
+package gdbserver.
+
+Scenario 1.
+Stand-alone cross-toolchain is installed on the host. The  application is built
+by the stand-alone cross-toolchain, out of the yocto build system, and not
+present in the target image.
+
+Target:
+Run the target
+Install the application (e.g. copy it from host with scp).
+Run gdbserver with the application
+$ gdbserver localhost:<port> <application> [<args>]
+
+Host:
+Source cross-toolchain environment script
+Run gdb-cross with the application, to load the binary as well as the debugging
+information:
+arm-poky-linux-gnueabi-gdb <application>
+Connect gdb to the gdbserver:
+(gdb) target remote <ip>:<port>
+(gdb) break main
+(gdb) continue
+
+1.1. Release 
+
+Scenario 2.
+The application is included in the sysroot image.
+
+For debugging with eclipse see eclipse.txt
+
+TODO:
+Host GDB:
+ Release-ARM
+ Debug-ARM
+Cross GDB
+ Release-ARM
+ Debug-ARM
