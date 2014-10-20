@@ -58,6 +58,7 @@ info source
 info sources
 show directories
 dir <directory>
+	Add directory with source files
 symbol-file <file>
 
 Debug running program
@@ -75,6 +76,7 @@ Scenario 1.
 Stand-alone cross-toolchain is installed on the host. The application is built
 by the stand-alone cross-toolchain, out of the yocto build system, and not
 present in the target image.
+TODO
 
 Scenario 2.
 The application is included to the sysroot image. Install -gdb package of the
@@ -117,15 +119,15 @@ the host's binaries.
 As the host GDB, cross-gdb must be used, that is part of the cross-toolchain
 for the specific target. The cross-gdb understands the target specific EABI
 (data size, stack frame organization, registers usage, function parameter
-passing, data alignment, etc). 
+passing, data alignment, etc).
 
 Make sure gdbserver is installed on the target. If it is not, install the
 package gdbserver.
 
 Scenario 1.
-Stand-alone cross-toolchain is installed on the host. The  application is built
-by the stand-alone cross-toolchain, out of the yocto build system, and not
-present in the target image.
+Stand-alone cross-toolchain is installed on the host. The  application with
+debug information is built by the stand-alone cross-toolchain, out of the
+yocto build system, and not present in the target image.
 
 Target:
 Run the target
@@ -142,18 +144,10 @@ Connect gdb to the gdbserver:
 (gdb) target remote <ip>:<port>
 (gdb) break main
 (gdb) continue
-
-1.1. Release 
+  
 
 Scenario 2.
 The application is included in the sysroot image.
+TODO
 
 For debugging with eclipse see eclipse.txt
-
-TODO:
-Host GDB:
- Release-ARM
- Debug-ARM
-Cross GDB
- Release-ARM
- Debug-ARM

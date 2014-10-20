@@ -261,6 +261,7 @@ Prepare and install Yocto cross-toolchain. See yocto.txt for more details.
 In a terminal source the toolchain environment script and then run eclipse from
 the terminal - this is necessary to make the environment variables visible for
 eclipse(*).
+
 Create C/C++ project in eclipse:
 Menu -> File -> New -> C Project
 Give a name and a location for the project -> Next
@@ -329,7 +330,7 @@ for the given build configuration.
 
 Build all configurations
 ------------------------
-Menu -> Window -> Preferences -> C/C++ -> Preferences:
+Menu -> Window -> Preferences -> C/C++ -> Build:
   Select "Build all configurations in each project".
   
 or:
@@ -342,46 +343,83 @@ Clean all configurations
 Select the project in Project Explorer
 Context Menu -> Build Configurations -> Clean All
 
-
 Run configuration
 -----------------
 Create run configuration for every target (build), like: Release, Release-ARM,
 Debug, Debug-ARM:
 Select the project in Project Explorer
 Context Menu -> Run As -> Run configurations...
-Select Local C/C++ Application and then "New launch configuration" or select an
-existing configuration and then "Duplicate"
-Application: set <path>/<bin>, e.g. Debug ARM/hello
+Select Remote C/C++ Application and then "New launch configuration" or select
+an existing configuration and then "Duplicate"
+Application: set <path>/<bin>, e.g. Debug-ARM/hello
 
-If you select Run As -> Local C/C++ Aplication, and then a target, then
+If you select Run As -> Local C/C++ Application, and then a target, then
 a run configuration is created automatically.
 
-Debug configuration
+Debug configuration (GDB)
 -------------------
-See remote debugging
+See 'Remote debug setup' to make initial setup.
+
+Select the project in Project Explorer
+Context Menu -> Debug As -> Debug configurations...
+Select Remote C/C++ Application and then "New launch configuration"
+Main Tab -> C/C++ Application:
+  Enter path to the application on Host
+Connection:
+  Select the connection to the target
+Remote Absolute File Path to C/C++ Application:
+  Enter path to the application on the target (including the application name)
+  
+Debugger Tab -> GDB Debugger -> Enter cross-gdb e.g. arm-poky-linux-gnueabi-gdb
+
+Apply the settings and press 'Debug button'. Debug perspective shall open.
+
 
 *******************************************************************************
-Remote debugging
-----------------
+Remote debug setup (Yocto)
+------------------
+
+Install openssh-sftp-server, gdbserver packages on the target or just add the
+package packagegroup-core-eclipse-debug to the image.
+
+Install RSE plugins
+-------------------
+Menu -> Help -> Install New Software -> Work with "Luna ..."
+Select Mobile and Device Development -> ...
+  -> Remote System Explorer End-User Runtime
+  -> C/C++ Remote Launch (Requires RSE Remote System Explorer)
+   
+Create RSE connection
+---------------------
+Open RSE perspective:
+Menu -> Window -> Open Perspective -> Other... -> Remote System Explorer
+
+Remote Systems -> Icon "Define a connection to remote system" or
+Menu -> File -> New -> Other... -> Remote System Explorer -> Connection
+
+System type:
+  Select Linux -> Next
+Remote Linux System Connection:
+  Host Name: enter the target IP and a name of the connection -> Next
+Files:
+  Select ssh.files -> Next
+Processes:
+  Select processes.shell.linux -> Next
+Shells:
+  Select ssh.shells -> Next
+Ssh Terminals:
+  Select ssh.terminals -> Finish
+
+Remote Systems -> Select the connection -> Context Menu -> Properties -> Host
+Default User ID: <target_user>
+
+Check RSE connection
+--------------------
+Run the target
+Remote Systems -> Select the connection -> Context Menu -> Connect
 
 
-
-
-
-
-ECLIPSE
-http://janaxelson.com/eclipse5.htm
-http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.faqs/ka16282.html
-http://www.freertos.org/Eclipse.html
-RSE: http://help.eclipse.org/luna/index.jsp
-
-
-ELF
-http://stackoverflow.com/questions/26113966/is-it-possible-to-read-result-from-readelf-command
-http://pl.wikipedia.org/wiki/Executable_and_Linkable_Format
-
-
-GDB
-https://sourceware.org/gdb/onlinedocs/gdb/index.html#SEC_Contents
-
-https://wiki.yoctoproject.org/wiki/Tracing_and_Profiling#Tracing_and_Profiling_in_Yocto
+*******************************************************************************
+Target Communication Framework
+------------------------------
+TODO
