@@ -255,8 +255,8 @@ Menu -> Window -> Preferences -> C/C++ -> Code Style -> Formatter
 
 
 *******************************************************************************
-Cross-toolchain setup (C/C++, Yocto)
----------------------
+C/C++ Cross-toolchain setup (Yocto)
+---------------------------
 Prepare and install Yocto cross-toolchain. See yocto.txt for more details.
 In a terminal source the toolchain environment script and then run eclipse from
 the terminal - this is necessary to make the environment variables visible for
@@ -343,52 +343,36 @@ Clean all configurations
 Select the project in Project Explorer
 Context Menu -> Build Configurations -> Clean All
 
-Run configuration
------------------
-Create run configuration for every target (build), like: Release, Release-ARM,
-Debug, Debug-ARM:
-Select the project in Project Explorer
-Context Menu -> Run As -> Run configurations...
-Select Remote C/C++ Application and then "New launch configuration" or select
-an existing configuration and then "Duplicate"
-Application: set <path>/<bin>, e.g. Debug-ARM/hello
+Local Run configuration
+-----------------------
+TODO
 
-If you select Run As -> Local C/C++ Application, and then a target, then
-a run configuration is created automatically.
 
-Debug configuration (GDB)
--------------------
-See 'Remote debug setup' to make initial setup.
-
-Select the project in Project Explorer
-Context Menu -> Debug As -> Debug configurations...
-Select Remote C/C++ Application and then "New launch configuration"
-Main Tab -> C/C++ Application:
-  Enter path to the application on Host
-Connection:
-  Select the connection to the target
-Remote Absolute File Path to C/C++ Application:
-  Enter path to the application on the target (including the application name)
-  
-Debugger Tab -> GDB Debugger -> Enter cross-gdb e.g. arm-poky-linux-gnueabi-gdb
-
-Apply the settings and press 'Debug button'. Debug perspective shall open.
+Local Debug configuration
+-------------------------
+TODO
 
 
 *******************************************************************************
-Remote debug setup (Yocto)
-------------------
+Remote Run and Debug
+--------------------
+There are a few eclipse plugins, which helps you deploy the built application
+to the target, launch it and also debug it remotely. Several alternative
+solutions are available.
 
-Install openssh-sftp-server, gdbserver packages on the target or just add the
-package packagegroup-core-eclipse-debug to the image.
 
-Install RSE plugins
--------------------
+*******************************************************************************
+1. Remote System Explorer + Remote Luncher + GDB
+
+Install openssh, openssh-sftp-server, gdbserver packages on the target.
+
+Install and configure eclipse plugins
+-------------------------------------
 Menu -> Help -> Install New Software -> Work with "Luna ..."
 Select Mobile and Device Development -> ...
   -> Remote System Explorer End-User Runtime
   -> C/C++ Remote Launch (Requires RSE Remote System Explorer)
-   
+  
 Create RSE connection
 ---------------------
 Open RSE perspective:
@@ -418,8 +402,111 @@ Check RSE connection
 Run the target
 Remote Systems -> Select the connection -> Context Menu -> Connect
 
+Remote Run configuration
+------------------------
+Select the project in Project Explorer
+Context Menu -> Run As -> Run configurations...
+Select Remote C/C++ Application and then "New launch configuration" or select
+an existing configuration and then "Duplicate"
+
+Main Tab ->
+Connection:
+  Select the connection to the target
+Project:
+  Enter project name, e.g. hello
+C/C++ Application:
+  Enter path to the application on Host, e.g. Release-ARM/hello 
+Remote Absolute File Path to C/C++ Application:
+  Enter path to the application on the target (including the application name):
+  /home/root/hello
+  
+Apply the settings, press 'Run' button to run remotely the application. 
+
+Remote Debug configuration
+--------------------------
+Select the project in Project Explorer
+Context Menu -> Debug As -> Debug configurations...
+Select Remote C/C++ Application and then "New launch configuration"
+Main Tab ->
+C/C++ Application:
+  Enter path to the application on Host
+Project:
+  Enter project name, e.g. hello
+Connection:
+  Select the connection to the target
+Remote Absolute File Path to C/C++ Application:
+  Enter path to the application on the target (including the application name)
+  
+Debugger Tab ->
+GDB Debugger:
+  Enter cross-gdb e.g. arm-poky-linux-gnueabi-gdb
+
+Apply the settings and press 'Debug' button. Debug perspective shall open.
 
 *******************************************************************************
-Target Communication Framework
-------------------------------
-TODO
+2. TCF Remote System Explorer add-in + Remote Luncher + GDB
+
+Install openssh-sftp-server, tcf-agent, gdbserver packages on the target, or
+just add packagegroup-core-eclipse-debug to the image.
+
+Install and configure eclipse plugins
+-------------------------------------
+Menu -> Help -> Install New Software -> Work with "Luna ..."
+Select Mobile and Device Development -> ...
+  -> Remote System Explorer End-User Runtime
+  -> TCF Remote System Explorer add-in
+  -> C/C++ Remote Launch (Requires RSE Remote System Explorer)
+  
+Create TCF-RSE connection
+-------------------------
+Open RSE perspective:
+Menu -> Window -> Open Perspective -> Other... -> Remote System Explorer
+
+Remote Systems -> Icon "Define a connection to remote system" or
+Menu -> File -> New -> Other... -> Remote System Explorer -> Connection
+
+System type:
+  Select TCF -> Next
+Remote TCF System Connection:
+  Host Name: enter the target IP and a name of the connection -> Next
+Files:
+  Select <...> -> Next
+Processes:
+  Select <...> -> Next
+Shells:
+  Select <...> -> Next
+Terminals:
+  Select <...> -> Finish
+
+Remote Systems -> Select the connection -> Context Menu -> Properties -> Host
+Default User ID: <target_user>
+
+Check TCF-RSE connection
+--------------------
+Run the target
+Remote Systems -> Select the connection -> Context Menu -> Connect
+
+Remote Run configuration
+------------------------
+The configuration is the same like for Method 1, just select TCF connection.
+
+Remote Debug configuration
+--------------------------
+The configuration is the same like for Method 1, just select TCF connection.
+
+
+*******************************************************************************
+3. TCF Remote System Explorer add-in + TCF Remote Luncher + GDB
+---------------------------------------------------------------
+
+*******************************************************************************
+4. TCF Remote System Explorer add-in + TCF Remote Luncher + TCF Debugger
+------------------------------------------------------------------------
+
+*******************************************************************************
+5. TCF Target Explorer + TCF Remote Luncher + TCF Debugger
+----------------------------------------------------------
+
+
+
+
