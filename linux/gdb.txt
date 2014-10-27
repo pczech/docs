@@ -76,12 +76,26 @@ Scenario 1.
 Stand-alone cross-toolchain is installed on the host. The application is built
 by the stand-alone cross-toolchain, out of the yocto build system, and not
 present in the target image.
+Make sure your application is compiled with -g option.
 TODO
 
 Scenario 2.
 The application is included to the sysroot image. Install -gdb package of the
-application, which includes debug symbols and references to source files.
-TODO
+application, which includes debug symbols and corresponding source files.
+Make sure your application is compiled with -g option.
+
+$ gdb <application>
+
+Example:
+$ gdb hello
+
+If ok, then gdb should return:
+Reading symbols from /usr/bin/hello...Reading symbols from /usr/bin/.debug/hello
+...done.
+
+Check if source files are visible:
+(gdb) info source
+(gdb) list
 
 
 *******************************************************************************
@@ -126,14 +140,14 @@ package gdbserver.
 
 Scenario 1.
 Stand-alone cross-toolchain is installed on the host. The  application with
-debug information is built by the stand-alone cross-toolchain, out of the
+debug information (-g) is built by the stand-alone cross-toolchain, out of the
 yocto build system, and not present in the target image.
 
 Target:
 Run the target
 Install the application (e.g. copy it from host with scp).
 Run gdbserver with the application
-$ gdbserver localhost:<port> <application> [<args>]
+$ gdbserver :<port> <application> [<args>]
 
 Host:
 Source cross-toolchain environment script
@@ -142,12 +156,57 @@ information:
 arm-poky-linux-gnueabi-gdb <application>
 Connect gdb to the gdbserver:
 (gdb) target remote <ip>:<port>
+
+Check if source files are visible:
+(gdb) info source
+(gdb) list
+
 (gdb) break main
 (gdb) continue
   
 
 Scenario 2.
-The application is included in the sysroot image.
-TODO
+The application is included in the sysroot image. Target sysroot is installed
+on Host (by e.g. runqemu-extract-sdk, see Cross-Toolchain in yocto.txt)
+
+Target:
+Run the target
+Run gdbserver with the application:
+$ gdbserver :<port> <application> [<args>]
+
+Host:
+Source cross-toolchain environment script
+Run gdb-cross with the application from the sysroot installed on Host, to load
+the binary as well as the debugging information:
+arm-poky-linux-gnueabi-gdb <application>
+Set sysroot:
+(gdb) set sysroot <path_to_sysroot_copy_on_Host>
+
+Connect gdb to the gdbserver:
+(gdb) target remote <ip>:<port>
+
+Check if source files are visible:
+(gdb) info source
+(gdb) list
+
+gdb running on Host cannot access the source files. The source files path
+included in the debug information (DW_AT_comp_dir) don't match source files
+path in the target sysroot copy on Host, for example:
+Target: hello.c: /usr/src/debug/...
+Host: ~/Dev/yocto/poky-adt/_adt/_sysroot/usr/src/debug/...
+
+See also https://sourceware.org/ml/gdb/2014-08/msg00091.html.
+
+To solve the issue use substitue_path:
+(gdb) set substitute-path <from> <to>
+
+Check if source files are visible:
+(gdb) info source
+(gdb) list
+
+Now it should be OK.
+ 
+(gdb) break main
+(gdb) continue
 
 For debugging with eclipse see eclipse.txt

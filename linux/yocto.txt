@@ -712,4 +712,13 @@ ls meta*/recipes*/images/*.bb
 *******************************************************************************
 Debug support
 ------------- 
-See also gdb.txt
+Install <app>-dbg package of your application. Make sure, that your application
+is built with -g option and debug information is included to the resulting
+binary.
+
+Yocto build system strips the binary of debug symbols in normal package <app>.
+For <app>-dbg package, the build system extracts debug symbols and stores them
+in a separate file /usr/bin/.debug/<app>, and copies referenced source files to
+/usr/src/debug. See <build_dir>/tmp/work/<arch>/<app>/packages-split/
+ 
+For further information see gdb.txt
