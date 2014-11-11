@@ -1,0 +1,110 @@
+Serial Terminal to HW Board
+---------------------------
+
+PuTTY
+check which COM port is used to 
+UBS-TTY - check serial device name by dmesg, e.g:
+
+[  103.650137] usb 1-1.1: pl2303 converter now attached to ttyUSB0
+
+check permissions to /dev/ttyUSB0, add user to dialout group if needed:
+sudo adduser <user> dialout
+
+
+X,Y,Z Modem tools
+-----------------
+Install lrzsz
+
+To upload a file (e.g. u-boot) via XMODEM protocol do:
+sx <file> > /dev/ttyUSB0 < /dev/ttyUSB0
+
+
+TFTP Server
+-----------
+Install xinetd, tftpd
+
+Create /etc/xinetd.d/tftp file:
+service tftp
+{
+  protocol    = udp
+  port        = 69
+  socket_type = dgram
+  wait        = yes
+  user        = nobody
+  server      = /usr/sbin/in.tftpd
+  server_args = /srv/tftp
+  disable     = no
+}
+
+Create tftp folder:
+$ cd /srv
+$ sudo mkdir tftp
+$ sudo chmod 777 tftp
+$ sudo chown nobody tftp
+
+Restart xinetd service:
+$ service xinetd restart
+
+See also uboot.txt
+
+Configure uboot:
+setenv serverip 192.168.1.101
+setenv ipaddr 192.168.1.110
+save
+
+Copy kernel image and devtree to /srv/tftp and check if u-boot loads it.
+
+Hint: If you do not develop kernel, program the kernel to flash and set u-boot
+to load it from the memory and to load filesystem from NFS to minimize boot
+time. See Board BSP documentation for more details.
+
+
+NFS Server
+----------
+Install nfs-kernel-server
+Create /srv/nfs
+Add to /etc/exports file:
+/srv/nfs    192.168.1.*(rw,sync,no_root_squash,no_subtree_check)
+
+Restart NFS server:
+$ service nfs-kernel-server restart
+
+Set linux_bootargs to mount NFS filesystem in u-boot 
+
+See also uboot.txt
+
+ffmpeg
+------
+Install on Ubuntu 14.04:
+
+FFmpeg is available on a PPA on Launchpad:
+Have a look at the FFmpeg download page for details of possible PPA's.
+Current PPA: https://launchpad.net/~mc3man/+archive/ubuntu/trusty-media
+Add the PPA to SW sources:
+Open Software & Updates -> Other Software -> Add ->
+APT Line: ppa:mc3man/trusty-media
+Update SW cache:
+$ sudo apt-get update
+It appear in the list in a few minutes
+Install ffmeg from Ubuntu Software Center
+
+Jitsi VOIP Client
+-----
+Install https://download.jitsi.org/jitsi/debian/jitsi_2.5.5065-1_amd64.deb
+
+
+Wireshark
+---------
+In the default installation only root user can capture packets, however it can
+be installed in a way that allows members of the "wireshark" system group to
+capture packets. For more detailed information please see
+/usr/share/doc/wireshark-common/README.Debian.
+
+In a terminal:
+$ sudo dpkg-reconfigure wireshark-common
+
+This adds a wireshark group. Add the user to the group:
+$ sudo adduser <user> wireshark
+
+Logout and login
+
