@@ -1,0 +1,34 @@
+lsmod
+cat /proc/modules
+    - list modules
+    
+insmod <module>
+    - insert module
+    
+rmmod <mod>
+    - remove module
+
+tail /var/log/messages
+
+modinfo (kmod package)
+    - show information about a Linux Kernel module (also that given by macros
+      MODULE_LICENSE, MODULE_AUTHOR)
+
+Cross build kernel modules with Yocto
+-------------------------------------
+Prepare cross-toolchain:
+See yocto.txt - Cross develop kernel modules
+
+Create a "Makefile Project with Existing Code" for a kernel module in Eclipse.
+Import toolchain environment settings to the project build configuration.
+Build the kernel module as usual makefile project
+
+Run target (qemu):
+$runqemu qemuarm
+
+Deploy the module using Eclipse RSE plugin (see eclipse.txt for more details)
+install the module:
+$ insmod <module>
+
+Read module information:
+$ modinfo <module>

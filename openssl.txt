@@ -1,0 +1,40 @@
+enc
+---
+Encoding with Ciphers
+-?
+  show help
+-<cipher>
+  use given cipher
+-k <key>
+  use given passphrase
+-in <file.in>
+  use file.in as input
+-out <file.out>
+  store result in file.out
+-a
+  ascii mode
+-engine <engine>
+  use given engine
+-nosalt
+  don't generate salt, use for test purposes only
+
+Examples:
+enc -aes-128-cbc -nosalt -k "<key>" -in <file.in> -out "file.out" -a -engine <engine>
+
+engine
+------
+Engine information and manipulation
+-?
+  show help for engine component
+-c
+  show engines and their capabilities 
+
+speed
+-----
+Algorithm Speed Measurement
+
+-?
+  show help for speed component
+  
+[-evp] aes-128-cbc [-engine <engine>]
+

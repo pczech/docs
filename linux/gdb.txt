@@ -55,6 +55,7 @@ backtrace   bt
 Source files
 ------------
 info source
+    Show current source file
 info sources
 show directories
 dir <directory>
@@ -65,43 +66,91 @@ Debug running program
 ---------------------
 attach <pid>
 
+pwd 
+	Show current working directory ($cwd)
+cd <dir>
+	Change $cwd
+
 
 *******************************************************************************
 Local debugging (Yocto)
 ----------------
+It is assumed that you debug an application on a target HW, which is running a
+kernel image and file system created by Yocto build system. The application to
+be debugged on target HW, however, may be built out of the Yocto build system
+and not included to the target image produced by the Yocto system. In this case
+the application should be built by the cross-toolchain produced by the Yocto
+system. The application to be debugged may be also built by Yocto build system
+and included to the target image by Yocto, or installed later by a package
+manager (rpm, dep, ipk).
+
+In any case the application has to include debugging information, i.e. it shall
+be compiled with -g option. If you build the application outside Yocto, usually
+you should have Release and Debug targets defined. If you use Yocto to build
+your application, you don't need to define debug, release targets. Make only
+sure the application binary is not stripped of debug information prior to Yocto
+build (Yocto QA shall catch such issues and inform you), because Yocto build
+system generates release, debug versions (packages) of your application by
+itself. Debug package has just suffix -dbg.
+
+The release, debug packages are generated in the following way: for the release
+package, Yocto do_package task strips debug symbols from the binary generated
+by build tool used by your application (make, automake, etc). For debug
+package, Yocto do_package task splits debug information and stores it in a
+separate file and also collects all referenced source files.
+
+Example: helloworld application.
+- Release package: helloworld
+- Binary: /usr/bin/helloworld
+
+Debug package: helloworld-dbg
+- Debug symbols: /usr/bin/.debug/helloword
+- Source files: /usr/src/debug/helloworld.c
+ 
+The described solutions have been verified on Yocto 1.6.1 Daisy.
+
 Make sure gdb is installed on the target. If it is not, install the
 package gdb.
 
-Scenario 1.
-Stand-alone cross-toolchain is installed on the host. The application is built
-by the stand-alone cross-toolchain, out of the yocto build system, and not
-present in the target image.
-Make sure your application is compiled with -g option.
-TODO
+Application built outside Yocto
+-------------------------------
+Cross-toolchain (stand-alob, system-derived) is installed on the host. The
+application is built by the the toolchain, out of the yocto build system.
 
-Scenario 2.
-The application is included to the sysroot image. Install -gdb package of the
-application, which includes debug symbols and corresponding source files.
-Make sure your application is compiled with -g option.
-
+Install debug version of your application on target HW. Copy the source files
+to the target HW as well (to the same directory).
+Run gdb debugger in target HW console:
 $ gdb <application>
-
-Example:
-$ gdb hello
-
-If ok, then gdb should return:
-Reading symbols from /usr/bin/hello...Reading symbols from /usr/bin/.debug/hello
-...done.
-
-Check if source files are visible:
+Check if source files are found by gdb:
 (gdb) info source
 (gdb) list
+ 
+It may happen that the sources are not on found in the gdb source path. Then
+you can fix it by setting substitute-path, extending source path or even
+changing $cwd.
+
+More details: https://sourceware.org/gdb/onlinedocs/gdb/Source-Path.html
+
+Application built by Yocto
+--------------------------
+Install -dbg package of your application (use a package manager) on the target
+HW (you can also include the package to the debug-image and install the whole
+image on the target).
+Run gdb debugger in target HW console:
+$ gdb <application>
+Check if source files are found by gdb:
+(gdb) info source
+(gdb) list
+
+Normally gdb should see the source files. If not - check first whether they are
+included to the application -dbg package.
 
 
 *******************************************************************************
 Remote debugging (Yocto)
 ----------------
-Due to memory or disk space constraints, it is not possible to use GDB directly
+
+Due to memory or disk space constraints, it may not be possible to use GDB directly
 on the remote target to debug applications. These constraints arise because GDB
 needs to load the debugging information and the binaries of the process being
 debugged. Additionally, GDB needs to perform many computations to locate
@@ -135,25 +184,41 @@ for the specific target. The cross-gdb understands the target specific EABI
 (data size, stack frame organization, registers usage, function parameter
 passing, data alignment, etc).
 
-Make sure gdbserver is installed on the target. If it is not, install the
-package gdbserver.
+Make sure "gdbserver" package is installed on target HW. If you need to
+minimize debugging influence on target HW, you can even use release image on
+target HW with gdbserver only installed, and debug-image on Host. (there is no
+need to make debug-image sysroot copy on Host, if target HW uses NFS, then
+simply install debug-image sysroot on your NFS).
 
-Scenario 1.
-Stand-alone cross-toolchain is installed on the host. The  application with
-debug information (-g) is built by the stand-alone cross-toolchain, out of the
-yocto build system, and not present in the target image.
+Build and install release-image and "gdbserver" package on target HW.
+Build debug-image and extract sysroot on your host out of it.
+In short, if you have Yocto build directory:
+$ runqemu-extract-sdk tmp/deploy/images/<debug-image>.tar.bz2 <sysroot_direcory>
+The sysroot will be generated in <sysroot_directory>
 
+Application built outside Yocto
+-------------------------------
 Target:
-Run the target
-Install the application (e.g. copy it from host with scp).
-Run gdbserver with the application
-$ gdbserver :<port> <application> [<args>]
-
+Install release (?) version of your application on target HW. TODO: Verify if
+really release version can be used on target, if not just use debug version
+(compiled with -g option).
+Run gdbserver in target HW console:
+$ gdbserver :<port> <application> [<app_args>]
+Example:
+$ gdbserver :2345 helloworld
+ 
 Host:
-Source cross-toolchain environment script
-Run gdb-cross with the application, to load the binary as well as the debugging
-information:
-arm-poky-linux-gnueabi-gdb <application>
+Install debug version of your application to <sysroot_directory>
+Init cross-toolchain environment, if not initiated yet:
+$ source <path-to-toolchain>/environment-setup-armv5te-poky-linux-gnueabi
+
+Run cross-gdb to with the application from the sysroot copy extracted on Host
+as the parameter, to load the binary as well as the debugging information:
+$ arm-poky-linux-gnueabi-gdb <application>
+
+Set sysroot:
+(gdb) set sysroot <sysroot_directory>
+
 Connect gdb to the gdbserver:
 (gdb) target remote <ip>:<port>
 
@@ -163,50 +228,65 @@ Check if source files are visible:
 
 (gdb) break main
 (gdb) continue
-  
 
-Scenario 2.
-The application is included in the sysroot image. Target sysroot is installed
-on Host (by e.g. runqemu-extract-sdk, see Cross-Toolchain in yocto.txt)
 
+Application built by Yocto
+--------------------------
 Target:
-Run the target
-Run gdbserver with the application:
-$ gdbserver :<port> <application> [<args>]
+Install release-image (or release version of your application) on target HW.
+Run gdbserver in target HW console:
+$ gdbserver :<port> <application> [<aoo_args>]
+Example:
+$gdbserver :2345 helloworld
 
 Host:
-Source cross-toolchain environment script
-Run gdb-cross with the application from the sysroot installed on Host, to load
-the binary as well as the debugging information:
-arm-poky-linux-gnueabi-gdb <application>
-Set sysroot:
-(gdb) set sysroot <path_to_sysroot_copy_on_Host>
+Init cross-toolchain environment if not done yet:
+source <path-to-toolchain>/environment-setup-armv5te-poky-linux-gnueabi
 
-Connect gdb to the gdbserver:
-(gdb) target remote <ip>:<port>
-
-Check if source files are visible:
+Run cross-gdb to with the application from the sysroot copy extracted on Host
+as the parameter, to load the binary as well as the debugging information:
+$ arm-poky-linux-gnueabi-gdb <application>
+ 
+Check if source files are found by gdb:
 (gdb) info source
 (gdb) list
+ 
+You will probably get:
+No current source file.
+<source-file.c>: No such file or directory.
+ 
+Set sysroot:
+(gdb) set sysroot <sysroot_directory>
+ 
+Check if source files are found by gdb:
+(gdb) info source
+(gdb) list
+ 
+You will probably get:
+Current source file is <source-file.c>
+Compilation directory is /usr/src/debug/.....
+in <source-file.c>
 
-gdb running on Host cannot access the source files. The source files path
-included in the debug information (DW_AT_comp_dir) don't match source files
-path in the target sysroot copy on Host, for example:
+gdb running on Host cannot access the source files. It is so, because the
+source files path included in the debug information (DW_AT_comp_dir) doesn't
+match source files path in the target sysroot copy on Host, for example:
 Target: hello.c: /usr/src/debug/...
-Host: ~/Dev/yocto/poky-adt/_adt/_sysroot/usr/src/debug/...
+Host: ~/Dev/yocto/poky/build/_sysroot/usr/src/debug/...
 
 See also https://sourceware.org/ml/gdb/2014-08/msg00091.html.
 
 To solve the issue use substitue_path:
 (gdb) set substitute-path <from> <to>
 
-Check if source files are visible:
-(gdb) info source
-(gdb) list
+Example:
+(gdb) set substitute-path /usr/src/debug /home/<user>/Dev/yocto/poky/build/_sysroot/usr/src/debug/
 
+Check if source files are found by gdb:
 Now it should be OK.
- 
+ 
+Connect to gdbserver running on target HW:
+(gdb) target remote <target_ip>:<port>
+ 
+Set the initial breakpoint and start the application:
 (gdb) break main
 (gdb) continue
-
-For debugging with eclipse see eclipse.txt

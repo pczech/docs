@@ -356,35 +356,48 @@ TODO
 *******************************************************************************
 Remote Run and Debug
 --------------------
-There are a few eclipse plugins, which helps you deploy the built application
-to the target, launch it and also debug it remotely. Several alternative
-solutions are available.
+There are a few Eclipse plugins, which helps you deploy the application to the
+remote system, launch it or debug it remotely. Several alternative solutions
+are available and some of them are described here. Every presented solution is
+independent of the others.
+
+Verified on: Ubuntu 14.04, Eclipse 4.4 Luna + CDT Plugin, remote systems:
+ARM HW Board, QEMUARM.
+
+Make sure you have your C/C++ project in Eclipse and you can build the project
+for the remote system in Eclipse (i.e. cross Build Configuration for your C/C++
+project is defined and cross toolchain environment variables are visible for
+the Build Configuration).
 
 
 *******************************************************************************
 1. Remote System Explorer + Remote Luncher + GDB
+------------------------------------------------
 
-Install openssh, openssh-sftp-server, gdbserver packages on the target.
+Install remote system packages
+------------------------------
+Required: openssh, openssh-sftp-server, gdbserver.
 
-Install and configure eclipse plugins
--------------------------------------
+Install eclipse plugins
+-----------------------
 Menu -> Help -> Install New Software -> Work with "Luna ..."
 Select Mobile and Device Development -> ...
   -> Remote System Explorer End-User Runtime
   -> C/C++ Remote Launch (Requires RSE Remote System Explorer)
-  
+
 Create RSE connection
 ---------------------
 Open RSE perspective:
 Menu -> Window -> Open Perspective -> Other... -> Remote System Explorer
 
-Remote Systems -> Icon "Define a connection to remote system" or
+Remote Systems -> Button "Define a connection to remote system" or
 Menu -> File -> New -> Other... -> Remote System Explorer -> Connection
 
+Configure the new connection:
 System type:
   Select Linux -> Next
 Remote Linux System Connection:
-  Host Name: enter the target IP and a name of the connection -> Next
+  Host Name: enter the remote system IP and a name of the connection -> Next
 Files:
   Select ssh.files -> Next
 Processes:
@@ -394,69 +407,122 @@ Shells:
 Ssh Terminals:
   Select ssh.terminals -> Finish
 
-Remote Systems -> Select the connection -> Context Menu -> Properties -> Host
-Default User ID: <target_user>
+Set default user for the remote system:
+Remote Systems -> Select the connection -> Context Menu -> Properties -> Host
+-> Default User ID: <user>
 
 Check RSE connection
 --------------------
-Run the target
-Remote Systems -> Select the connection -> Context Menu -> Connect
+Run the remote system with the required packages
+Remote Systems -> Select the connection -> Context Menu -> Connect
+If the connection is established, you can for example explore files and
+processes of the remote system.
+
+Issue: The connection can be established only with QEMUARM, th tested HW board
+returned "SSH_MSG_DISCONNECT: 2 Packet corrupt"
+
+Remote Deploy configuration
+---------------------------
+Open C/C++ perspective
+Select the file you want to deploy in Project Explorer:
+Context Menu -> Export... or
+Menu -> File -> Export...: Export Configuration Window will open.
+
+Select the project and files you want to export if not selected yet. 
+Select an export destination:
+  Remote Systems -> Remote file system -> Next
+Enter Destination folder:
+  Select a RSE connection and the folder on the remote system 
+Select options:
+  Overwrite existing files without warning
+  Save the settings of this export in the workspace: provide path and name
+  of the rexpfd file (you can store it in your project folder).
+  
+Remote deploy:
+Select the rexpfd file in Project Explorer
+Context Menu -> Export to Remote File System
 
 Remote Run configuration
 ------------------------
-Select the project in Project Explorer
-Context Menu -> Run As -> Run configurations...
+Open C/C++ perspective
+Select the project in Project Explorer:
+Context Menu -> Run As -> Run configurations... or
+Menu -> Run -> Run Configurations...
 Select Remote C/C++ Application and then "New launch configuration" or select
-an existing configuration and then "Duplicate"
-
+an existing configuration and then "Duplicate".
+Enter a name for the configuration.
 Main Tab ->
 Connection:
-  Select the connection to the target
+  Select the connection to the remote system
 Project:
-  Enter project name, e.g. hello
+  Select the project project  to be assigned to the run configuration
 C/C++ Application:
-  Enter path to the application on Host, e.g. Release-ARM/hello 
+  Enter path to the application on Host you want to deploy and run
 Remote Absolute File Path to C/C++ Application:
-  Enter path to the application on the target (including the application name):
-  /home/root/hello
+  Enter path to the application on the remote system (including the application
+  name)
   
-Apply the settings, press 'Run' button to run remotely the application. 
+Apply the settings, press 'Run' button to deploy and run remotely the
+application.
 
 Remote Debug configuration
 --------------------------
+For debug convenience you should make a copy of the remote system sysroot on
+host and set sysroot in gdb. To make the copy, use runqemu-extract-sdk tool.
+Create .gdbinit file in the project and add sysroot config there, e.g.:
+set sysroot /home/<user>/Dev/yocto/poky/build/_sysroot
+
+Open C/C++ perspective
 Select the project in Project Explorer
-Context Menu -> Debug As -> Debug configurations...
-Select Remote C/C++ Application and then "New launch configuration"
+Context Menu -> Debug As -> Debug configurations... or 
+Menu -> Run -> Debug Configurations...
+Select Remote C/C++ Applicationand then "New launch configuration" or select
+an existing configuration and then "Duplicate".
+Enter a name for the configuration.
+
 Main Tab ->
 C/C++ Application:
-  Enter path to the application on Host
+  Enter path to the application on Host  you want to deploy and debug
 Project:
-  Enter project name, e.g. hello
+  Select the project project to be assigned to the debug configuration
 Connection:
-  Select the connection to the target
+  Select the connection to the remote system
 Remote Absolute File Path to C/C++ Application:
-  Enter path to the application on the target (including the application name)
+  Enter path to the application on the remote system (including the application
+  name)
   
 Debugger Tab ->
 GDB Debugger:
-  Enter cross-gdb e.g. arm-poky-linux-gnueabi-gdb
+  Enter cross-gdb e.g. arm-poky-linux-gnueabi-gdb. Make sure cross-toolchain
+  environment variables are visible in the corresponding Build Configuration.
+GDB command file: enter .gdbinit file.
 
-Apply the settings and press 'Debug' button. Debug perspective shall open.
+Apply the settings and press 'Debug' button. The project will be built (you can
+disable auto build), then deployed to the remote system and gdbserver will be
+started remotely on the remote system. Eclipse gdb plugin will connect to the
+gdbserver, Debug perspective will open and then you can debug the application
+remotely.
 
 *******************************************************************************
-2. TCF Remote System Explorer add-in + Remote Luncher + GDB
+2. Remote System Explorer + TCF Add-in + Remote Launcher + GDB
+--------------------------------------------------------------
 
-Install openssh-sftp-server, tcf-agent, gdbserver packages on the target, or
-just add packagegroup-core-eclipse-debug to the image.
+The solution uses TCF framework and tcf_agent to deploy the application to
+the remote system.
 
-Install and configure eclipse plugins
--------------------------------------
+Install remote system packages
+------------------------------
+Required: openssh-sftp-server, tcf-agent, gdbserver packages, or just add
+packagegroup-core-eclipse-debug to the image.
+
+Install Eclipse plugins
+-----------------------
 Menu -> Help -> Install New Software -> Work with "Luna ..."
 Select Mobile and Device Development -> ...
   -> Remote System Explorer End-User Runtime
   -> TCF Remote System Explorer add-in
   -> C/C++ Remote Launch (Requires RSE Remote System Explorer)
-  
+
 Create TCF-RSE connection
 -------------------------
 Open RSE perspective:
@@ -468,23 +534,27 @@ Menu -> File -> New -> Other... -> Remote System Explorer -> Connection
 System type:
   Select TCF -> Next
 Remote TCF System Connection:
-  Host Name: enter the target IP and a name of the connection -> Next
+  Host Name: enter the remote system IP and a name of the connection -> Next
 Files:
-  Select <...> -> Next
+  Select tcf.rse.Files -> Next
 Processes:
-  Select <...> -> Next
+  Select tcf.rse.Processes -> Next
 Shells:
-  Select <...> -> Next
+  Select tcf.rse.Shells -> Next
 Terminals:
-  Select <...> -> Finish
-
+  Select tcf.rse.Terminals -> Finish
+  
+Set default user for remote system:
 Remote Systems -> Select the connection -> Context Menu -> Properties -> Host
-Default User ID: <target_user>
+Default User ID: <user>
 
 Check TCF-RSE connection
---------------------
-Run the target
-Remote Systems -> Select the connection -> Context Menu -> Connect
+------------------------
+Run the remote system with the required packages
+Eclipse -> Remote Systems -> Select the connection -> Context Menu -> Connect
+
+If the connection is established, you can for example explore files and
+processes of the remote system in the Remote Systems window.
 
 Remote Run configuration
 ------------------------
@@ -496,17 +566,85 @@ The configuration is the same like for Method 1, just select TCF connection.
 
 
 *******************************************************************************
-3. TCF Remote System Explorer add-in + TCF Remote Luncher + GDB
----------------------------------------------------------------
+3. TCF Debugger
+---------------
 
-*******************************************************************************
-4. TCF Remote System Explorer add-in + TCF Remote Luncher + TCF Debugger
-------------------------------------------------------------------------
+TCF framework provides more services of communicating with a remote system:
+- Locator (for autodetecting targets on local network)
+- Remote File Access (File System Service)
+- Remote Processes Access (Processes Service)
+- Remote system status (System Monitor Service)
+- Debug Services (Memory, Run Control, Registers, Stacktrace, Breakpoints,
+  Symbols, Line Numbers, Expressions)
+  
+For more information about TCF see:
+- https://wiki.eclipse.org/TCF
+- http://git.eclipse.org/c/tcf/org.eclipse.tcf.git/plain/docs/TCF%20Getting%20Started.html
+- http://git.eclipse.org/c/tcf/org.eclipse.tcf.git/plain/docs/TCF%20Specification.html
 
-*******************************************************************************
-5. TCF Target Explorer + TCF Remote Luncher + TCF Debugger
-----------------------------------------------------------
+Unfortunately Yocto 1.6.1 still uses very old version of tcf-agent (2011),
+which doesn't fully compile for ARM, thus many its services are excluded. In
+order to use TCF only solution, including debugger, you have to use the current
+version of tcf_agent.
+
+Install remote system packages
+-------------------------------
+tcf_agent (make sure you have version TCF_AGENT_1_2_0).
+
+Install Eclipse plugins
+-----------------------
+Menu -> Help -> Install New Software -> Work with "Luna ..."
+Select Mobile and Device Development -> ...
+  -> TCF C/C++ Debugger
+
+Run the remote system with the required packages.
+  
+Remote Run configuration
+------------------------
+Open C/C++ perspective
+Select the project in Project Explorer:
+Context Menu -> Run As -> Run configurations... or
+Menu -> Run -> Run Configurations...
+Select "Target Communication Framework" then "New launch configuration" or 
+select an existing configuration and then "Duplicate".
+Enter a name for the configuration.
+Target Tab ->
+  Uncheck options:
+  - "Run TCF symbols server on the local host",
+  - "Run instance of TCF agent on the local host",
+  - "Use local host as the target".
+  
+TCF shall auto detect remote systems in local network, which run tcf-agent. You
+should see the targets in "Available targets" list. Select your target.  
+
+Application Tab ->
+  Project: select the project assigned to the run configuration.
+  Local File Path: select the binary to be deployed and launched on the remote
+  system.
+  Remote File Path: Enter the directory for the binary on the target system.
+
+Apply the setting, press 'Run' button to deploy and run remotely the
+application.
 
 
+Remote Debug configuration
+--------------------------
+Open C/C++ perspective
+Select the project in Project Explorer
+Context Menu -> Debug As -> Debug configurations... or 
+Menu -> Run -> Debug Configurations...
+Select "Target Communication Framework" then "New launch configuration" or 
+select an existing configuration and then "Duplicate".
+Enter a name for the configuration.
 
+Target Tab:
+The settings are similar to Run Configuration:
 
+Application Tab:
+The settings are similar to Run Configuration:
+
+Apply the settings and press 'Debug' button. The project will be built (you can
+disable auto build), then deployed to the remote system and tcf_agent will
+start the application. Eclipse TCF Debugger will connect to the tcf_agent,
+Debug perspective will open and then you can debug the application
+remotely.

@@ -62,9 +62,10 @@ time. See Board BSP documentation for more details.
 NFS Server
 ----------
 Install nfs-kernel-server
-Create /srv/nfs
-Add to /etc/exports file:
+Create nfs folder, e.g. /srv/nfs
+Add to /etc/exports file e.g.:
 /srv/nfs    192.168.1.*(rw,sync,no_root_squash,no_subtree_check)
+/home/<user>/Dev/embed/nfs    172.29.1.1/24(rw,async,no_subtree_check,no_root_squash)
 
 Restart NFS server:
 $ service nfs-kernel-server restart

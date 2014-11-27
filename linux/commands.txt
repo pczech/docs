@@ -8,6 +8,12 @@ cp -R dir.orig dir
 Make your changes in dir
 diff -rupN dir.orig dir > dir.patch
 
+How to compare folders (no files content)
+-----------------------------------------
+find <dir1> | sort > dir1.list
+find <dir2> | sort > dir2.list
+diff dir1.list dir2.list > dir.diff
+
 
 *******************************************************************************
 dmesg
@@ -18,6 +24,20 @@ Print kernel ring buffer
 
 Older events are logged in the files /var/log/messages and /var/log/warn ?
 
+*******************************************************************************
+find <path> <opts>
+
+opts:
+-type f
+    - find files
+
+Examples:
+
+find
+  - find any file and folder
+  
+find -type d
+  - find directories
 
 *******************************************************************************
 ln
@@ -102,6 +122,10 @@ extract from archive:
 tar -xvf file.tar [extract_here]
 tar -zxvf file.tar.gz [extract_here]      gzip
 tar -jxvf file.tar.bz2 [extract_here]     bzip2
+
+If a folder <A> is archived in file.tar and you want to unpack the content of 
+the folder without the folder itself to the folder <B>:
+tar -xvf file.tar -C <B> --strip-components=1
 
 compress directory:
 tar -cvf file.tar directory_to_compress

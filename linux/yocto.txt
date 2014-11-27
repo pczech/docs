@@ -426,6 +426,123 @@ symlinks:       bzImage
 
 
 *******************************************************************************
+Reuse download directory in other build [offline build]
+---------------------------------------
+build/download directory containing tarballs can be moved and reused in other
+location (e.g. to build offline).
+
+- Create a new poky location (unpack poky-daisy-11.0.1.tar.bz2)
+- Initialize build environment
+- Copy build/download directory from other location
+- Start build
+
+If there is no Internet connection, bitbake returns the error:
+Sanity checker: Failed to fetch test data from the network
+
+Solution:
+- Add to build/conf/local.conf the following line:
+  BB_NO_NETWORK = "1"
+- Run bitbake only to parse the recipes:
+  bitbake <target> -p
+- Discard the changes made in local.conf
+- Restart the build
+
+
+*******************************************************************************
+Merge different (x86, arm) installations [offline build]
+----------------------------------------
+A common practice is to use a different Build Directory for different targets.
+- Create a new poky location (unpack poky-daisy-11.0.1.tar.bz2)
+- Create poky-daisy-11.0.1/downloads directory
+- Copy and merge if needed the content of poky-daisy-11.0.1-x86/build/downloads, 
+  poky-daisy-11.0.1-arm/build/downloads to poky-daisy-11.0.1/downloads
+- Initialize build environment for qemux86 target:
+  source oe-init-build-env qemux86
+- Initialize build environment for qemuarm target:
+  source oe-init-build-env qemuarm
+- Uncomment the line #MACHINE ?= "qemuarm" in qemuarm/conf/local.conf
+- Uncomment and update the line #DL_DIR ?= "${TOPDIR}/downloads" in
+  qemuarm/conf/local.conf and qemux86/conf/local.conf to:
+  DL_DIR ?= "${TOPDIR}/../downloads
+- Fix the issue 'Sanity checker: Failed to fetch test data from the network'
+
+
+*******************************************************************************
+Add a new layer to yocto [hob][ypdd]
+------------------------
+cd ./poky-daisy-1.17.0
+source oe-init-build-env
+mkdir -p meta-hello/conf
+touch meta-hello/conf/layer.conf
+
+- Add the layer to BBLAYERS variable in ./build/conf/bblayers.conf
+- Run bitbake core-image-minimal
+
+This empty layer is included and processed, however doesn't modifies the
+original layers
+
+Add a new recipe to the new layer [ypdd]
+---------------------------------
+- Add the recipe ./meta-hello/recipes-hello/images/core-image-hello.bb
+- Copy the content from ./meta/recipes-core/images/core-image-minimal.bb
+- Run bitbake core-image-hello
+
+ERROR: Nothing PROVIDES 'core-image-hello'
+
+- Add to meta-hello/conf/layer.conf:
+  BBFILES += "${LAYERDIR}/recipes-*/*/*.bb"
+
+
+*******************************************************************************
+Add a package to the image [ypdd]
+--------------------------
+Just add the package (e.g. psplash to add support for a graphical boot logo) to
+IMAGE_INSTALL in core-image-hello
+
+
+*******************************************************************************
+Add a new machine support to a layer [hob]
+------------------------------------
+- Do "Add a new layer to yocto"
+mkdir meta-hello/conf/machine
+touch meta-hello/conf/machine/helloarm.conf
+touch meta-hello/conf/machine/hellox86.conf
+
+hob does not recognize the added machines, because bitbake cannot see the
+files yet.
+
+- Add to meta-hello/conf/layer.conf:
+  BBPATH .= ":${LAYERDIR}"
+  (see bitbake.txt for more details)
+- Select the machine in local.conf
+
+*******************************************************************************
+Use other kernel in the image
+-----------------------------
+- Do:
+    Add a new layer to yocto
+    Add a new recipe to the new layer
+    Add a new machine support to a layer
+
+to get:
+
+meta-hello/conf/layer.conf
+meta-hello/conf/machine/hellox86.conf
+meta-hello/recipes-kernel/linux/kernel-hello_X.X.XX.bb
+
+- Add to hellox86.conf:
+  PREFERRED_PROVIDER_virtual/kernel ?= "linux-hello"
+- Add to kernel-hello_X.X.XX.bb required fields: LICENSE,
+
+
+*******************************************************************************
+List images
+-----------
+Images are just common recipes (targets). To list the supported images write:
+ls meta*/recipes*/images/*.bb
+
+
+*******************************************************************************
 Application Development Toolkit
 -------------------------------
 
@@ -593,123 +710,6 @@ Example:
 
 
 *******************************************************************************
-Reuse download directory in other build [offline build]
----------------------------------------
-build/download directory containing tarballs can be moved and reused in other
-location (e.g. to build offline).
-
-- Create a new poky location (unpack poky-daisy-11.0.1.tar.bz2)
-- Initialize build environment
-- Copy build/download directory from other location
-- Start build
-
-If there is no Internet connection, bitbake returns the error:
-Sanity checker: Failed to fetch test data from the network
-
-Solution:
-- Add to build/conf/local.conf the following line:
-  BB_NO_NETWORK = "1"
-- Run bitbake only to parse the recipes:
-  bitbake <target> -p
-- Discard the changes made in local.conf
-- Restart the build
-
-
-*******************************************************************************
-Merge different (x86, arm) installations [offline build]
-----------------------------------------
-A common practice is to use a different Build Directory for different targets.
-- Create a new poky location (unpack poky-daisy-11.0.1.tar.bz2)
-- Create poky-daisy-11.0.1/downloads directory
-- Copy and merge if needed the content of poky-daisy-11.0.1-x86/build/downloads, 
-  poky-daisy-11.0.1-arm/build/downloads to poky-daisy-11.0.1/downloads
-- Initialize build environment for qemux86 target:
-  source oe-init-build-env qemux86
-- Initialize build environment for qemuarm target:
-  source oe-init-build-env qemuarm
-- Uncomment the line #MACHINE ?= "qemuarm" in qemuarm/conf/local.conf
-- Uncomment and update the line #DL_DIR ?= "${TOPDIR}/downloads" in
-  qemuarm/conf/local.conf and qemux86/conf/local.conf to:
-  DL_DIR ?= "${TOPDIR}/../downloads
-- Fix the issue 'Sanity checker: Failed to fetch test data from the network'
-
-
-*******************************************************************************
-Add a new layer to yocto [hob][ypdd]
-------------------------
-cd ./poky-daisy-1.17.0
-source oe-init-build-env
-mkdir -p meta-hello/conf
-touch meta-hello/conf/layer.conf
-
-- Add the layer to BBLAYERS variable in ./build/conf/bblayers.conf
-- Run bitbake core-image-minimal
-
-This empty layer is included and processed, however doesn't modifies the
-original layers
-
-Add a new recipe to the new layer [ypdd]
----------------------------------
-- Add the recipe ./meta-hello/recipes-hello/images/core-image-hello.bb
-- Copy the content from ./meta/recipes-core/images/core-image-minimal.bb
-- Run bitbake core-image-hello
-
-ERROR: Nothing PROVIDES 'core-image-hello'
-
-- Add to meta-hello/conf/layer.conf:
-  BBFILES += "${LAYERDIR}/recipes-*/*/*.bb"
-
-
-*******************************************************************************
-Add a package to the image [ypdd]
---------------------------
-Just add the package (e.g. psplash to add support for a graphical boot logo) to
-IMAGE_INSTALL in core-image-hello
-
-
-*******************************************************************************
-Add a new machine support to a layer [hob]
-------------------------------------
-- Do "Add a new layer to yocto"
-mkdir meta-hello/conf/machine
-touch meta-hello/conf/machine/helloarm.conf
-touch meta-hello/conf/machine/hellox86.conf
-
-hob does not recognize the added machines, because bitbake cannot see the
-files yet.
-
-- Add to meta-hello/conf/layer.conf:
-  BBPATH .= ":${LAYERDIR}"
-  (see bitbake.txt for more details)
-- Select the machine in local.conf
-
-*******************************************************************************
-Use other kernel in the image
------------------------------
-- Do:
-    Add a new layer to yocto
-    Add a new recipe to the new layer
-    Add a new machine support to a layer
-
-to get:
-
-meta-hello/conf/layer.conf
-meta-hello/conf/machine/hellox86.conf
-meta-hello/recipes-kernel/linux/kernel-hello_X.X.XX.bb
-
-- Add to hellox86.conf:
-  PREFERRED_PROVIDER_virtual/kernel ?= "linux-hello"
-- Add to kernel-hello_X.X.XX.bb required fields: LICENSE,
-
-
-*******************************************************************************
-List images
------------
-Images are just common recipes (targets). To list the supported images write:
-ls meta*/recipes*/images/*.bb
-
-
-*******************************************************************************
 Debug support
 ------------- 
 Install <app>-dbg package of your application. Make sure, that your application
@@ -722,3 +722,32 @@ in a separate file /usr/bin/.debug/<app>, and copies referenced source files to
 /usr/src/debug. See <build_dir>/tmp/work/<arch>/<app>/packages-split/
  
 For further information see gdb.txt
+
+*******************************************************************************
+Cross develop kernel modules
+----------------------------
+Create a meta layer e.g. meta-ldd for given MACHINE e.g. "qemuarm", SDKMACHINE
+e.g. "x84_64", with a target ldd-image-minimal-dev, which includes kernel
+development, modules and debug support packages:
+IMAGE_INSTALL += "kernel-dev kmod packagegroup-core-eclipse-debug"
+
+See meta-ldd for more details.
+
+Build the target:
+$ bitbake ldd-image-minimal-dev
+
+Check if kernel source tree is present in sysroot:
+./tmp/sysroots/qemuarm/usr/src/kernel
+
+Prepare the toolchain. Here the system derived toolchain is used (see yocto.txt
+for more details and other solutions):
+$ bitbake meta-ide-support
+
+Source toolchain environment script:
+$ source environment-setup-armv5te-poky-linux-gnueabi
+
+Build kernel scripts (make sure the cross toolchain environment is active):
+$ cd ./tmp/sysroots/qemuarm/usr/src/kernel
+$ make scripts
+
+,
