@@ -13,7 +13,15 @@ tail /var/log/messages
 modinfo (kmod package)
     - show information about a Linux Kernel module (also that given by macros
       MODULE_LICENSE, MODULE_AUTHOR)
+      
+/sys/module
+    - a sysfs directory hierarchy containing information on currently-loaded
+      modules.
+/proc/modules
+    - the older, single-file version of that information.
 
+
+*******************************************************************************
 Cross build kernel modules with Yocto
 -------------------------------------
 Prepare cross-toolchain:
@@ -32,3 +40,67 @@ $ insmod <module>
 
 Read module information:
 $ modinfo <module>
+
+
+*******************************************************************************
+Module initialization and shutdown
+----------------------------------
+static int __init init_func(void) {
+  // Module initialization code
+}
+
+module_init(init_func);
+
+Initialization functions should be declared static, since they are not meant to
+be visible outside the specific file. The __init token is a hint to the kernel
+that the given function is used only at initialization time. The module loader
+drops the initialization function after the module is loaded, making its memory
+available for other uses.Use of __init is optional.
+
+The use of module_init is mandatory. This macro adds a special section to the
+module’s object code stating where the module’s initialization function is to
+be found.
+
+static void __exit cleanup_function(void) {
+  // Module cleanup code
+}
+
+module_exit(cleanup_func);
+
+The cleanup function has no value to return. The __exit modifier marks the code
+as being for module unload only (by causing the compiler to place it in a
+special ELF section). If your module does not define a cleanup function, the
+kernel does not allow it to be unloaded.
+
+
+*******************************************************************************
+Module parameters
+-----------------
+module_param(name, type, perm);
+
+name, type - parameter name and type (e.g. int, charp, ...
+perm - permission. This value controls who can access the representation of the
+module parameter in sysfs:
+ 0 - there is no sysfs entry at all; otherwise, it appears under /sys/module
+      with the given set of permissions.
+ S_IRUGO - parameter can be read by the world but cannot be changed
+ S_IRUGO|S_IWUSR - allows root to change the parameter.
+ 
+Example
+------- 
+module: hellop.ko:
+ 
+static int howmany = 1;
+static char* whom = "world";
+
+module_param(howmany, int, S_IRUGO);
+module_param(whom, charp, S_IRUGO);
+
+sysfs:
+-r--r--r-- /sys/module/hellop/parameters/howmany
+-r--r--r-- /sys/module/hellop/parameters/whom
+
+
+TODO
+----
+Kernel debugging

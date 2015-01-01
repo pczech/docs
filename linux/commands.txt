@@ -24,12 +24,18 @@ Print kernel ring buffer
 
 Older events are logged in the files /var/log/messages and /var/log/warn ?
 
+
 *******************************************************************************
 find <path> <opts>
 
 opts:
 -type f
     - find files
+    
+-name
+
+-iname
+  - like -name but the match is case insensitive.
 
 Examples:
 
@@ -38,11 +44,19 @@ find
   
 find -type d
   - find directories
+  
+  
+*******************************************************************************  
+kill
+
+-l  - list signals
+
 
 *******************************************************************************
 ln
 --
 Make links between files
+
 ln [<options>] <target> <linkname>
 
 -s  - symbolic link
@@ -62,6 +76,20 @@ ps
 --
 
 aux - Show all running processes
+
+
+*******************************************************************************
+rename
+------
+Rename multiple files
+
+Examples:
+
+rename 's/$/.tmp/' *.*
+  Add .tmp to all file with dot within the name.
+  
+rename 's/\.tmp$//' *.*.*
+  Remove the .tmp suffix from those files
 
 
 *******************************************************************************
@@ -111,7 +139,6 @@ sx
 XMODEM file send
 
 sx -vv <file> < /dev/ttyS0 > /dev/ttyS0
-
 
 
 *******************************************************************************

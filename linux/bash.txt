@@ -1,15 +1,40 @@
-source <filename>
-    Read and execute commands from filename in the current shell environment.
-    Useful if you e.g. want to set multiple environment variables from a file.
-    . is synonymous with source.
-    
-    
-$BASH_SOURCE
-    The call stack of scripts with the top of the stack being the currently
-    executing sourced script, sourcing another script from the current one will
-    push it on top of the stack.     
+*******************************************************************************
+Grammar
+-------
 
+Pipelines
+---------
+A pipeline is a sequence of one or more commands separated by one of the
+control operators | or |&.
+
+cmd1 | cmd2
+    The standard output of cmd2 is connected via a pipe to the standard input
+    of cmd2.
     
+cmd1 |& cmd2
+    Cmd1's  standard  error, in addition to its standard output, is connected
+    to cmd2's standard input through the pipe; it  is  shorthand for  "2>&1 |".
+    
+Lists
+-----
+A list is a sequence of one or more pipelines separated by one of the operators
+;, &, &&, or ||
+
+cmd1 &
+    Shell executes the command in the background in a subshell. The shell does
+    not wait for the command to finish, and the return status is 0.
+  
+cmd1 ; cmd2
+    Commands separated by ; are executed sequentially; the shell waits for each
+    command to terminate in turn. The return status is the exit status of the
+    last command executed.
+
+cmd1 && cmd2
+    cmd2 is executed if, and only if cmd1 returns an exit status of zero.
+    
+cmd1 || cmd2 
+    cmd2 is executed if and only if cmd1 returns a non-zero exit status.
+
 *******************************************************************************
 Conditional operators
 ---------------------
@@ -19,20 +44,31 @@ Conditional operators
 
 
 *******************************************************************************
-argument list
--------------
-$0 - expands  to  the name of the shell or shell script
-$* - expands to the positional parameters, starting from  one,
+Positional parameters
+---------------------
+Parameter denoted by one or more digits, other than the single digit 0: $1, $2,
+... Positional parameters are assigned from the shell's arguments when it is
+invoked, and may be reassigned using the set builtin command. Positional
+parameters may not be assigned to with assignment statements.
+
+Special parameters
+------------------
+$* - positional parameters, starting from one,
      "$*" is equivalent to "$1 $2..."
-$@ - expands to the positional parameters, starting from  one,
+$@ - positional parameters, starting from one,
      "$@" is equivalent to "$1" "$2" ...
-$# - expands to the number of positional parameters in decimal
+$# - number of positional parameters in decimal
+$? - exit status of the most recently executed foreground pipeline
+$$ - process ID of the shell (not subshell)
+$! - process ID of the job most recently placed into the background
+$0 - name of the shell or shell script
 
 
 *******************************************************************************
 Parameter expansion
 -------------------
-$   - parameter expansion, command substitution, or arithmetic expansion.
+$
+    Parameter expansion, command substitution, or arithmetic expansion.
 
 ${parameter}
     The value of parameter is substituted.
@@ -43,6 +79,28 @@ ${#parameter}
     the array. See Arrays.
 
 
+*******************************************************************************
+Variables
+---------
+Assignment
+= (no space before and after), e.g. foo="Hello"
+
+Concatenation (strings)
+foo="Hello"
+bar="$foo World"
+echo $bar
+> Hello World
+
+foo="Hello"
+bar=" World"
+var=$foo$bar
+echo $var
+> Hello World
+
+foo="Hello"
+foo+=" World"
+echo $foo
+> Hello World
 
 
 *******************************************************************************
@@ -51,8 +109,9 @@ Arrays
 ${array[@]}     expands each element of array to a separate  word
 ${#array[@]}    number of elements
 
+
 *******************************************************************************
-functions
+Functions
 ---------
 
 function function_name {
@@ -65,3 +124,36 @@ function_name () {
 command...
 }
 
+
+*******************************************************************************
+Commands
+echo -e 
+
+read -p
+
+source <filename>
+    Read and execute commands from filename in the current shell environment.
+    Useful if you e.g. want to set multiple environment variables from a file.
+    . is synonymous with source.
+    
+$BASH_SOURCE
+    The call stack of scripts with the top of the stack being the currently
+    executing sourced script, sourcing another script from the current one will
+    push it on top of the stack.     
+
+
+*******************************************************************************
+Jobs
+----
+ctrl-z: stop (suspend) current process
+
+jobs
+  list current jobs
+  
+bg [job]
+  continue (resume) the job in background
+   
+fg [job]
+  continue (resume) the job in foreground
+   
+kill

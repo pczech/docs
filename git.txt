@@ -134,6 +134,12 @@ pushing to remotes
 ------------------
 git push REMOTE BRANCH
 git push REMOTE BRANCH_LOCAL:BRANCH_REMOTE
+git push -u REMOTE BRANCH
+  -u (--set-upstream) - For every branch that is up to date or successfully
+  pushed, add upstream (tracking) reference, used by argument-less git-pull and
+  other commands. After pushing a local branch with -u option, this local
+  branch will be automatically linked with remote branch, and you can use
+  'git pull' without arguments.
 
 renaming remotes
 ----------------
@@ -387,20 +393,36 @@ SPECIAL CASES
 
 Replace master branch by another one (GitHub)
  ------------------------------------------
- create empty repository PRJ in GitHub
- clone the repository to your workstation: git clone https://github.com/USER/PRJ.git
- repository has no branch yet
- create and checkout the required branch
-    git checkout -b BRANCH (e.g. 7.x-1.x)
- create a file
-    touch README.txt
- add the file to the repository amd push to remote:
-    git add README.txt
-    git commit -m "Initial commit"
-    git push origin BRANCH
- the only and default branch now is BRANCH
+Create empty repository PRJ in GitHub
+Clone the repository to your workstation:
+$ git clone https://github.com/USER/PRJ.git
+Repository has no branch yet
+Create and checkout the required branch
+$ git checkout -b BRANCH (e.g. 7.x-1.x)
+Create a file
+$ touch README.txt
+Add the file to the repository amd push to remote:
+$ git add README.txt
+$ git commit -m "Initial commit"
+$ git push origin BRANCH
+The only and default branch now is BRANCH
  
- See also
- https://drupal.org/empty-git-master
+See also
+https://drupal.org/empty-git-master
  
- 
+Push local repository to a remote server
+---------------------------------------- 
+If the local git repository is not created yet:
+$ cd <project>
+$ git init
+Add .gitignore, README, etc files
+Make initial commit
+
+If you have been working on a local git repository, and you want to push it
+to a remote git server, e.g. github, with the whole your history:
+Check current remotes:
+$ git remote -v
+Create an empty repository on a git server like github.
+Add the remote, URL determines access protocol: git ssh, https, ...:
+$ git remote add https://...
+$ git push -u origin master

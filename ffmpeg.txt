@@ -1,0 +1,215 @@
+*******************************************************************************
+Help
+----
+$ ffmpeg -h full > ffmpeg.help
+$ ffmpeg -formats > ffmpeg.formats
+$ ffmpeg -codecs > ffmpeg.codecs
+$ ffmpeg -protocols > ffmpeg.protocols
+$ ffmpeg -sample_fmts > ffmpeg.sample_fmts
+
+Basic parameters
+----------------
+-re                 Read input at native frame rate
+-i <input>          Input file 
+-f <format>         Force format
+-t <duration>       Record or transcode "duration" seconds of audio/video
+-ss <time_off>      Set the start time offset
+
+Audio
+-c:a <codec>        Force audio codec ('copy' to copy stream)
+-acodec <codec> 
+-b:a <bitrate>      Audio bitrate
+-ac <channels>      Set number of audio channels
+-ar <rate>          Set audio sampling rate (in Hz), e.g. 8k, 16k
+-an                 Disable audio
+
+Video
+-c:v <codec>        Force audio codec ('copy' to copy stream)
+-vcodec <codec>
+-b:v                Video bitrate
+
+*******************************************************************************
+Audio streaming (for Voip)
+---------------
+Create raw files (without container)
+$ ffmpeg -i <audio_file> -f alaw -ar 8k -ac 1 <raw_alaw_file>
+$ ffmpeg -i <audio_file> -f mulaw -ar 8k -ac 1 <raw_mulaw_file>
+$ ffmpeg -i <audio_file> -f g722 -ar 16k -ac 1 <raw_g722_file>
+
+Play raw files (you have to provide some parameters, which are usually stored
+in a container):
+$ ffplay -f alaw -ar 8k <raw_alaw_file>
+$ ffplay -f mulaw -ar 8k <raw_mulaw_file>
+$ ffplay -f g722 -ar 16k <raw_g722_file>
+
+RTP
+---
+Convert and stream any audio file
+$ ffmpeg -re -i <audio_file> -acodec pcm_alaw -ar 8k -ac 1 -f rtp rtp://<ip>:<port>
+$ ffmpeg -re -i <audio_file> -acodec pcm_mulaw -ar 8k -ac 1 -f rtp rtp://<ip>:<port>
+$ ffmpeg -re -i <audio_file> -acodec g722 -ar 16k -ac 1 -f rtp rtp://<ip>:<port>
+
+Stream raw audio file
+$ ffmpeg -re -f alaw -ar 8k -i <raw_alaw_file> -acodec pcm_alaw -f rtp rtp://<ip>:<port>
+$ ffmpeg -re -f mulaw -ar 8k -i <raw_mulaw_file> -acodec pcm_mulaw -f rtp rtp://<ip>:<port>
+$ ffmpeg -re -f g722 -i <raw_g722_file> -acodec adpcm_g722 -f rtp rtp://<ip>:<port>
+
+RTP Payload Type is set automatically on the basis of parameters used.
+
+Force Payload Type
+$ ffmpeg -re -i <audio_file> -f rtp -payload_type <PT> rtp://<ip>:<port>
+
+Play RTP stream
+$ ffplay rtp://<ip>:<port>
+
+
+*******************************************************************************
+Video streaming
+---------------
+Check Webcam formats and resolutions
+$ ffmpeg -f video4linux2 -list_formats all -i /dev/video0
+
+Play local video from Webcam
+$ ffplay -f video4linux2 -video_size 320x240 -framerate 20 -i /dev/video0
+$ ffplay -f video4linux2 -video_size 640x480 -framerate 20 -i /dev/video0
+$ ffplay -f video4linux2 -input_format mjpeg -video_size 320x240 -framerate 20 -i /dev/video0
+
+Stream video from Webcam in RTP MJPEG, RTP MPEG-2, MJPEG UDP, MPEGTS UDP
+$ ffmpeg -f v4l2 -framerate 20 -video_size 320x240 -input_format mjpeg -i /dev/video0 -vcodec copy -f rtp rtp://<ip>:<port>
+$ ffmpeg -f v4l2 -framerate 20 -video_size 640x360 -input_format mjpeg -i /dev/video0 -vcodec copy -f rtp rtp://<ip>:<port> 
+$ ffmpeg -f v4l2 -framerate 20 -video_size 320x240 -input_format mjpeg -i /dev/video0 -vcodec copy -f mjpeg udp://<ip>:<port>
+$ ffmpeg -f v4l2 -framerate 20 -video_size 320x240 -i /dev/video0 -vcodec mpeg2video -f rtp rtp://<ip>:<port>
+$ ffmpeg -f v4l2 -framerate 20 -video_size 320x240 -i /dev/video0 -vcodec mpeg2video -an -f mpegts udp://<ip>:<port>
+
+Stream video and audio in two RTP streams
+$ ffmpeg -f v4l2 -framerate 20 -video_size 320x240 -i /dev/video0 -vcodec mpeg2video -an -f rtp rtp://<ip>:<vport> \
+-f alsa -i hw:1 -ar 16k -ac 1 -vn -acodec g722 -f rtp rtp://<ip>:<aport>
+
+Stream video and audio in two RTP streams (audio via arecord)
+$ ffmpeg -f v4l2 -framerate 20 -video_size 320x240 -i /dev/video0 -vcodec mpeg2video -f rtp rtp://<ip>:<vport> &
+$ arecord -f cd -D plughw:1 -q | ffmpeg -re -i - -ac 1 -ar 16k -acodec g722 -f rtp rtp://<ip>:<aport>
+
+Stream movie file in two RTP streams
+$ ffmpeg -re -i <movie_file> -vcodec mpeg2video -an -f rtp rtp://<ip>:<vport> \
+-vn -ar 16k -ac 1 -acodec g722 -f rtp -payload_type 9 rtp://<ip>:<aport>
+
+Transcode IPTV stream into two RTP streams
+$ ffmpeg -re -i <IPTV_Stream_URL> -framerate 20 -s 320x240 -vcodec mpeg2video -an -f rtp rtp://<ip>:<vport> \
+-ar 16k -ac 1 -acodec g722 -vn -f rtp rtp://<ip>:<aport>
+
+Stream video in RTP to remote and to self (ffmpeg tee)
+$ ffmpeg -f video4linux2 -video_size 320x240 -framerate 20 -i /dev/video0 -vcodec mpeg2video -an \
+-f tee -map 0:v "[f=rtp]rtp://<remote_ip>:<port>|[f=rtp]rtp://<self_ip>:<port>"
+
+
+*******************************************************************************
+Convert media files
+-------------------
+Change container only:
+$ ffmpeg -i <input.mp4> -c copy <output.mkv>
+
+Transcode only audio to ac3 with bitrate 384k, use avi container for output:
+$ ffmpeg -i <input.avi> -c:v copy -c:a ac3 -b:a 384k <output.avi>
+
+Transcode only video to h264 with average bitrate 4000 kbps, use mkv container:
+$ ffmpeg -i <input.avi> -c:a copy -c:v h264 -b:v <4000k> <output.mkv>
+
+Transcode concatenated VOB to h264 with given preset and CRF, copy audio,
+use mp4 container:
+$ ffmpeg -i <input.VOB> -c:a copy -c:v h264 -preset veryslow -crf 20 <output.mp4>
+
+Transcode only video to h264 with given preset and CRF, use mkv container:
+$ ffmpeg -i <input.avi> -c:a copy -c:v h264 -preset veryslow -crf 20 <output.mkv>
+
+Transcode audio to ac3 with bitrate 384k, transcode video to h264, use mkv
+container:
+$ ffmpeg -i <input.avi> -c:a ac3 -b:a 384k -c:v h264 -preset veryslow -crf 20 <output.mkv>
+
+Transcode video to mpeg4 (XVID) with average bitrate 1500k
+$ffmpeg -i <input.avi> -c:v libxvid -b:v 1500k -c:a copy <output.avi>
+
+Deinterlace
+-----------
+-vf yadif - video filter 'yet another deinterlace filter'
+
+$ ffmpeg -i <input.VOB> -c:v h264 -b:v 4000k -vf yadif -c:a copy <output.mkv>
+
+Time control (split)
+--------------------
+Start at 00:00:00 and process 55m 40s of data:
+$ ffmpeg -i <input.mkv> -c copy -t 00:55:40 <output.mkv>
+
+Start at 55:40 and process 57m 47s of data: 
+$ ffmpeg -i <input.mkv> -c copy -ss 00:55:40 -t 00:57:47 <output.mkv>
+
+Start at 01:51:42 and process data till end
+$ ffmpeg -i <output.mkv> -c copy -ss 01:51:42 <output.mkv>
+
+Select streams (also from multiple files)
+-----------------------------------------
+Use ffprobe to check streams numbers.
+
+Reorder languages (0:0 - video stream, 0:3, 0:2, 0:1 - audio streams):
+$ ffmpeg -i <input.mkv> -map 0:0 -map 0:3 -map 0:2 -map 0:1 -c copy <output.mkv>
+
+Use multiple inputs: merge video from input2 with reordered audio streams
+from input1):
+$ ffmpeg -i <input1.mkv> -i <input2.mkv> -map 1:0 -map 0:3 -map 0:2 -map 0:1 -c copy <output.mkv>
+
+Concatenate media files
+-----------------------
+Create 'concat.txt' file, like:
+file 'input1.avi'
+file 'input2.avi'
+
+$ ffmpeg -f concat -i concat.txt -c:v copy -c:a mp3 -b:a 192k <output.avi>
+
+Change aspect
+-------------
+-aspect <aspect>
+
+Set aspect only:
+$ ffmpeg -i <input.mkv> -aspect 4:3 -c copy <output.mkv>
+
+Set aspect and change container:
+$ ffmpeg -i <input.mp4> -aspect 16:9 -c copy <output.mkv>
+
+Transcode video to h264 with average bitrate 900k, set aspect, use mkv
+container:
+$ ffmpeg -i <input.avi> -aspect 4:3 -c:v h264 -b:v 900k -c:a copy <output.mkv>
+
+Transcode concatenated VOB to h264 with given preset and CRF, set aspect,
+deinterlace, use mkv container: 
+$ ffmpeg -i <input.VOB> -aspect 16:9 -c:a copy -c:v h264 -preset veryslow -crf 20 -vf yadif <output.mkv> 
+
+Crop
+----
+-vf crop=<crop_params>
+
+Use cropdetect to autodetect crop values:
+$ ffplay -i <input.avi> -vf cropdetect=24:16:0
+
+Then:
+$ ffmpeg -i <input.avi> -c:v libxvid -b:v 1500k -vf crop=640:336:0:72 -c:a mp3 -b:a 256k <output.avi>
+
+
+*******************************************************************************
+Links
+-----
+https://www.ffmpeg.org/ffmpeg.html
+https://www.ffmpeg.org/ffplay.html
+https://www.ffmpeg.org/ffmpeg-formats.html
+https://www.ffmpeg.org/ffmpeg-protocols.html
+https://www.ffmpeg.org/ffmpeg-devices.html
+https://www.ffmpeg.org/ffmpeg-bitstream-filters.html
+
+https://trac.ffmpeg.org/wiki/StreamingGuide
+https://trac.ffmpeg.org/wiki/FilteringGuide
+https://trac.ffmpeg.org/wiki/Creating%20multiple%20outputs
+https://trac.ffmpeg.org/wiki/PlayingYoutubeVideos
+https://trac.ffmpeg.org/wiki/AudioChannelManipulation
+https://trac.ffmpeg.org/wiki/Capture/ALSA
+https://trac.ffmpeg.org/wiki/Capture/Webcam
+https://trac.ffmpeg.org/wiki/EncodingForStreamingSites
+
+https://libav.org/avplay.html
