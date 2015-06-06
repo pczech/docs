@@ -9,3 +9,10 @@ The kernel no longer contains the description of the hardware, it is located
 in a separate binary: the Device Tree Blob. The bootloader loads two binaries:
 the kernel image and the DTB. DTB is located in kernel's arch/arm/boot/dts
 folder, one per board.
+
+arch/<ARCH>/boot/dts
+
+arch/arm/boot/dts/<MACH>
+
+dtb - device tree binary
+dts -device tree source

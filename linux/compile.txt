@@ -1,0 +1,262 @@
+*******************************************************************************
+Compilation
+-----------
+Compiling
+    Process of translating the code of a higher-level language to the code of a
+    lower-level language.
+Translation unit
+    The input for the compiler, a typically  a text file containing the source
+    code.
+Binary object file
+    The output of the compilation of each of the translation units.
+Linking
+    Processing and 'joining' object files to become suitable for execution.
+    
+Stages
+------
+Preprocessing
+Linguistic Analysis
+Assembling
+Optimization
+Code Emission
+
+Preprocessor performs its commands (started by # in C), in result:
+- files containing definitions (include/header files) are included into the
+  source files, as specified by the #include keyword.
+- values specified by #define are converted into the constants.
+- macro definitions are converted into code
+- certain parts of the code are conditionally included or excludes based on the
+  #if, #elif, and #endif directives.
+  
+The output of the preprocessor is the code in its final shape, which will be
+passed to the next stage.
+
+Linguistic Analysis includes lexical analysis, parsing/syntax analysis and
+semantic analysis. During the phase the compiler complains about typos or other
+errors it encounters.
+
+Assembling is done only after the source code is verified to contain no syntax
+errors. In this stage, the compiler tries to convert the standard language
+constructs into the constructs specific to the actual CPU instruction.
+
+Optimization - usage of the registers is minimized, not needed parts of the
+code are eliminated, etc.
+
+Code Emission creates the compilation output: object files, one for each
+translation unit. The assembly instructions are converted into the binary
+values of the corresponding machine instructions (opcodes) and written to the
+specific locations in the object file(s).
+
+Object File Properties
+----------------------
+Object file consists of symbols (references to the memory addresses in program
+or data memory), sections, e.g. code (.text), initialized data (.data),
+uninitialized data (.bss), debugging information, etc.
+
+The information is stored in the object files according to a certain set of
+rules in the form of binary format specification, Linux: ELF - Executable and
+Linkable Format.
+
+The intention behind the idea of building the program is that the sections
+obtained by compiling individual source files are combined (tiled) together
+into the single binary executable file. Such binary file would contain the
+sections of the same type (.text, .data, .bss, ...) obtained by tiling
+together the sections from the individual files.
+
+The structure of the object file does not, however, suggest where the sections
+will reside in the program memory map. For that reason, the address ranges of
+each section in each of the object files is tentatively set to start from a zero
+value. The actual address range at which a section from an object file will
+reside in the program map will be determined in the linking stage.
+
+Linking
+-------
+The input to the linking process is the collection of object files created by
+the previously completed compiling stage. The task of the linker is to form the
+resultant program memory map section out of individual contributions and to
+resolve all the references (function calls between object files, external
+variables).
+
+Linking stages
+--------------
+Relocation
+Resolving References
+
+Relocation
+----------
+A process in which sections of various kinds contained in individual object
+files are combined together to create the program memory map sections (tiling).
+In order to complete this task, the previously neutral, zero-based address
+ranges of contributing sections get translated into the more concrete address
+ranges of resultant program memory map.
+
+Resolving References
+--------------------
+The root cause of linking problems is that pieces of code originated from
+different translation units are trying to reference each other, but cannot
+possibly know where in memory these items will reside up until the object files
+are tiled into the body of program memory map.
+
+What linker needs to do to resolve references is to
+- Examine the sections already tiled together in the program memory map.
+- Find out which part of the code makes calls outside of its original section.
+- Figure out where exactly (at which address in the memory map) the referenced
+  part of the code resides.
+- Resolve the references by replacing dummy addresses in the machine
+  instructions with the actual addresses of the program memory map.
+  
+Example
+-------
+Build obj files and the executable:
+$ gcc -c function.c main.c
+$ gcc function.c main.c
+Deassemble main.c:
+$ objdump -d -M intel main.o
+main() calls external function add_and_multiply() and uses external variable
+nCompletionStatus.
+
+You can see a call instruction that jumps to null address and access the
+variable residing at the null address too. These two strange values were
+inserted by the linker purposefully.
+
+x64
+---
+0000000000000000 <main>:
+37:   e8 00 00 00 00          call   3c <main+0x3c>
+          38: R_X86_64_PC32   add_and_multiply-0x4
+
+47:   c7 05 00 00 00 00 01    mov    DWORD PTR [rip+0x0],0x1        # 51 <main+0x51>
+4e:   00 00 00 
+          49: R_X86_64_PC32   nCompletionStatus-0x8
+
+Deassemble the executable: objdump -d -M intel a.out
+
+You can see that the content of object files have been relocated to the address
+range starting at the address 0x004004ed, but also these two dummy null
+addresses have been resolved by the linker:
+
+00000000004004ed <main>:
+400524: e8 46 00 00 00          call   40056f <add_and_multiply>
+400534: c7 05 fe 0a 20 00 01    mov    DWORD PTR [rip+0x200afe],0x1        # 60103c <nCompletionStatus>
+
+000000000040056f <add_and_multiply>:
+...
+
+.bss:
+000000000060103c <nCompletionStatus>:
+  60103c:   00 00
+
+ARM
+---
+main.o:
+00000000 <main>:
+2c:   ebfffffe    bl  0 <add_and_multiply>
+            2c: R_ARM_CALL  add_and_multiply
+54:   00000000    .word   0x00000000
+            54: R_ARM_ABS32 nCompletionStatus
+
+Executable:
+.bss:
+00010bac <nCompletionStatus>:
+   10bac:   00000000
+   
+.text:
+00008424 <add_and_multiply>:
+...
+            
+00008470 <main>:
+849c:   ebffffe0    bl  8424 <add_and_multiply>
+84c4:   00010bac    .word   0x00010bac
+
+When assembler is producing the object file, the final address of the bl target
+is not fixed yet (it depends on the other object files that will be linked with
+it). So the assembler sets the address to 0 but also adds a relocation that
+tells the linker where this bl is supposed to go in the final file.
+
+When linking, the linker processes the relocation, calculates the final address
+of the target function and patches the instruction so that the target address
+lines up.
+
+ELF section types
+-----------------
+objdump -h <file>
+
+.bss    Uninitialized data that contributes to the program’s memory image.
+.data   Initialized data that contributes to the program’s memory image.
+.debug  Information for symbolic debugging. The contents are unspecified.
+.line   Holds the line number information for symbolic debugging, which
+        describes the correspondence between the program source and the machine
+        code. The contents are unspecified.
+.text   Holds executable instructions of the program.
+.rodata Holds read-only data that typically contributes to a nonwritable segment
+        in the process image.
+
+.ctors  Initialized pointers to the C++ constructors.
+.dtors  Initialized pointers to the C++ destructors.
+...
+
+ELF symbol types
+----------------
+nm <file>
+
+T   Code
+B   Uninitialized data section
+D   Initialized data section
+R   Read only data section
+
+*******************************************************************************
+gcc
+---
+
+Preprocess only
+---------------
+gcc -E [-P] <file.c> [-o <file.i>]
+
+-E - Stop after the preprocessing stage. The output is in the form of
+     preprocessed source code, which is sent to the standard output.
+-P - no linemarkers in the output from the preprocessor.
+
+Assemble
+--------
+gcc -S [masm=att|intel] <file.c> [-o <file.s>]
+
+-S - Stop after the stage of compilation, do not assemble.  The output is in
+     the form of an assembler code file for each nonassembler input file
+     specified. By default, the assembler file name for a source file is made
+     by replacing the suffix .c, .i, etc., with .s.
+
+masm - assembler dialect
+
+Compile only
+------------
+gcc -c <file.c> [-o <file.o>]
+
+-c - Compile or assemble the source files, but do not link.  The linking stage
+     simply is not done. The output is in the form of an object file for each
+     source file. By default, the object file name for a source file is made by
+     replacing the suffix .c, .i, .s, etc., with .o.
+
+
+*******************************************************************************
+objdump
+
+objdump [<opt>] <file>
+-------
+
+-d - Disassemble only those sections which are expected to contain instructions.
+-D - Disassemble the contents of all sections.
+-r - Print the relocation entries of the file.
+-x - Display all available header information, including the symbol table and 
+     relocation entries.
+-j <section> - Display information only for section (e.g. .text .bss)
+
+*******************************************************************************
+nm
+
+list symbols from object files
+
+nm [<opt>] <file>
+
+
+
+    

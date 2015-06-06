@@ -1,0 +1,67 @@
+Examples:
+
+*******************************************************************************
+USB-Serial cable
+----------------
+New elements:
+
+/sys/bus/usb-serial
+/sys/bus/usb-serial/devices
+/sys/bus/usb-serial/devices/ttyUSB0 ->
+/sys/devices/pci0000:00/0000:00:1c.4/0000:0b:00.0/usb3/3-2/3-2:1.0/ttyUSB0
+
+/sys/bus/usb-serial/drivers
+/sys/bus/usb-serial/drivers/generic
+/sys/bus/usb-serial/drivers/generic/module -> /sys/module/usbserial
+
+/sys/bus/usb-serial/drivers/pl2303
+/sys/bus/usb-serial/drivers/pl2303/module -> /sys/module/pl2303
+/sys/bus/usb-serial/drivers/pl2303/ttyUSB0 -> 
+/sys/devices/pci0000:00/0000:00:1c.4/0000:0b:00.0/usb3/3-2/3-2:1.0/ttyUSB0
+
+/sys/bus/usb/drivers/usbserial_generic
+/sys/bus/usb/drivers/usbserial_generic/module -> /sys/module/usbserial
+
+/sys/bus/usb/drivers/usbserial
+/sys/bus/usb/drivers/usbserial/module -> /sys/module/usbserial
+
+/sys/bus/usb/drivers/pl2303
+/sys/bus/usb/drivers/pl2303/3-2:1.0 ->
+/sys//devices/pci0000:00/0000:00:1c.4/0000:0b:00.0/usb3/3-2/3-2:1.0
+/sys/bus/usb/drivers/pl2303/module -> /sys/module/usbserial
+
+/sys/class/tty/ttyUSB0 ->
+/sys/devices/pci0000:00/0000:00:1c.4/0000:0b:00.0/usb3/3-2/3-2:1.0/ttyUSB0/tty/ttyUSB0
+
+/sys/devices/pci0000:00/0000:00:1c.4/0000:0b:00.0/usb3
+manufacturer: Linux 3.13.0-39-generic xhci_hcd
+product: xHCI Host Controller
+
+/3-2
+manufacturer: Prolific Technology Inc.
+product: USB-Serial Controller
+
+/3-2:1.0
+driver -> /sys/bus/usb/drivers/pl2303
+
+/sys/module/usbserial
+/sys/module/usbserial/drivers
+/sys/module/usbserial/drivers/usb:pl2303 -> /sys/bus/usb/drivers/pl2303
+/sys/module/usbserial/drivers/usb:usbserial -> /sys/bus/usb/drivers/usbserial
+/sys/module/usbserial/drivers/usb:usbserial_generic -> /sys/bus/usb/drivers/usbserial_generic
+/sys/module/usbserial/drivers/usb-serial:generic -> /sys/bus/usb-serial/drivers/generic
+
+/sys/module/pl2303
+/sys/module/pl2303/drivers
+/sys/module/pl2303/drivers/usb-serial:pl2303 -> /sys/bus/usb-serial/drivers/pl2303
+
+
+
+
+
+
+
+
+
+
+

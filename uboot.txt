@@ -1,63 +1,5 @@
-TFTP server
------------
-install xinetd, tftpd
-
-Create /etc/xinetd.d/tftp file:
-
-service tftp
-{
-  protocol    = udp
-  port        = 69
-  socket_type = dgram
-  wait        = yes
-  user        = nobody
-  server      = /usr/sbin/in.tftpd
-  server_args = /home/<user>/Dev/embed/tftpboot
-  disable     = no
-}
-
-Create tftpboot:
-
-cd ~/embedded
-sudo mkdir tftpboot
-sudo chmod -R 777 tftpboot
-sudo chown -R nobody tftpboot
-
-Restart xinetd service:
-
-service xinetd restart
-
-
-NFS Server
-----------
-install nfs-kernel-server
-
-Add config to /etc/exports file:
-<EXPORT_DIR> <CLIENTS> (parameters)
-/home/<user>/Dev/embed/nfs 172.29.1.186 (rw,sync)
-
-Restart NFS server:
-
-service nfs-kernel-server restart
-
-Examples:
-/export       192.168.1.0/24(rw,fsid=0,insecure,no_subtree_check,async)
-  /export is exported to a local network with mask 192.168.1.0/24
-/images 192.168.0.2(rw,sync,subtree_check)
-  /images is exported for NFS Client with given IP with Read Write access
-/mp3 192.168.0.1/24(ro,sync)
-  /mp3 is exported for NFS Client with IP 192.168.0.1 to 192.168.0.254 with Read Only access
-
-
-config files:
-/etc/default/nfs-kernel-server
-/etc/default/nfs-common
-
-see man exports
-
 U-Boot commands
 ---------------
-
 You don't need to type full command name; instead it is sufficient to type
 a few characters: save = saveenv, tftp = tftpboot, set = seenv
 
@@ -68,13 +10,12 @@ run             - run commands in environment variable. Environment variables
                   can store commands or sequence of commands (separated by ;)
 
 tftpboot        - boot image via network using TFTP
-                  tftp [loadAddress] [hostIPaddr:]bootfilename]
+                  tftp [loadAddress] [[hostIPaddr:]bootfilename]
                   
 bootd (boot)    - boot default (synonym for 'run bootcmd') 
 bootm           - boot application image from memory.
                   bootm ${kernel_addr] ${ramdisk_addr} ${fdt_addr}
                   bootm ${kernel_addr] - ${fdt_addr}
-
 
 Environment variables
 ---------------------
@@ -86,7 +27,6 @@ bootfile        - name of default image to load with TFTP
 mtdparts        - define a Linux compatible MTD partition scheme for flash
                   memory at boot time. Kernel shall be compiled with option
                   CONFIG_MTD_CMDLINE_PARTS to recognize argument 'mtdparts'.
-
 ipaddr          - IP address of the device; needed for tftp
 loadaddr        - Default RAM load address, e.g. for tftp
 serverip        - TFTP server IP address; needed for tftp
@@ -101,6 +41,94 @@ cmd1 || cmd2    - cmd2 is executed if, and only if, cmd1 returns a non-zero exit
 cmd1; cmd2      - commands are executed sequentially; the shell  waits for each
                   command to terminate in turn. The return status is the exit
                   status of the last command executed. 
+
+
+Load kernel and device tree from tftp by default
+------------------------------------------------
+If not interrupted, u-boot runs bootcmd: 'run bootcmd' on startup.
+
+Make a copy of bootcmd variable:
+# setenv bootcmd_org $bootcmd
+
+Set new value for bootcmd:
+# setenv bootcmd 'tftp && tftp ${devtree_addr} ${devicetree} && run bootm'
+
+************
+TODO bootm
+************
+
+Configure tfptboot:
+tftp [loadAddress] [[hostIPaddr:]bootfilename]
+
+Default values are controlled by the following variables:
+loadAddress - $loadaddr
+hostIPaddr - $serverip
+bootfilename - $bootfile
+
+Example:
+# setenv serverip 192.168.1.101
+# setenv ipaddr 192.168.1.110
+# setenv loadaddr 0x42000000 (*)
+# setenv bootfile uImage
+
+# devtree_addr=0x43000000 (**)
+# devicetree=<devtree_file>.dtb
+
+# save
+
+Copy kernel image and devtree to /srv/tftp and check if u-boot loads it.
+
+(*) loadaddr depends on memory map of the device. Examples:
+
+AM335X Sitara Processors (BBB) Memory Map:
+EMIF0 SDRAM: 0x8000:0000 - oxBFFF:FFFF (1GB)
+loadaddr=0x82000000 (32 MB)
+
+
+(**) device tree address. The bootloader passes the DTB address through r2
+     register. Examples:
+
+AM335X Sitara Processors (BBB) Memory Map:
+fdtaddr=0x88000000 (128 MB)
+
+# dbinfo
+
+arch_number = 0x00000E05
+boot_params = 0x80000100
+DRAM bank   = 0x00000000
+-> start    = 0x80000000
+-> size     = 0x20000000                    -> 512 MB
+eth0name    = cpsw
+ethaddr     = 6c:ec:eb:bb:48:8b
+eth1name    = usb_ether
+eth1addr    = 6c:ec:eb:bb:48:8d
+current eth = cpsw
+ip_addr     = <NULL>
+baudrate    = 115200 bps
+TLB addr    = 0x9FFF0000                    -> last 64 kB
+relocaddr   = 0x9F753000                    -> 515404 kB = 503 MB 332 kB
+reloc off   = 0x1EF53000
+irq_sp      = 0x9E732EE0
+sp start    = 0x9E732ED0
+
+******************
+U-boot relocation
+******************
+<MAXMEM> - CONFIG_SYS_MONITOR_LEN.
+CONFIG_SYS_SDRAM_BASE
+CONFIG_SYS_TEXT_BASE
+
+
+
+Hint: If you do not develop kernel, program the kernel to flash and set u-boot
+to load it from the memory and to load filesystem from NFS to minimize boot
+time. See Board BSP documentation for more details.
+
+Mount sysroot via NFS
+---------------------
+TODO
+Set linux_bootargs to mount NFS filesystem in u-boot 
+
                   
 
 Example board environment variables
@@ -201,3 +229,31 @@ Load kernel image and devtree to RAM
 
 Run kernel
   run bootm
+  
+  
+*******************************************************************************
+MMC Subsystem (BBB)
+
+# mmc list
+    List available devices. Ex: SD/MMC: 0, SD/MMC: 1 are shown (even
+    micro SD card is not present).
+# mmc dev
+    Show current mmc device. Ex: mmc0(part 0) is current device
+# mmc dev <dev>
+    Set current mmc device. Ex: mmc dev 1 =>  mmc1(part 0) is current device
+# mmc part
+    List available partitions on current device.
+    
+# ls <interface> [<dev>[:<part>] [<directory>]]
+    List files in directory.
+    
+Examples:
+# ls mmc 1:1
+    List files on partition 1 (boot) on mmc1 (eMMC)
+
+# ls mmc 1:2
+    List files on partition 2 (sysroot) on mmc1 (eMMC)
+
+
+*******************************************************************************    
+Network

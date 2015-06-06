@@ -1,0 +1,38 @@
+Linux Graphics Systems
+
+Frame Buffer fbdev
+Memory memdev
+VNC
+
+Linux Framebuffer
+-----------------
+https://www.kernel.org/doc/Documentation/fb/framebuffer.txt
+
+
+fbset
+-----
+
+fbset -s
+Show 
+
+fbset -depth 1
+
+1 bpp
+printf "\xaa\x00\xf0\xaa\x0f\xaa\xff" > /dev/fb0
+
+*******************************************************************************
+QT Embedded
+-----------
+
+
+http://qt-project.org/doc/qt-4.8/qt-embedded-linux.html
+http://qt-project.org/doc/qt-4.8/qt-embedded-architecture.html
+http://qt-project.org/doc/qt-4.8/qt-embedded-accel.html
+http://qt-project.org/doc/qt-4.8/qt-embeddedlinux-directfb.html
+http://stackoverflow.com/questions/8075557/accessing-multiple-framebuffers-in-qt-embedded-directfb
+http://qt-project.org/doc/qt-4.8/qt-embedded-running.html
+http://qt-project.org/doc/qt-4.8/qt-embedded-pointer.html
+http://qt-project.org/doc/qt-4.8/qt-embedded-displaymanagement.html
+
+http://qt-project.org/search/tag/frame~buffer
+http://qt-project.org/search/tag/linuxfb

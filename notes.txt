@@ -2,42 +2,25 @@ SEO, Links
 http://www.1websitedesigner.com/drupal-end-user-guide
 http://www.1websitedesigner.com/search-engine-optimization
 
-hosting home.pl migration
--------------------------
-create FTP account:
-Usługi -> Hosting -> serwerXXX -> Konta FTP
 
-Login and load index.html to main www directory
-
-Configure private folder:
-https://pomoc.home.pl/produkty/panel/137
-
-Move common tools to the folder e.g. pack.php, install.php
-
-Create /tools folder
-
-Make backups for all sites 01, 02, 03, 01-01:
- Clear cache
- Export database using phpMyAdmin
- Pack and copy source files via FTP
-
-Install e.g. 01:
- Create a database
- Login to the database and import XXX.sql.gz
- Install source files via FTP
- Update database settings in sites/default/settings.php
- Done
  
-Create email accounts and aliases
-
-Assign domain to the new server
-
-If new passwords are set, update them e.g. in your email client. 
-
-In old service:
- Delete email accounts
- Delete databases (drop tables first)
- Delete source files
- Delete private folder settings
- Delete FTP account
  
+ 
+ 
+ BBB
+ 
+
+[13960.020892] usb 3-2: new full-speed USB device number 4 using xhci_hcd
+[13960.060786] usb 3-2: New USB device found, idVendor=067b, idProduct=2303
+[13960.060798] usb 3-2: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[13960.060804] usb 3-2: Product: USB-Serial Controller
+[13960.060809] usb 3-2: Manufacturer: Prolific Technology Inc.
+[13960.110636] usbcore: registered new interface driver usbserial
+[13960.110648] usbcore: registered new interface driver usbserial_generic
+[13960.110656] usbserial: USB Serial support registered for generic
+[13960.113504] usbcore: registered new interface driver pl2303
+[13960.113529] usbserial: USB Serial support registered for pl2303
+[13960.113568] pl2303 3-2:1.0: pl2303 converter detected
+[13960.141111] usb 3-2: pl2303 converter now attached to ttyUSB0
+
+

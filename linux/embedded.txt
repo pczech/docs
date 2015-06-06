@@ -45,34 +45,70 @@ $ sudo chown nobody tftp
 Restart xinetd service:
 $ service xinetd restart
 
-See also uboot.txt
-
-Configure uboot:
-setenv serverip 192.168.1.101
-setenv ipaddr 192.168.1.110
-save
-
-Copy kernel image and devtree to /srv/tftp and check if u-boot loads it.
-
-Hint: If you do not develop kernel, program the kernel to flash and set u-boot
-to load it from the memory and to load filesystem from NFS to minimize boot
-time. See Board BSP documentation for more details.
-
 
 NFS Server
 ----------
 Install nfs-kernel-server
 Create nfs folder, e.g. /srv/nfs
-Add to /etc/exports file e.g.:
-/srv/nfs    192.168.1.*(rw,sync,no_root_squash,no_subtree_check)
-/home/<user>/Dev/embed/nfs    172.29.1.1/24(rw,async,no_subtree_check,no_root_squash)
+Add to /etc/exports file:
+<EXPORT_DIR> <CLIENTS> (parameters)
+
+Examples:
+/srv/nfs    192.168.1.*(rw,async,no_root_squash,no_subtree_check)
+/home/<user>/nfs    172.29.1.1/24(rw,async,no_root_squash,no_subtree_check)
+/export     192.168.1.0/24(rw,fsid=0,insecure,no_subtree_check,async)
+  /export is exported to a local network with mask 192.168.1.0/24
+/images     192.168.0.2(rw,sync,subtree_check)
+  /images is exported for NFS Client with given IP with Read Write access
+/mp3        192.168.0.1/24(ro,sync)
+  /mp3 is exported for NFS Client with IP 192.168.0.1 to 192.168.0.254 with Read Only access
 
 Restart NFS server:
 $ service nfs-kernel-server restart
 
-Set linux_bootargs to mount NFS filesystem in u-boot 
+Parameters
+rw
+    Allow both read and write requests on this NFS volume. The default is to
+    disallow any request which changes the filesystem (ro).
+sync
+    Reply to requests only after the changes have been committed to stable
+    storage.
+async
+    Allow the NFS server to violate the NFS protocol and reply to requests
+    before any changes made by that request have been committed to stable
+    storage. Using this option usually improves performance, but at the cost
+    that an unclean server restart (i.e. a crash) can cause data to be lost or
+    corrupted (Acceptable for daily embedded system development).
 
-See also uboot.txt
+root_squash
+    Map requests from uid/gid 0 to the anonymous uid/gid. It causes files
+    accessed/created by 'root' on the NFS client to be given the permissions of
+    a non-root user on the NFS server. The idea is to increase security by
+    preventing a ownership of the root account on NFS server system.
+
+no_root_squash
+    Allow the root user on the client to access/create files on the NFS server
+    as root. Typically this is needed if you are hosting root filesystems on
+    the NFS server for diskless clients.
+
+subtree_check
+    If a subdirectory of a filesystem is exported, but the whole filesystem
+    isn't then whenever a NFS request arrives, the server must check not only
+    that the accessed file is in the appropriate filesystem  (which  is easy)
+    but also that it is in the exported tree (which is harder). This check is
+    called the subtree_check. This can cause problems with accessing files that
+    are renamed while a client has them open.
+    
+no_subtree_check
+    Disables subtree checking, which has mild security implications, but can
+    improve reliability in some circumstances.
+
+Config files:
+/etc/default/nfs-kernel-server
+/etc/default/nfs-common
+
+See man exports
+
 
 ffmpeg
 ------
@@ -88,6 +124,7 @@ Update SW cache:
 $ sudo apt-get update
 It appear in the list in a few minutes
 Install ffmeg from Ubuntu Software Center
+
 
 Jitsi VOIP Client
 -----
@@ -109,3 +146,17 @@ $ sudo adduser <user> wireshark
 
 Logout and login
 
+
+
+*******************************************************************************
+Beaglebone Black
+----------------
+
+Connect serial console
+----------------------
+BBB has a serial header.
+Check voltage level.
+http://elinux.org/Beagleboard:BeagleBoneBlack
+
+
+zImage -> mkimage -> uImage

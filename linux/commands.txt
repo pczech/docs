@@ -145,10 +145,15 @@ sx -vv <file> < /dev/ttyS0 > /dev/ttyS0
 tar
 ---
 
-extract from archive:
-tar -xvf file.tar [extract_here]
-tar -zxvf file.tar.gz [extract_here]      gzip
-tar -jxvf file.tar.bz2 [extract_here]     bzip2
+extract from archive to current folder
+tar -xf file.tar[.<ANY>]
+tar -xvf file.tar[.<ANY>]
+tar -zxvf file.tar.gz      gzip
+tar -jxvf file.tar.bz2     bzip2
+tar -Jxvf file.tar.xz      LZMA2
+
+extract from archive to given folder
+tar -xf file.tar -C <folder>
 
 If a folder <A> is archived in file.tar and you want to unpack the content of 
 the folder without the folder itself to the folder <B>:
@@ -158,6 +163,7 @@ compress directory:
 tar -cvf file.tar directory_to_compress
 tar -zcvf file.tar.gz directory_to_compress
 tar -jcvf file.tar.bz2 directory_to_compress
+tar -Jcvf file.tar.xz directory_to_compress
 
 
 *******************************************************************************
@@ -177,3 +183,62 @@ Print system information
 
 Linux Dell 3.13.0-30-generic #55-Ubuntu SMP Fri Jul 4 21:40:53 UTC 2014 x86_64
 x86_64 x86_64 GNU/Linux
+
+*******************************************************************************
+vi
+--
+vi <file> - edit/create <file>
+
+Esc            command mode
+h              move cursor one character to left
+j              move cursor one line down
+k              move cursor one line up
+l              move cursor one character to right
+w              move cursor one word to right
+b              move cursor one word to left
+0              move cursor to beginning of line
+$              move cursor to end of line
+nG             move cursor to line n
+control-f      scroll forward one screen
+control-b      scroll backward one screen
+ 
+i              insert to left of current cursor position (end with ESC)
+a              append to right of current cursor position (end with ESC)
+dw             delete current word (end with ESC)
+cw             change current word (end with ESC)
+r              change current character
+~              change case (upper-, lower-) of current character
+     
+dd             delete current line
+D              delete portion of current line to right of the cursor
+x              delete current character
+ma             mark currrent position
+d`a            delete everything from the marked position to here
+`a             go back to the marked position
+p              dump out at current place your last deletion (``paste'')
+     
+u              undo the last command 
+.              repeat the last command 
+     
+J              combine (``join'') next line with this one
+     
+:w             write file to disk, stay in vi
+:q!            quit VI, do not write file to disk,
+ZZ             write file to disk, quit vi
+
+:r filename    read in a copy of the specified file to the current
+               buffer
+     
+/string        search forward for string (end with Enter)
+?string        search backward for string (end with Enter)
+n              repeat the last search (``next search'')
+     
+:s/s1/s2       replace (``substitute'') (the first) s1 in this line by s2
+:lr/s/s1/s2/g  replace all instances of s1 in the line range lr by s2
+               (lr is of form `a,b', where a and b are either explicit
+               line numbers, or . (current line) or $ (last line)
+:map k s       map the key k to a string of vi commands s (see below)
+:abb s1 s2     expand the string s1 in append/insert mode to a string 
+               s2 (see below)
+%              go to the "mate," if one exists, of this parenthesis
+               or brace or bracket (very useful for programmers!)

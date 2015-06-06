@@ -1,0 +1,332 @@
+*******************************************************************************
+Logic family
+------------
+
+TTL - Transistor–transistor logic.
+----------------------------------
+It relies on circuits built from bipolar transistors to achieve switching and 
+maintain logic states. A majority of systems rely on 5V TTL Logic Levels.
+
+Voltage levels:
+Standard: VCC = 5V
+Low Voltage (LVTTL): VCC = 3.3V
+
+CMOS - Complementary metal–oxide–semiconductor
+----------------------------------------------
+In contrast to TTL, CMOS uses almost no power in the static state (that is,
+when inputs are not changing). A CMOS gate draws no current other than leakage
+when in a steady 1 or 0 state. When the gate switches states, current is drawn
+from the power supply to charge the capacitance at the output of the gate.
+This means that the current draw of CMOS devices increases with switching rate.
+
+Voltage levels
+CMOS chips often work with a broader range of power supply voltages than other
+logic families: 5V, 3.3V, 2.5V, 1.8V, ...
+ 
+Lowering the power supply voltage reduces the charge stored on any capacitances
+and consequently reduces the energy required for a logic transition. Reduced 
+energy implies less heat dissipation. By lowering the power supply from 5V to
+3.3V, switching power was reduced by almost 60 percent.
+ 
+Logic levels
+------------
+VIH - High-level Input voltage, above which a logic HIGH is defined
+VIL - Low-level Input voltage, below which a logic low is defined
+VOH - High-level output voltage
+VOL - Low-level output voltage
+
+VOH-VIH - High level noise margin (VOH > VIH)
+VOL-VIL - Low level noise margin (VOL < VIL)
+
+        5V TTL      3.3V LVTTL  5V CMOS     3.3V CMOS   2.5V CMOS   1.8V CMOS 
+V_OH    2.4         2.4         4.44        2.4         2.0         1.2
+V_IH    2           2           3.5         2.0         1.7         1.17
+V_IL    0.8         0.8         1.5         0.8         0.7         0.7
+V_OL    0.4         0.4         0.5         0.4         0.2         0.45
+
+
+Signal ground
+-------------
+Signal grounds serve as return paths for signals and power within equipment,
+and on the signal interconnections between equipment. Many electronic designs
+feature a single return that acts as a reference for all signals. Power and
+signal grounds often get connected, usually through the metal case of the
+equipment.
+
+Single return (single-ended signaling) is the simplest and most commonly used
+method of transmitting electrical signals over wires. One wire carries a
+varying voltage that represents the signal, while the other wire is connected
+to a reference voltage, usually ground.
+
+Alternatives: differential signaling, ground return (historic).
+
+The main advantage of single-ended over differential signaling is that fewer
+wires are needed to transmit multiple signals. If there are n signals, then
+there are n+1 wires - one for each signal and one for ground. (Differential
+signaling uses at least 2n wires).
+
+A disadvantage of single-ended signaling is that the return currents for all
+the signals share the same conductor, and this can sometimes cause interference
+("crosstalk") between the signals.
+
+Examples: RS232, PS2, I2C, TTL, CMOS circuits.
+
+
+*******************************************************************************
+UART - RS232 - TTL Serial
+-------------------------
+
+UART
+----
+Universal Asynchronous Receiver/Transmitter. A serial communications interface.
+It can be configured to support many different specific serial protocols. The
+term is generic, and does not represent a specific standard. At minimum it means
+that it has a TX and an RX line, which sends a serial data stream and receives a
+serial data stream.
+
+Signals
+GND --- Signal ground
+TxD --> Transmit Data
+RxD <-- Receive Data
+RTS --> Request To Send (HW, out-of-band flow control)
+CTS <-- Clear To Send (HW, out-of-band flow control)
+
+XON / XOFF
+Software flow control uses special codes, transmitted in-band, over the primary
+communications channel. These codes are generally called XOFF and XON (from
+"transmit off" and "transmit on", respectively). Thus, "software flow control"
+is sometimes called "XON/XOFF flow control".
+
+Data format
+1 START bit, 5-8 DATA bits (LSB first), 1 PARITY bit, 1-2 STOP bits
+
+Notation: Data/Parity/Stop, examples: 8N1, 8E1, 8N2
+
+A minimal "3-wire" serial connection consisting only of transmit data, receive
+data, and ground, is commonly used when the full facilities of RS232 are not
+required. Even a two-wire connection (data and ground) can be used if the data
+flow is one way. When only hardware flow control is required in addition to
+two-way data, the RTS and CTS lines are added in a 5-wire version.
+
+RS232
+-----
+A standard defining the signals between two devices, the signal names, their
+purpose, voltage levels, connectors and pinouts. This is a specific interface
+standard that allows for equipment interoperability.
+
+A logic high ('1') is represented by a negative voltage – anywhere from -3 to 
+-25V – while a logic low ('0') transmits a positive voltage that can be
+anywhere from +3 to +25V. On most PCs these signals swing from -13 to +13V.
+
+The more extreme voltages of an RS-232 signal help to make it less susceptible
+to noise, interference, and degradation. This means that an RS-232 signal can
+generally travel longer physical distances than their TTL counterparts, while
+still providing a reliable data transmission.
+
+Pinout
+
+ -----------
+ \1 2 3 4 5/
+  \6 7 8 9/
+   -------
+
+1 - CD  Carrier Detect
+2 - RxD
+3 - TxD
+4 - DTR Data Terminal Ready
+5 - GND
+6 - DSR Data Set Ready
+7 - RTS
+8 - CTS
+9 - RI (Ring Indicator)
+/ - PGND
+
+
+TTL Serial
+----------
+Serial communication at a TTL level - between the limits of 0V and Vcc (usually
+5V or 3.3V. A logic high ('1') is represented by Vcc, while a logic low ('0') is
+0V.
+
+RS232 - TTL conversion
+----------------------
+MAX232 converts signals from an RS-232 serial port to signals suitable for use
+in TTL compatible digital logic circuits. The MAX232 is a dual sender/receiver
+and typically converts the RX, TX, CTS and RTS signals.
+
+When a MAX232 receives a TTL level to convert, it changes a TTL logic 0 to
+between +3 and +15 V, and changes TTL logic 1 to between -3 to -15 V, and vice
+versa for converting from RS232 to TTL.
+
+Warning! RS232 data transmission voltages at a certain logic state are opposite
+from the RS232 control line voltages at the same logic state.
+
+Line                        RS232 voltage   TTL voltage
+Rx/Tx logic 0               +3 V to +15 V   0 V
+Rx/Tx logic 1               -3 V to -15 V   5 V
+RTS/CTS/DTR/DSR logic 0     -3 V to -15 V   5 V
+RTS/CTS/DTR/DSR logic 1     +3 V to +15 V   0 V
+
+USB to Serial
+-------------
+The USB - TTL Serial converters provide connectivity between USB and serial
+UART interfaces at various levels (e.g. TTL 5V, 3.3V or a user specific signal
+levels)
+
+Solutions:
+FTDI - FT232RQ, FT2232H, ...
+
+Prolific - PL2303, ...
+
+
+*******************************************************************************
+Serial console hacking
+----------------------
+
+Identifing voltage level and pins of your USB-Serial cable
+----------------------------------------------------------
+
+Connect the USB-Serial cable to your Host and find the device:
+
+$ dmesg
+
+Example result:
+usb 3-2: new full-speed USB device number 4 using xhci_hcd
+usb 3-2: New USB device found, idVendor=067b, idProduct=2303
+usb 3-2: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+usb 3-2: Product: USB-Serial Controller
+usb 3-2: Manufacturer: Prolific Technology Inc.
+pl2303 3-2:1.0: pl2303 converter detected
+usb 3-2: pl2303 converter now attached to ttyUSB0
+
+check permissions to /dev/ttyUSB0, add user to dialout group if needed:
+sudo adduser <user> dialout
+
+Identify the pins of the cable
+
+Example:
+Black, Green, White pins:
+
+      IDLE      /dev/urandom > /dev/ttyUSB0
+B-W: +0.07V     +0.69V
+B-G: +3.55V     +1,80V
+W-G:  0.00V      1,72V
+
+G-GND: +3.56V   +1.80V
+B-GND: 0.00V     0.00V
+W-GND: +0.06V   +1.02V
+
+In result:
+Vcc = 33V
+B = GND
+G = Tx
+W = Rx
+
+Identifying serial header on the board
+-------------------------------------
+http://www.devttys0.com/2012/11/reverse-engineering-serial-ports/
+
+There aren’t any industry standardized UART pin outs, and manufacturers don’t
+often go around advertising or documenting their debug interfaces. You have to
+reverse engineer both the hardware interface and the software protocol
+settings.
+
+Try to identify potential candidates for serial port headers. Most serial port
+headers have at a minimum four pins: Vcc, GND, Tx, Rx. Typically you’ll want to
+look for a single row of 4-6 pins, although this is not a hard and fast rule
+and they can come in any pin configuration the manufacturer has decided on.
+
+Sometimes you won’t have a nicely broken out set of pins like this, and you’ll
+have to examine test points on the board; usually starting with test points
+closest to the SoC is a good idea.
+
+1. Visual Inspection
+Example: On the top layer of a PCB the right most pin is labeled as pin “1”.
+This is not terribly important, but it gives a common frame of reference when
+describing the pin numbers.
+
+On the bottom of the PCB we see that pin 3 has four traces in a crosshair
+pattern that connect it to the surrounding ground plane. This easily identifies
+pin 3 as ground.
+
+Pins 2 and 4 have thin traces connected to them, while pin 1 is connected to a
+fatter trace. Wide traces are typically used for supplying power, while narrow
+traces are usually used for signal traces. This suggests that pin 1 is Vcc and
+pins 2 and 4 are potentially transmit and receive.
+
+2. Grounded Pins
+A continuity test introduces a small current into the circuit; if enough
+current passes from one probe to the other, the multimeter will emit an audible
+tone.
+
+The first thing we want to do is perform a continuity test between ground and
+all the pins on each of the headers using the multimeter. This will tell us
+which pins are connected directly to ground.
+
+3. Vcc
+Vcc is less important to identify since we don’t actually need to connect
+anything to it, but locating the Vcc pin is a good exercise and is useful in
+eliminating the Vcc pin as a possible candidate for transmit or receive.
+
+Another method of identifying Vcc is to perform a continuity test between
+ground and the suspected Vcc pin. It will commonly result in a very short beep.
+
+What happens with the Vcc continuity test is that there is usually a filter
+capacitor connected between the Vcc pin and ground. This is done to eliminate
+any possible noise in the power lines on the PCB, and such filter capacitors
+are used liberally in any well designed board. Due to the nature of how
+capacitors work, they will “pass” a direct current very briefly until they are
+charged to capacity, at which point they will cease “passing” direct current
+and will “block” direct current, resulting in the short beep observed during
+the continuity test.
+
+Although it doesn’t always work, the continuity test is a more conclusive
+method of determining Vcc than simply measuring the voltage on each pin, as any
+number of pins could all read the same voltage.
+
+4. Transmit Pin
+The transmit pin is fairly easy to identify provided that the serial port is
+active and is transmitting data. The transmit pin on the board will be pulled
+high to the same voltage as Vcc. As it transmits bits of data, the voltage will
+drop to 0 volts (to send a “space”), then back to Vcc (to send a “mark”). When
+reading a changing DC voltage, digital multimeters will end up displaying an
+average of the sampled voltage; this means that the voltage displayed on the
+multimeter will briefly dip down during bursts of activity on the transmit pin.
+
+The most activity on the transmit pin typically occurs during system boot up
+when all the boot information from the bootloader/kernel/system is being
+printed to the serial port.
+
+Although this is an effective method of identifying the transmit pin, it is
+worth noting that if the serial port only transmits a small amount of data,
+the voltage fluctuations will be too brief for the multimeter to register and
+you will need an oscilloscope or logic analyzer to capture the data activity
+on the transmit pin.
+
+5. Receive Pin
+Identifying the receive pin is the most difficult, as it has no truly unique
+defining characteristics. Observed examples pf Rx pin in different boards:
+
+- Pulled high to the same voltage as Vcc
+- Pulled high to a voltage a few hundred millivolts lower than that of Vcc
+- Left “floating”, wildly fluctuating around a few hundred millivolts
+- Left “floating” for a few seconds and then pulled high when the serial port
+  is initialized.
+
+Sometimes it just comes down to connecting a serial adapter to all possible
+receive pins individually, pressing a few keys in a terminal and seeing what
+happens. 
+
+Example (BBB)
+1. 6 pin header J1-J6
+2. J1 - GND, J1-J4: 600 Ohm (J1+), J1-J5: 600 Ohm (J1+), other JX-JY: Inf Ohm
+3. Vcc pin: -
+4. 
+  J1-J5 - +3.40V IDLE, ~1-2V after power on
+  J1-JX - 0.0V
+  J2-JX - 0.0
+  J3-JX
+  J4-J5 - +3.37V
+  J4-JX - 0
+
+

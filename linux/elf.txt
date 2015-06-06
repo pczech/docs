@@ -1,2 +1,5 @@
 readelf -a <binary>
+-d
+-s
+
 readelf --debug-dump=info <binary>

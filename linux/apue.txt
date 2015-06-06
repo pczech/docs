@@ -1,0 +1,8 @@
+Advanced Linux Programming in UNIX environment
+
+/etc/passwd
+login name:encrypted password:numeric user ID:numeric group ID:a comment field:
+home directory:shell program, e.g.
+<user>:x:1000:1000:<User Name>,,,:/home/<user>:/bin/bash
+
+Encrypted password is usually moved to another file (/etc/shadow)
